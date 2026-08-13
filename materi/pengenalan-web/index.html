@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pengenalan Web, UI/UX & Wireframe | VINIX7</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Slide Viewer Global Reset ── */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0f172a;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .slide-viewer {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background: #0f172a;
+    }
+
+    /* ── Navbar over Slide (Optional) ── */
+    .slide-navbar {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #e2e8f0;
+      justify-content: space-between;
+      z-index: 1001;
+    }
+
+    .slide-navbar a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slide-navbar a:hover {
+      color: #2563eb;
+    }
+
+    /* ── Slide Container ── */
+    .slide-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Slide Element ── */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      padding: 60px 80px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(50px);
+      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      z-index: 10;
+    }
+
+    /* ── Customizing Scrollbar inside slides ── */
+    .slide::-webkit-scrollbar {
+      width: 8px;
+    }
+    .slide::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .slide::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 99px;
+    }
+
+    /* ── Special Slide Types (Cover & Section) ── */
+    .slide.cover-slide, .slide.section-slide {
+      background: #0f172a; /* Dark navy */
+      color: white;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Decorative Circles */
+    .slide.cover-slide::before, .slide.section-slide::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      left: -100px;
+      width: 400px;
+      height: 400px;
+      background: #1e3a8a;
+      border-radius: 50%;
+      opacity: 0.8;
+      z-index: 0;
+    }
+    
+    .slide.cover-slide::after, .slide.section-slide::after {
+      content: '';
+      position: absolute;
+      bottom: -200px;
+      right: -150px;
+      width: 600px;
+      height: 600px;
+      background: #4c1d95;
+      border-radius: 50%;
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    .slide.cover-slide > *, .slide.section-slide > * {
+      z-index: 1;
+      position: relative;
+    }
+
+    /* Typography for Cover */
+    .slide.cover-slide h1, .slide.section-slide h2 {
+      font-family: 'Merriweather', serif;
+      font-size: 4.5rem;
+      font-weight: 900;
+      margin-bottom: 24px;
+      color: white;
+      line-height: 1.2;
+    }
+
+    .slide.cover-slide .accent-line {
+      width: 150px;
+      height: 6px;
+      background: #06b6d4; /* Teal accent */
+      margin: 0 auto 30px auto;
+    }
+
+    .slide.cover-slide.left-align {
+      text-align: left;
+      align-items: flex-start;
+      padding-left: 120px;
+    }
+    
+    .slide.cover-slide.left-align .accent-line {
+      margin-left: 0;
+    }
+
+    .slide.cover-slide p, .slide.section-slide p {
+      font-size: 1.5rem;
+      color: #cbd5e1;
+      max-width: 800px;
+      font-weight: 400;
+    }
+
+    .slide.section-slide .icon-wrapper {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: #38bdf8;
+    }
+
+    /* ── Content Slides ── */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      border-bottom: 4px solid #3b82f6;
+      padding-bottom: 15px;
+      display: inline-flex;
+    }
+
+    .slide h2 {
+      font-family: 'Merriweather', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #1e40af;
+      margin: 0;
+    }
+    
+    .slide-badge {
+      display: none; /* Hide badge, use header instead */
+    }
+
+    .slide .lead-text {
+      font-size: 1.3rem;
+      color: #334155;
+      margin-bottom: 30px;
+      line-height: 1.6;
+      background: #f8fafc;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Cards Layout */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .content-card {
+      background: #f1f5f9;
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    .content-card h3 {
+      font-family: 'Merriweather', serif;
+      color: #1e3a8a;
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      margin-top: 16px;
+    }
+
+    .content-card p {
+      color: #475569;
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    .icon-large {
+      font-size: 2.5rem;
+    }
+
+    /* Standard Lists */
+    .slide-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-left: 0;
+    }
+
+    .slide-list li {
+      position: relative;
+      padding-left: 40px;
+      font-size: 1.2rem;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .slide-list li::before {
+      content: '●';
+      position: absolute;
+      left: 0;
+      top: 2px;
+      color: #3b82f6;
+      font-size: 1.2rem;
+    }
+
+    .slide-list li strong {
+      color: #1e3a8a;
+      font-weight: 700;
+    }
+
+    .slide-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 20px;
+      font-size: 1.1rem;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+    }
+
+    .slide-table th {
+      background: #f8fafc;
+      color: #1e40af;
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .slide-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #475569;
+      background: white;
+    }
+
+    /* ── Bottom Controls ── */
+    .slide-controls {
+      height: 70px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 1001;
+    }
+
+    .btn-nav {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+    }
+
+    .btn-nav:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-nav.secondary {
+      background: #f1f5f9;
+      color: #3b82f6;
+    }
+
+    .btn-nav.secondary:hover:not(:disabled) {
+      background: #e2e8f0;
+    }
+
+    .slide-progress-wrapper {
+      flex: 1;
+      margin: 0 60px;
+      text-align: center;
+    }
+
+    .slide-progress-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .slide-progress-bar {
+      height: 6px;
+      background: #f1f5f9;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .slide-progress-fill {
+      height: 100%;
+      background: #3b82f6;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .slide { padding: 40px; }
+      .slide.cover-slide h1 { font-size: 3.5rem; }
+      .slide h2 { font-size: 2.2rem; }
+    }
+
+    @media (max-width: 768px) {
+      .slide-controls { padding: 0 20px; }
+      .btn-nav span { display: none; }
+      .slide { padding: 30px 20px; }
+      .slide.cover-slide.left-align { padding-left: 30px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="slide-viewer">
+
+    <div class="slide-navbar">
+      <a href="../../index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        Kembali ke Beranda
+      </a>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <div style="font-size: 0.8rem; color: #64748b; font-weight: 600;">VINIX7 Web Developer</div>
+        <button id="btn-fullscreen"
+          style="background: none; border: none; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 4px; transition: background 0.2s, color 0.2s;"
+          title="Toggle Fullscreen (Tekan F)"
+          onmouseover="this.style.background='#f1f5f9'; this.style.color='#2563eb'"
+          onmouseout="this.style.background='none'; this.style.color='#64748b'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="slide-container" id="slide-container">
+
+      <!-- SLIDE 1: COVER -->
+      <div class="slide cover-slide left-align" id="slide-1">
+        <div class="icon-wrapper" style="text-align: left; margin-bottom: 20px;">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        </div>
+        <h1>Pengenalan<br>Web, UI/UX &<br>Wireframe</h1>
+        <div class="accent-line"></div>
+      </div>
+      
+      <div class="slide" id="slide-2">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem;">📋</span>
+          <h2>Daftar Isi</h2>
+        </div>
+        <div class="cards-grid">
+          <div class="content-card" style="display: flex; align-items: center; text-align: left; gap: 20px;">
+             <div style="background: #2563eb; color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem;">01</div>
+             <p style="margin: 0; font-weight: 600;">Pengenalan World Wide Web</p>
+          </div>
+          <div class="content-card" style="display: flex; align-items: center; text-align: left; gap: 20px;">
+             <div style="background: #8b5cf6; color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem;">02</div>
+             <p style="margin: 0; font-weight: 600;">Bagaimana Internet Bekerja</p>
+          </div>
+          <div class="content-card" style="display: flex; align-items: center; text-align: left; gap: 20px;">
+             <div style="background: #06b6d4; color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem;">03</div>
+             <p style="margin: 0; font-weight: 600;">Teknologi Web (HTML, CSS, JS)</p>
+          </div>
+          <div class="content-card" style="display: flex; align-items: center; text-align: left; gap: 20px;">
+             <div style="background: #10b981; color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem;">04</div>
+             <p style="margin: 0; font-weight: 600;">Pengenalan UI/UX Design</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide section-slide" id="slide-3">
+        <div class="icon-wrapper">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        </div>
+        <h2>BAGIAN 1</h2>
+        <p>Pengenalan World Wide Web</p>
+      </div>
+
+      <div class="slide" id="slide-4">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #0ea5e9;">🌐</span>
+          <h2>Apa itu World Wide Web?</h2>
+        </div>
+        <p class="lead-text">World Wide Web (WWW) adalah sistem informasi di internet yang memungkinkan dokumen dan sumber daya terhubung satu sama lain melalui hyperlink dan dapat diakses melalui browser.</p>
+        
+        <div class="cards-grid">
+          <div class="content-card">
+            <div class="icon-large">📅</div>
+            <h3>Ditemukan</h3>
+            <p>Tim Berners-Lee, 1989 di CERN, Swiss</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">🔗</div>
+            <h3>Hyperlink</h3>
+            <p>Menghubungkan dokumen melalui URL</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">🌍</div>
+            <h3>Global</h3>
+            <p>Lebih dari 1.9 miliar website aktif</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">📱</div>
+            <h3>Multi-Device</h3>
+            <p>PC, Tablet, HP, SmartTV, dll</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-5">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #64748b;">🔄</span>
+          <h2>Internet vs World Wide Web</h2>
+        </div>
+        <table class="slide-table" style="margin-top: 30px;">
+          <tr>
+            <th style="font-size: 1.4rem; text-align: center;">🌐 INTERNET</th>
+            <th style="font-size: 1.4rem; text-align: center; color: #8b5cf6;">🕸️ WORLD WIDE WEB</th>
+          </tr>
+          <tr>
+            <td>Infrastruktur global jaringan komputer yang saling terhubung</td>
+            <td>Layanan yang berjalan di atas internet menggunakan HTTP/HTTPS</td>
+          </tr>
+          <tr>
+            <td>Jaringan fisik (kabel, router)</td>
+            <td>Dokumen HTML/Website</td>
+          </tr>
+          <tr>
+            <td>Protokol TCP/IP</td>
+            <td>Protokol HTTP/HTTPS</td>
+          </tr>
+          <tr>
+            <td>Email, FTP, VoIP</td>
+            <td>Browser sebagai klien</td>
+          </tr>
+          <tr>
+            <td>Infrastruktur lebih luas</td>
+            <td>Bagian dari internet</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="slide section-slide" id="slide-6">
+        <div class="icon-wrapper">💻</div>
+        <h2>BAGIAN 2</h2>
+        <p>Teknologi Dasar Web: HTML, CSS & JavaScript</p>
+      </div>
+
+      <div class="slide" id="slide-7">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem;">🏷️</span>
+          <h2 style="color: #f59e0b;">HTML — HyperText Markup Language</h2>
+        </div>
+        <p class="lead-text">HTML adalah bahasa markup standar untuk membuat struktur halaman web. Setiap elemen didefinisikan menggunakan tag.</p>
+        
+        <div style="display: flex; gap: 30px; margin-top: 20px;">
+          <div style="flex: 1; background: #1e293b; color: #e2e8f0; padding: 24px; border-radius: 12px; font-family: monospace; font-size: 1.1rem; line-height: 1.6;">
+            &lt;!DOCTYPE html&gt;<br>
+            &lt;html lang='id'&gt;<br>
+            &nbsp;&nbsp;&lt;head&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Halaman Pertama&lt;/title&gt;<br>
+            &nbsp;&nbsp;&lt;/head&gt;<br>
+            &nbsp;&nbsp;&lt;body&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Halo Dunia!&lt;/h1&gt;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Ini paragraf pertama.&lt;/p&gt;<br>
+            &nbsp;&nbsp;&lt;/body&gt;<br>
+            &lt;/html&gt;
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
+            <div style="background: #fef3c7; padding: 16px; border-radius: 8px;"><strong>&lt;html&gt;</strong>: Root element</div>
+            <div style="background: #fef3c7; padding: 16px; border-radius: 8px;"><strong>&lt;head&gt;</strong>: Metadata halaman</div>
+            <div style="background: #fef3c7; padding: 16px; border-radius: 8px;"><strong>&lt;body&gt;</strong>: Konten yang tampil</div>
+            <div style="background: #fef3c7; padding: 16px; border-radius: 8px;"><strong>&lt;h1&gt;-&lt;h6&gt;</strong>: Heading / Judul</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="slide section-slide" id="slide-8">
+        <div class="icon-wrapper">🎨</div>
+        <h2>BAGIAN 3</h2>
+        <p>Pengenalan UI/UX Design</p>
+      </div>
+
+      <div class="slide" id="slide-9">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem;">🖥️</span>
+          <h2>Apa itu UI (User Interface)?</h2>
+        </div>
+        <p class="lead-text">User Interface (UI) adalah semua elemen visual yang terlihat dan digunakan oleh pengguna untuk berinteraksi dengan produk digital.</p>
+        
+        <div class="cards-grid">
+          <div class="content-card">
+            <div class="icon-large">🔘</div>
+            <h3>Tombol (Button)</h3>
+            <p>CTA, Submit, Cancel</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">📝</div>
+            <h3>Form Input</h3>
+            <p>Text field, dropdown, checkbox</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">🎨</div>
+            <h3>Warna (Color)</h3>
+            <p>Palet warna brand</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">🔤</div>
+            <h3>Tipografi</h3>
+            <p>Font, ukuran, style</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">📐</div>
+            <h3>Layout & Grid</h3>
+            <p>Susunan elemen di layar</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">🖼️</div>
+            <h3>Ikon & Gambar</h3>
+            <p>Visual elemen pendukung</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-10">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">👤</span>
+          <h2 style="color: #6d28d9;">Apa itu UX (User Experience)?</h2>
+        </div>
+        <p class="lead-text">User Experience (UX) adalah keseluruhan pengalaman yang dirasakan pengguna saat berinteraksi dengan produk — mencakup kemudahan, kenyamanan, kepuasan, dan efisiensi.</p>
+        
+        <div class="cards-grid">
+          <div class="content-card">
+            <div class="icon-large">💡</div>
+            <h3>Useful</h3>
+            <p>(Berguna)</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">🎯</div>
+            <h3>Usable</h3>
+            <p>(Mudah digunakan)</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">😊</div>
+            <h3>Desirable</h3>
+            <p>(Menyenangkan)</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">🔍</div>
+            <h3>Findable</h3>
+            <p>(Mudah ditemukan)</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">♿</div>
+            <h3>Accessible</h3>
+            <p>(Dapat diakses)</p>
+          </div>
+          <div class="content-card">
+            <div class="icon-large">🔒</div>
+            <h3>Credible</h3>
+            <p>(Terpercaya)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-11">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem;">⚖️</span>
+          <h2>Perbedaan UI dan UX</h2>
+        </div>
+        <div style="background: #f8fafc; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin-bottom: 30px; font-size: 1.2rem; font-weight: bold; color: #334155;">
+          💡 UI = CARA PRODUK TERLIHAT &nbsp; | &nbsp; UX = CARA PRODUK TERASA DAN BEKERJA
+        </div>
+        <table class="slide-table">
+          <tr>
+            <th style="font-size: 1.4rem;">🖥️ UI Design</th>
+            <th style="font-size: 1.4rem; color: #6d28d9;">👤 UX Design</th>
+          </tr>
+          <tr>
+            <td>Fokus pada tampilan visual</td>
+            <td>Fokus pada pengalaman user</td>
+          </tr>
+          <tr>
+            <td>Warna, tipografi, ikon</td>
+            <td>Alur & navigasi produk</td>
+          </tr>
+          <tr>
+            <td>Layout & komposisi</td>
+            <td>Penelitian pengguna</td>
+          </tr>
+          <tr>
+            <td>Konsistensi visual & Estetika</td>
+            <td>Pemecahan masalah & Kepuasan</td>
+          </tr>
+          <tr>
+            <td><strong>Output:</strong> Mockup / Prototype Visual Final</td>
+            <td><strong>Output:</strong> Wireframe / User Flow / Journey Map</td>
+          </tr>
+        </table>
+      </div>
+      
+      <div class="slide section-slide" id="slide-12">
+        <div class="icon-wrapper">📐</div>
+        <h2>BAGIAN 4</h2>
+        <p>Wireframe & Prototyping</p>
+      </div>
+
+      <div class="slide" id="slide-13">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">📐</span>
+          <h2 style="color: #6d28d9;">Apa itu Wireframe?</h2>
+        </div>
+        <p class="lead-text">Wireframe adalah sketsa/rancangan kasar struktur halaman web atau aplikasi yang menunjukkan tata letak elemen tanpa detail visual seperti warna, font, atau gambar nyata.</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Hanya bentuk & layout, bukan visual final</li>
+          <li>Kotak mewakili gambar, teks sebagai placeholder</li>
+          <li>Menentukan hierarki konten halaman</li>
+          <li>Cepat dibuat, mudah direvisi</li>
+          <li>Alat komunikasi tim (desainer, developer, klien)</li>
+        </ul>
+      </div>
+
+      
+      <div class="slide" id="slide-14">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">🖥️</span>
+          <h2 style="color: #1e40af;">📊  Jenis-Jenis Wireframe</h2>
+        </div>
+        <p class="lead-text">Low-Fidelity</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>(Lo-Fi)</li>
+          <li>Sketsa tangan atau digital sederhana</li>
+          <li>Tanpa detail visual</li>
+          <li>Sangat cepat dibuat</li>
+          <li>Untuk ide awal & brainstorm</li>
+          <li>Untuk: Tahap awal / ideasi</li>
+          <li>Mid-Fidelity</li>
+          <li>(Mid-Fi)</li>
+          <li>Digital, lebih terstruktur</li>
+          <li>Grid & spacing mulai jelas</li>
+          <li>Placeholder teks & gambar</li>
+          <li>Navigasi & flow mulai detail</li>
+          <li>Untuk: Presentasi & feedback</li>
+          <li>High-Fidelity</li>
+          <li>(Hi-Fi)</li>
+          <li>Mendekati desain final</li>
+          <li>Warna, font, ikon nyata</li>
+          <li>Interaktif (clickable)</li>
+          <li>Dasar handoff ke developer</li>
+          <li>Untuk: Prototype & testing</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-15">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">☰</span>
+          <h2 style="color: #1e40af;">🧩  Elemen-Elemen dalam Wireframe</h2>
+        </div>
+        <p class="lead-text">[ ]</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Navigation Bar</li>
+          <li>Menu utama, logo, dan CTA header</li>
+          <li>[ ▬▬▬ ]</li>
+          <li>Hero Section</li>
+          <li>Banner utama dengan headline & tombol</li>
+          <li>Image Placeholder</li>
+          <li>Kotak dengan 'X' diagonal</li>
+          <li>═══</li>
+          <li>Text Block</li>
+          <li>Garis horizontal sebagai placeholder teks</li>
+          <li>[ Button ]</li>
+          <li>Call-to-Action</li>
+          <li>Tombol aksi utama pengguna</li>
+          <li>Hamburger Menu</li>
+          <li>Menu mobile/collapse</li>
+          <li>[ ▼ ]</li>
+          <li>Dropdown</li>
+          <li>Pilihan yang dapat diperluas</li>
+          <li>[ Form ]</li>
+          <li>Input Field</li>
+          <li>Kotak isian untuk user input</li>
+          <li>═══════</li>
+          <li>Footer</li>
+          <li>Area bawah dengan info & link</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-16">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">📱</span>
+          <h2 style="color: #1e40af;">🔗  Prototyping</h2>
+        </div>
+        <p class="lead-text">Prototype adalah simulasi interaktif produk yang memungkinkan pengguna 'merasakan' cara kerja produk sebelum dikembangkan. Prototype dibuat dari wireframe yang dihubungkan satu sama lain.</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Paper Prototype</li>
+          <li>Sketsa kertas dihubungkan</li>
+          <li>dengan tangan. Cepat & murah.</li>
+          <li>Digital Lo-Fi</li>
+          <li>Wireframe digital</li>
+          <li>dengan link antar halaman.</li>
+          <li>Interactive Hi-Fi</li>
+          <li>Desain final interaktif</li>
+          <li>mendekati produk nyata.</li>
+          <li>✅  Manfaat Prototyping:</li>
+          <li>• Validasi ide sebelum coding</li>
+          <li>• Hemat waktu & biaya development</li>
+          <li>• Mudah mendapat feedback user</li>
+          <li>• Iterasi cepat tanpa kode</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-17">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">✏️</span>
+          <h2 style="color: #1e40af;">🛠️  Tools Wireframe & Prototyping</h2>
+        </div>
+        <p class="lead-text">Figma</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Free & Pro</li>
+          <li>Kolaborasi real-time, paling populer saat ini</li>
+          <li>Adobe XD</li>
+          <li>Berbayar</li>
+          <li>Terintegrasi dengan ekosistem Adobe</li>
+          <li>Sketch</li>
+          <li>Mac Only</li>
+          <li>Standar industri untuk desainer Mac</li>
+          <li>Balsamiq</li>
+          <li>Lo-Fi Khusus</li>
+          <li>Khusus wireframe cepat gaya sketsa</li>
+          <li>InVision</li>
+          <li>Prototype</li>
+          <li>Platform prototyping & kolaborasi tim</li>
+          <li>Marvel App</li>
+          <li>Mudah</li>
+          <li>Cocok untuk pemula, gratis tersedia</li>
+          <li>Miro</li>
+          <li>Whiteboard</li>
+          <li>Mind mapping & low-fi wireframe</li>
+          <li>Pencil + Kertas</li>
+          <li>Manual</li>
+          <li>Paling cepat untuk ide awal</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-18">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">🚀</span>
+          <h2 style="color: #1e40af;">🔄  Alur Proses Desain UI/UX</h2>
+        </div>
+        <p class="lead-text">1. Research</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>User interview, survei, kompetitor analysis</li>
+          <li>2. Define</li>
+          <li>Problem statement, user persona, user journey</li>
+          <li>3. Information Architecture</li>
+          <li>Sitemap, user flow, navigasi</li>
+          <li>4. Wireframe</li>
+          <li>Lo-fi sketsa struktur tiap halaman</li>
+          <li>5. Visual Design</li>
+          <li>UI Design dengan warna, tipografi, aset</li>
+          <li>6. Prototype</li>
+          <li>Interaktif, siap untuk testing</li>
+          <li>7. User Testing</li>
+          <li>Usability testing, feedback, iterasi</li>
+          <li>8. Handoff</li>
+          <li>Desain final ke tim developer</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-19">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
+          <h2 style="color: #1e40af;">🗺️  Sitemap - Peta Struktur Website</h2>
+        </div>
+        <p class="lead-text">Sitemap adalah diagram hierarki yang menunjukkan semua halaman dalam website dan bagaimana mereka saling terhubung satu sama lain.</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>🏠 HOME</li>
+          <li>📖 Tentang</li>
+          <li>🛍️ Produk</li>
+          <li>📬 Kontak</li>
+          <li>📰 Blog</li>
+          <li>Kategori A</li>
+          <li>Kategori B</li>
+          <li>Detail Produk</li>
+          <li>💡  Sitemap dibuat sebelum wireframe agar tim memiliki gambaran lengkap struktur website yang akan dibangun.</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-20">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">→</span>
+          <h2 style="color: #1e40af;">🔀  User Flow - Alur Pengguna</h2>
+        </div>
+        <p class="lead-text">User Flow adalah diagram yang menggambarkan langkah-langkah yang dilalui pengguna untuk menyelesaikan tugas tertentu dalam aplikasi/website.</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Contoh User Flow: Proses Login</li>
+          <li>Mulai</li>
+          <li>Buka</li>
+          <li>Halaman Login</li>
+          <li>Isi Email</li>
+          <li>& Password</li>
+          <li>Valid?</li>
+          <li>Masuk ke</li>
+          <li>Dashboard</li>
+          <li>Selesai</li>
+          <li>❌ Tampilkan</li>
+          <li>Pesan Error</li>
+          <li>Tidak</li>
+          <li>Simbol:  ○ = Mulai/Selesai   □ = Proses   ◇ = Keputusan   → = Alur</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-21">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
+          <h2 style="color: #1e40af;">📱  Responsive Design</h2>
+        </div>
+        <p class="lead-text">Responsive Design adalah pendekatan desain web yang memastikan tampilan dan fungsionalitas beradaptasi secara optimal di berbagai ukuran layar dan perangkat.</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Desktop</li>
+          <li>1280px+</li>
+          <li>Tablet</li>
+          <li>768px</li>
+          <li>Mobile</li>
+          <li>375px</li>
+          <li>Breakpoints CSS</li>
+          <li>< 576px</li>
+          <li>XS Mobile</li>
+          <li>576–768px</li>
+          <li>SM Mobile</li>
+          <li>768–992px</li>
+          <li>MD Tablet</li>
+          <li>992–1200px</li>
+          <li>LG Desktop</li>
+          <li>> 1200px</li>
+          <li>XL Wide</li>
+          <li>📌  Konsep Mobile First: Desain untuk mobile terlebih dahulu, kemudian scale up ke tablet dan desktop.</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-22">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">🔧</span>
+          <h2 style="color: #1e40af;">♿  Aksesibilitas (Accessibility) dalam Web Design</h2>
+        </div>
+        <p class="lead-text">Web Accessibility (a11y) memastikan website dapat digunakan oleh semua orang, termasuk penyandang disabilitas visual, motorik, kognitif, maupun pendengaran.</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Perceivable</li>
+          <li>Konten dapat dilihat/didengar semua user — alt text untuk gambar, caption video</li>
+          <li>Operable</li>
+          <li>Semua fungsi bisa diakses dengan keyboard, bukan hanya mouse</li>
+          <li>Understandable</li>
+          <li>Konten & UI mudah dipahami — bahasa jelas, instruksi konsisten</li>
+          <li>Robust</li>
+          <li>Kompatibel dengan berbagai browser & assistive technology (screen reader)</li>
+          <li>Standar global: WCAG 2.1 (Web Content Accessibility Guidelines) — Level A, AA, AAA</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-23">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
+          <h2 style="color: #1e40af;">🛠️  Tools Populer untuk Web & UI/UX Design</h2>
+        </div>
+        <p class="lead-text">Design & Prototyping</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Figma</li>
+          <li>Adobe XD</li>
+          <li>Sketch</li>
+          <li>InVision</li>
+          <li>Frontend Development</li>
+          <li>VS Code</li>
+          <li>Chrome DevTools</li>
+          <li>GitHub</li>
+          <li>CodePen</li>
+          <li>Collaboration</li>
+          <li>Miro</li>
+          <li>Notion</li>
+          <li>Trello</li>
+          <li>Slack</li>
+          <li>Testing & Analytics</li>
+          <li>Google Analytics</li>
+          <li>Hotjar</li>
+          <li>Maze</li>
+          <li>UserTesting</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-24">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
+          <h2 style="color: #1e40af;">✅  Best Practices UI/UX Design</h2>
+        </div>
+        <p class="lead-text">Selalu mulai dengan riset — siapa user, apa kebutuhan mereka, dan apa pain point-nya.</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Kenali Pengguna Anda</li>
+          <li>Keep It Simple (KISS)</li>
+          <li>Hindari elemen yang tidak perlu. Setiap elemen harus memiliki tujuan yang jelas.</li>
+          <li>Konsistensi adalah Kunci</li>
+          <li>Gunakan pola yang sama untuk komponen serupa agar user tidak perlu belajar ulang.</li>
+          <li>Feedback yang Jelas</li>
+          <li>Selalu beri tahu user apa yang sedang terjadi — loading, error, sukses.</li>
+          <li>Mobile First</li>
+          <li>Desain untuk layar terkecil terlebih dahulu, kemudian scale ke layar lebih besar.</li>
+          <li>Test & Iterate</li>
+          <li>Desain bagus lahir dari banyak iterasi. Uji dengan user nyata, perbaiki, ulangi.</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-25">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
+          <h2 style="color: #1e40af;">💼  Peluang Karir di Bidang Web & UI/UX</h2>
+        </div>
+        <p class="lead-text">🎨  UI Designer</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>💡 Figma, Adobe XD, Desain Grafis, Tipografi</li>
+          <li>💰 Rp 5–15 juta/bln</li>
+          <li>👤  UX Designer</li>
+          <li>💡 User Research, Wireframing, Prototyping</li>
+          <li>💰 Rp 6–18 juta/bln</li>
+          <li>💻  Frontend Developer</li>
+          <li>💡 HTML, CSS, JavaScript, React/Vue</li>
+          <li>💰 Rp 6–20 juta/bln</li>
+          <li>🔗  Fullstack Developer</li>
+          <li>💡 Frontend + Backend + Database</li>
+          <li>💰 Rp 10–30 juta/bln</li>
+          <li>🔬  UX Researcher</li>
+          <li>💡 Riset Kualitatif, Statistik, Analitik</li>
+          <li>💰 Rp 7–20 juta/bln</li>
+          <li>🚀  Product Designer</li>
+          <li>💡 UI + UX + Strategy + Data</li>
+          <li>💰 Rp 12–35 juta/bln</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-26">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
+          <h2 style="color: #1e40af;">📌  Ringkasan Materi</h2>
+        </div>
+        <p class="lead-text">Sistem dokumen terhubung via HTTP. Internet ≠ Web. Komponen: Frontend, Backend, Database, Domain, Hosting.</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>🌐  World Wide Web</li>
+          <li>💻  Teknologi Web</li>
+          <li>HTML = Struktur, CSS = Tampilan, JavaScript = Interaksi. Ketiganya wajib untuk web modern.</li>
+          <li>🖥️  UI Design</li>
+          <li>Visual & estetika produk — warna, tipografi, layout, ikon, tombol. Prinsip: konsistensi, hierarki, kontras.</li>
+          <li>👤  UX Design</li>
+          <li>Pengalaman pengguna — riset, persona, flow, kemudahan pakai. Beda UI: CARA TERLIHAT vs CARA TERASA.</li>
+          <li>📐  Wireframe</li>
+          <li>Sketsa struktur halaman tanpa visual final. Lo-Fi → Mid-Fi → Hi-Fi. Tools: Figma, Balsamiq, Sketch.</li>
+          <li>🔗  Prototype</li>
+          <li>Simulasi interaktif produk. Alat validasi sebelum development. User Testing untuk iterasi produk.</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-27">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
+          <h2 style="color: #1e40af;">❓  Kuis & Latihan</h2>
+        </div>
+        <p class="lead-text">3. Apa yang dimaksud dengan User Persona dan mengapa penting?</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>Diskusi</li>
+          <li>1. Apa perbedaan utama antara Internet dan World Wide Web?</li>
+          <li>Tertulis</li>
+          <li>2. Sebutkan 3 fungsi berbeda HTML, CSS, dan JavaScript!</li>
+          <li>Diskusi</li>
+          <li>Tertulis</li>
+          <li>4. Jelaskan perbedaan UI dan UX dengan analogi sehari-hari!</li>
+          <li>Praktik</li>
+          <li>5. Buatlah wireframe sederhana homepage toko online di kertas!</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-28">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
+          <h2 style="color: #1e40af;">📚  Referensi & Sumber Belajar</h2>
+        </div>
+        <p class="lead-text">📖 Dokumentasi Resmi</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>developer.mozilla.org (MDN Web Docs)</li>
+          <li>web.dev (Google)</li>
+          <li>figma.com/resources</li>
+          <li>🎓 Platform Belajar</li>
+          <li>freecodecamp.org</li>
+          <li>theodinproject.com</li>
+          <li>uxplanet.org</li>
+          <li>interaction-design.org</li>
+          <li>📱 Inspirasi Desain</li>
+          <li>dribbble.com</li>
+          <li>behance.net</li>
+          <li>mobbin.com</li>
+          <li>awwwards.com</li>
+          <li>📺 YouTube</li>
+          <li>Traversy Media</li>
+          <li>Kevin Powell (CSS)</li>
+          <li>DesignCourse</li>
+          <li>Google UX Design</li>
+        </ul>
+      </div>
+        
+
+      <div class="slide" id="slide-29">
+        <div class="slide-header">
+          <span style="font-size: 2.5rem; color: #8b5cf6;">🚀</span>
+          <h2 style="color: #1e40af;">Selamat Belajar!</h2>
+        </div>
+        <p class="lead-text">Web & UI/UX Design</p>
+        <ul class="slide-list" style="margin-top: 30px;">
+          <li>"Design is not just what it looks like and feels like.</li>
+          <li>Design is how it works." — Steve Jobs</li>
+          <li>Ada pertanyaan? 🙋</li>
+        </ul>
+      </div>
+        
+
+      <!-- ENDING SLIDE -->
+      <div class="slide cover-slide">
+        <div class="icon-wrapper">🚀</div>
+        <h1>Selamat Belajar!</h1>
+        <div class="accent-line"></div>
+        <p>"Design is not just what it looks like and feels like. Design is how it works." — Steve Jobs</p>
+        <div style="margin-top: 50px;">
+          <a href="../../index.html"
+            style="color: white; text-decoration: none; font-weight: bold; padding: 14px 36px; background: #2563eb; border-radius: 99px; transition: background 0.3s; display: inline-block; font-size: 1.1rem;"
+            onmouseover="this.style.background='#1d4ed8';"
+            onmouseout="this.style.background='#2563eb';">
+            Kembali ke Halaman Utama
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Controls ── -->
+    <div class="slide-controls">
+      <button class="btn-nav secondary" id="btn-prev" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Sebelumnya</span>
+      </button>
+
+      <div class="slide-progress-wrapper">
+        <div class="slide-progress-text">Slide <span id="current-slide-num">1</span> dari <span
+            id="total-slide-num">X</span></div>
+        <div class="slide-progress-bar">
+          <div class="slide-progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <button class="btn-nav" id="btn-next">
+        <span>Selanjutnya</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentIdx = 0;
+
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const textCurrent = document.getElementById('current-slide-num');
+      const textTotal = document.getElementById('total-slide-num');
+      const progressFill = document.getElementById('progress-fill');
+
+      textTotal.textContent = totalSlides;
+
+      function updateSlide() {
+        slides.forEach((slide, index) => {
+          if (index === currentIdx) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        });
+
+        textCurrent.textContent = currentIdx + 1;
+        const progressPercent = ((currentIdx + 1) / totalSlides) * 100;
+        progressFill.style.width = progressPercent + '%';
+
+        btnPrev.disabled = currentIdx === 0;
+        btnNext.disabled = currentIdx === totalSlides - 1;
+      }
+
+      function nextSlide() {
+        if (currentIdx < totalSlides - 1) {
+          currentIdx++;
+          updateSlide();
+        }
+      }
+
+      function prevSlide() {
+        if (currentIdx > 0) {
+          currentIdx--;
+          updateSlide();
+        }
+      }
+
+      btnNext.addEventListener('click', nextSlide);
+      btnPrev.addEventListener('click', prevSlide);
+
+      const btnFullscreen = document.getElementById('btn-fullscreen');
+      const viewer = document.documentElement;
+
+      btnFullscreen.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          viewer.requestFullscreen().catch(err => {
+            console.log("Error attempting to enable fullscreen:", err.message);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+          nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+          prevSlide();
+        } else if (e.key.toLowerCase() === 'f') {
+          btnFullscreen.click();
+        }
+      });
+
+      updateSlide();
+    });
+  </script>
+</body>
+</html>

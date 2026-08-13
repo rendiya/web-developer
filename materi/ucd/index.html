@@ -7,13 +7,13 @@
   <title>UCD — Slide Presentation | VINIX7</title>
   <link rel="stylesheet" href="../../style.css" />
   <style>
+
     /* ── Slide Viewer Global Reset ── */
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      /* Hide scrollbars in presentation mode */
-      background: var(--bg-surface);
+      background: #0f172a;
       font-family: 'Inter', sans-serif;
     }
 
@@ -26,7 +26,7 @@
       top: 0;
       left: 0;
       z-index: 1000;
-      background: var(--bg-base);
+      background: #0f172a;
     }
 
     /* ── Navbar over Slide (Optional) ── */
@@ -35,9 +35,9 @@
       display: flex;
       align-items: center;
       padding: 0 32px;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid #e2e8f0;
       justify-content: space-between;
       z-index: 1001;
     }
@@ -46,14 +46,14 @@
       text-decoration: none;
       font-size: 0.85rem;
       font-weight: 700;
-      color: var(--text-muted);
+      color: #64748b;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
     .slide-navbar a:hover {
-      color: var(--color-primary);
+      color: #2563eb;
     }
 
     /* ── Slide Container ── */
@@ -61,7 +61,7 @@
       flex: 1;
       position: relative;
       overflow: hidden;
-      background: radial-gradient(circle at center, #ffffff 0%, #f0f4ff 100%);
+      background: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -70,272 +70,266 @@
     /* ── Slide Element ── */
     .slide {
       position: absolute;
-      width: 95%;
-      max-width: 1400px;
-      height: 88%;
-      background: white;
-      border-radius: var(--radius-xl);
-      box-shadow: 0 12px 40px rgba(27, 63, 160, 0.1);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
       padding: 60px 80px;
       opacity: 0;
       visibility: hidden;
-      transform: translateY(30px) scale(0.95);
-      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      transform: translateX(50px);
+      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      border: 1px solid rgba(27, 63, 160, 0.08);
+      justify-content: flex-start;
       overflow-y: auto;
-      /* Just in case content is too long on small screens */
+      box-sizing: border-box;
     }
 
     .slide.active {
       opacity: 1;
       visibility: visible;
-      transform: translateY(0) scale(1);
+      transform: translateX(0);
       z-index: 10;
     }
 
     /* ── Customizing Scrollbar inside slides ── */
     .slide::-webkit-scrollbar {
-      width: 6px;
+      width: 8px;
     }
-
     .slide::-webkit-scrollbar-track {
       background: transparent;
     }
-
     .slide::-webkit-scrollbar-thumb {
-      background: rgba(27, 63, 160, 0.2);
+      background: #cbd5e1;
       border-radius: 99px;
     }
 
-    /* ── Content Typography ── */
-    .slide-badge {
-      display: inline-block;
-      background: rgba(27, 63, 160, 0.1);
-      color: var(--color-primary);
-      font-weight: 800;
-      font-size: 0.85rem;
-      padding: 6px 16px;
-      border-radius: 99px;
+    /* ── Special Slide Types (Cover & Section) ── */
+    .slide.cover-slide, .slide.section-slide {
+      background: #0f172a; /* Dark navy */
+      color: white;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    /* Decorative Circles */
+    .slide.cover-slide::before, .slide.section-slide::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      left: -100px;
+      width: 400px;
+      height: 400px;
+      background: #1e3a8a;
+      border-radius: 50%;
+      opacity: 0.8;
+      z-index: 0;
+    }
+    
+    .slide.cover-slide::after, .slide.section-slide::after {
+      content: '';
+      position: absolute;
+      bottom: -200px;
+      right: -150px;
+      width: 600px;
+      height: 600px;
+      background: #4c1d95;
+      border-radius: 50%;
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    .slide.cover-slide > *, .slide.section-slide > * {
+      z-index: 1;
+      position: relative;
+    }
+
+    /* Typography for Cover */
+    .slide.cover-slide h1, .slide.section-slide h2 {
+      font-family: 'Merriweather', serif;
+      font-size: 4.5rem;
+      font-weight: 900;
+      margin-bottom: 24px;
+      color: white;
+      line-height: 1.2;
+    }
+
+    .slide.cover-slide .accent-line {
+      width: 150px;
+      height: 6px;
+      background: #06b6d4; /* Teal accent */
+      margin: 0 auto 30px auto;
+    }
+
+    .slide.cover-slide.left-align {
+      text-align: left;
+      align-items: flex-start;
+      padding-left: 120px;
+    }
+    
+    .slide.cover-slide.left-align .accent-line {
+      margin-left: 0;
+    }
+
+    .slide.cover-slide p, .slide.section-slide p {
+      font-size: 1.5rem;
+      color: #cbd5e1;
+      max-width: 800px;
+      font-weight: 400;
+    }
+
+    .slide.section-slide .icon-wrapper {
+      font-size: 4rem;
       margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      color: #38bdf8;
+    }
+
+    /* ── Content Slides ── */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      border-bottom: 4px solid #3b82f6;
+      padding-bottom: 15px;
+      display: inline-flex;
     }
 
     .slide h2 {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: var(--color-primary-dark);
-      margin-bottom: 24px;
-      line-height: 1.2;
-      letter-spacing: -0.02em;
+      font-family: 'Merriweather', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #1e40af;
+      margin: 0;
     }
+    
+    
 
     .slide .lead-text {
-      font-size: 1.25rem;
-      color: var(--text-muted);
+      font-size: 1.3rem;
+      color: #334155;
       margin-bottom: 30px;
       line-height: 1.6;
+      background: #f8fafc;
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
     }
 
-    .slide .key-message {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      background: linear-gradient(135deg, rgba(27, 63, 160, 0.04), rgba(255, 215, 0, 0.06));
-      border-left: 4px solid var(--color-accent);
+    /* Cards Layout */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .content-card {
+      background: #f1f5f9;
       padding: 24px;
-      border-radius: 0 var(--radius-md) var(--radius-md) 0;
-      margin-bottom: 30px;
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--color-primary);
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    .content-card h3 {
+      font-family: 'Merriweather', serif;
+      color: #1e3a8a;
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      margin-top: 16px;
+    }
+
+    .content-card p {
+      color: #475569;
+      font-size: 1.05rem;
       line-height: 1.5;
     }
 
-    .slide .key-message .icon {
-      font-size: 1.6rem;
-      line-height: 1;
-      margin-top: -2px;
+    .icon-large {
+      font-size: 2.5rem;
     }
 
+    /* Standard Lists */
     .slide-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 20px;
       padding-left: 0;
     }
 
     .slide-list li {
       position: relative;
-      padding-left: 32px;
-      font-size: 1.1rem;
+      padding-left: 40px;
+      font-size: 1.2rem;
       color: #334155;
       line-height: 1.6;
     }
 
     .slide-list li::before {
-      content: '✦';
+      content: '●';
       position: absolute;
       left: 0;
-      color: var(--color-primary);
+      top: 2px;
+      color: #3b82f6;
       font-size: 1.2rem;
     }
 
     .slide-list li strong {
-      color: var(--color-primary-dark);
+      color: #1e3a8a;
+      font-weight: 700;
     }
 
     .slide-table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       margin-top: 20px;
-      font-size: 1rem;
+      font-size: 1.1rem;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
     }
 
     .slide-table th {
-      background: rgba(27, 63, 160, 0.07);
-      color: var(--color-primary);
-      padding: 12px 16px;
+      background: #f8fafc;
+      color: #1e40af;
+      padding: 16px 20px;
       text-align: left;
-      border: 1px solid var(--border-subtle);
+      border-bottom: 2px solid #e2e8f0;
     }
 
     .slide-table td {
-      padding: 12px 16px;
-      border: 1px solid var(--border-subtle);
-      color: #334155;
-    }
-
-    /* ── Two-Column Slide Layout ── */
-    .slide.two-col {
-      flex-direction: row;
-      gap: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    .slide.two-col .col-text {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 50px 56px;
-      overflow-y: auto;
-    }
-    .slide.two-col .col-img {
-      width: 38%;
-      flex-shrink: 0;
-      background: linear-gradient(150deg, #f0f4ff 0%, #e8eeff 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 32px;
-      border-left: 1px solid rgba(27, 63, 160, 0.08);
-    }
-    .slide.two-col .col-img img {
-      width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: var(--radius-md);
-      filter: drop-shadow(0 8px 24px rgba(27,63,160,0.12));
-    }
-    /* Cover with image */
-    .slide.cover-slide.two-col {
-      text-align: left;
-    }
-    .slide.cover-slide.two-col .col-text {
-      padding: 60px 64px;
-    }
-    .slide.cover-slide.two-col .col-img {
-      background: rgba(255,255,255,0.08);
-      border-left: 1px solid rgba(255,255,255,0.15);
-    }
-
-    /* ── Special Slide Types ── */
-    .slide.cover-slide {
-      text-align: center;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
-      color: white;
-      border: none;
-    }
-
-    .slide.cover-slide h1 {
-      font-size: 4rem;
-      font-weight: 900;
-      margin-bottom: 24px;
-      color: white;
-      letter-spacing: -0.03em;
-    }
-
-    .slide.cover-slide p {
-      font-size: 1.4rem;
-      color: rgba(255, 255, 255, 0.9);
-      max-width: 700px;
-      margin-bottom: 40px;
-    }
-
-    .slide.cover-slide .hero-badge {
-      display: inline-block;
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      padding: 8px 20px;
-      border-radius: 99px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      margin-bottom: 24px;
-    }
-
-    .slide.section-slide {
-      text-align: center;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .slide.section-slide .section-num {
-      font-size: 8rem;
-      font-weight: 900;
-      color: rgba(27, 63, 160, 0.1);
-      line-height: 1;
-      margin-bottom: -30px;
-    }
-
-    .slide.section-slide h2 {
-      font-size: 3.5rem;
-      color: var(--color-primary-dark);
-      margin-bottom: 16px;
-    }
-
-    .slide.section-slide p {
-      font-size: 1.4rem;
-      color: var(--text-muted);
+      padding: 16px 20px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #475569;
+      background: white;
     }
 
     /* ── Bottom Controls ── */
     .slide-controls {
       height: 70px;
       background: white;
-      border-top: 1px solid var(--border-subtle);
+      border-top: 1px solid #e2e8f0;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 40px;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
       z-index: 1001;
     }
 
     .btn-nav {
-      background: var(--color-primary);
+      background: #2563eb;
       color: white;
       border: none;
-      border-radius: var(--radius-sm);
+      border-radius: 8px;
       padding: 10px 24px;
       font-weight: 700;
       font-size: 0.9rem;
@@ -343,11 +337,11 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      transition: background var(--transition-fast), transform var(--transition-fast);
+      transition: all 0.2s;
     }
 
     .btn-nav:hover:not(:disabled) {
-      background: var(--color-primary-dark);
+      background: #1d4ed8;
       transform: translateY(-2px);
     }
 
@@ -358,12 +352,12 @@
     }
 
     .btn-nav.secondary {
-      background: rgba(27, 63, 160, 0.1);
-      color: var(--color-primary);
+      background: #f1f5f9;
+      color: #3b82f6;
     }
 
     .btn-nav.secondary:hover:not(:disabled) {
-      background: rgba(27, 63, 160, 0.2);
+      background: #e2e8f0;
     }
 
     .slide-progress-wrapper {
@@ -375,7 +369,7 @@
     .slide-progress-text {
       font-size: 0.8rem;
       font-weight: 700;
-      color: var(--text-muted);
+      color: #64748b;
       margin-bottom: 8px;
       letter-spacing: 0.05em;
       text-transform: uppercase;
@@ -383,66 +377,126 @@
 
     .slide-progress-bar {
       height: 6px;
-      background: rgba(27, 63, 160, 0.1);
+      background: #f1f5f9;
       border-radius: 99px;
       overflow: hidden;
     }
 
     .slide-progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      background: #3b82f6;
       width: 0%;
       transition: width 0.4s ease;
     }
 
     /* ── Responsive ── */
     @media (max-width: 1024px) {
-      .slide {
-        padding: 40px;
-        width: 96%;
-        height: 90%;
-      }
-
-      .slide h2 {
-        font-size: 2rem;
-      }
-
-      .slide .lead-text {
-        font-size: 1.1rem;
-      }
-
-      .slide-list li {
-        font-size: 1rem;
-      }
+      .slide { padding: 40px; }
+      .slide.cover-slide h1 { font-size: 3.5rem; }
+      .slide h2 { font-size: 2.2rem; }
     }
 
     @media (max-width: 768px) {
-      .slide-controls {
-        padding: 0 20px;
-      }
-
-      .btn-nav span {
-        display: none;
-      }
-
-      .slide {
-        height: 85%;
-        width: 95%;
-        padding: 30px 20px;
-      }
-
-      .slide.cover-slide h1 {
-        font-size: 2.2rem;
-      }
-
-      .slide.section-slide h2 {
-        font-size: 2.5rem;
-      }
-
-      .slide-progress-wrapper {
-        margin: 0 20px;
-      }
+      .slide-controls { padding: 0 20px; }
+      .btn-nav span { display: none; }
+      .slide { padding: 30px 20px; }
+      .slide.cover-slide.left-align { padding-left: 30px; }
     }
+  
+
+    /* ── UCD Specific Styles ── */
+    .slide .key-message {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: linear-gradient(135deg, rgba(27, 63, 160, 0.04), rgba(255, 215, 0, 0.06));
+      border-left: 4px solid #3b82f6;
+      padding: 24px;
+      border-radius: 0 12px 12px 0;
+      margin-bottom: 30px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #1e40af;
+      line-height: 1.5;
+    }
+
+    .slide .key-message .icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      margin-top: -2px;
+    }
+
+    /* ── Two-Column Slide Layout ── */
+    .slide.two-col {
+      flex-direction: row;
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .slide.two-col .col-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 50px 56px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .slide.two-col .col-img {
+      width: 38%;
+      flex-shrink: 0;
+      background: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      border-left: 1px solid rgba(255,255,255, 0.1);
+    }
+
+    .slide.two-col .col-img img {
+      width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      filter: drop-shadow(0 8px 24px rgba(0,0,0, 0.5));
+    }
+
+    .slide.cover-slide.two-col {
+      text-align: left;
+      align-items: stretch;
+    }
+
+    .slide.cover-slide.two-col .col-text {
+      padding: 60px 64px;
+    }
+
+    .slide.cover-slide.two-col .col-img {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    
+    .slide.section-slide .section-num {
+      font-size: 8rem;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.1);
+      line-height: 1;
+      margin-bottom: -30px;
+    }
+    
+    .slide-badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #2563eb;
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 6px 16px;
+      border-radius: 99px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
   </style>
 </head>
 
@@ -478,10 +532,9 @@
       <!-- SLIDE 1: COVER -->
       <div class="slide cover-slide two-col" id="slide-1">
         <div class="col-text">
-          <div style="display:inline-block; background: rgba(255,255,255,0.15); color: white; padding: 7px 18px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.3); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; margin-bottom: 28px;">📐 KURIKULUM DESAIN</div>
           <h1 style="text-align:left; font-size: 3.2rem; margin-bottom: 20px;">User-Centered Design</h1>
-          <p style="text-align:left; font-size: 1.25rem; max-width: 520px; margin-bottom: 36px;">Metodologi menempatkan pengguna sebagai pusat keputusan desain — dari riset hingga evaluasi.</p>
-          <div style="font-size: 0.85rem; opacity: 0.7; background: rgba(0,0,0,0.15); padding: 8px 18px; border-radius: 99px; display: inline-block;">← → untuk navigasi &nbsp;|&nbsp; F untuk fullscreen</div>
+          <p style="text-align:left; font-size: 1.25rem; max-width: 520px; margin-bottom: 36px;">Metodologi menempatkan
+            pengguna sebagai pusat keputusan desain — dari riset hingga evaluasi.</p>
         </div>
         <div class="col-img">
           <img src="img/cover.png" alt="UX Design Illustration" />
@@ -661,7 +714,8 @@
         <div class="col-text">
           <div class="slide-badge">Bagian 2: Memahami Pengguna</div>
           <h2>8. Peta Metode Riset Pengguna</h2>
-          <p class="lead-text">Riset pengguna tidak sekadar "menyebar survei". Pemilihan metode sangat bergantung pada jenis informasi yang Anda cari.</p>
+          <p class="lead-text">Riset pengguna tidak sekadar "menyebar survei". Pemilihan metode sangat bergantung pada
+            jenis informasi yang Anda cari.</p>
           <table class="slide-table">
             <tr>
               <th></th>
@@ -789,15 +843,18 @@
         <div class="col-text">
           <div class="slide-badge">Bagian 3: Mendefinisikan Kebutuhan</div>
           <h2>14. Personas (Karakter Fiktif)</h2>
-          <p class="lead-text">Persona adalah representasi fiktif namun realistis dari segmen target audiens utama Anda, disusun berdasarkan data riset, bukan imajinasi.</p>
+          <p class="lead-text">Persona adalah representasi fiktif namun realistis dari segmen target audiens utama Anda,
+            disusun berdasarkan data riset, bukan imajinasi.</p>
           <div class="key-message">
             <span class="icon">👤</span>
             <div>Berfungsi sebagai kompas saat berdebat: "Apakah fitur ini dibutuhkan oleh Budi si Kurir?"</div>
           </div>
           <ul class="slide-list">
-            <li><strong>Komponen Persona:</strong> Nama, Foto, Demografi, Motivasi (Goals), dan Frustrasi (Pain points).</li>
+            <li><strong>Komponen Persona:</strong> Nama, Foto, Demografi, Motivasi (Goals), dan Frustrasi (Pain points).
+            </li>
             <li><strong>Jumlah Ideal:</strong> Buatlah 2-4 persona utama agar seluruh tim ingat profilnya.</li>
-            <li><strong>Anti-Pattern:</strong> Persona gagal jika hanya berisi demografi kosong tanpa penjelasan perilaku.</li>
+            <li><strong>Anti-Pattern:</strong> Persona gagal jika hanya berisi demografi kosong tanpa penjelasan
+              perilaku.</li>
           </ul>
         </div>
         <div class="col-img">
@@ -904,12 +961,16 @@
         <div class="col-text">
           <div class="slide-badge">Bagian 4: Proses & Siklus UCD</div>
           <h2>19. Proses 4 Tahap UCD</h2>
-          <p class="lead-text">Berdasarkan ISO 9241-210, UCD berjalan dalam empat tahapan yang saling terhubung membentuk siklus (loop).</p>
+          <p class="lead-text">Berdasarkan ISO 9241-210, UCD berjalan dalam empat tahapan yang saling terhubung
+            membentuk siklus (loop).</p>
           <ul class="slide-list">
-            <li><strong>1. Understand (Pahami Konteks):</strong> Observasi dan wawancara. Siapa yang pakai, di mana, dan mengapa.</li>
-            <li><strong>2. Specify (Tetapkan Kebutuhan):</strong> Pembuatan persona, user stories, dan business requirement.</li>
+            <li><strong>1. Understand (Pahami Konteks):</strong> Observasi dan wawancara. Siapa yang pakai, di mana, dan
+              mengapa.</li>
+            <li><strong>2. Specify (Tetapkan Kebutuhan):</strong> Pembuatan persona, user stories, dan business
+              requirement.</li>
             <li><strong>3. Design (Rancang Solusi):</strong> Brainstorming, wireframe, dan prototipe.</li>
-            <li><strong>4. Evaluate (Evaluasi Desain):</strong> Tes prototipe ke pengguna nyata. Jika belum memadai, kembali ke tahap sebelumnya!</li>
+            <li><strong>4. Evaluate (Evaluasi Desain):</strong> Tes prototipe ke pengguna nyata. Jika belum memadai,
+              kembali ke tahap sebelumnya!</li>
           </ul>
         </div>
       </div>
