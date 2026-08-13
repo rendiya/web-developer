@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UCD — Slide Presentation | VINIX7</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <style>
+    /* ── Slide Viewer Global Reset ── */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      /* Hide scrollbars in presentation mode */
+      background: var(--bg-surface);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .slide-viewer {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      background: var(--bg-base);
+    }
+
+    /* ── Navbar over Slide (Optional) ── */
+    .slide-navbar {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-subtle);
+      justify-content: space-between;
+      z-index: 1001;
+    }
+
+    .slide-navbar a {
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slide-navbar a:hover {
+      color: var(--color-primary);
+    }
+
+    /* ── Slide Container ── */
+    .slide-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #ffffff 0%, #f0f4ff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Slide Element ── */
+    .slide {
+      position: absolute;
+      width: 95%;
+      max-width: 1400px;
+      height: 88%;
+      background: white;
+      border-radius: var(--radius-xl);
+      box-shadow: 0 12px 40px rgba(27, 63, 160, 0.1);
+      padding: 60px 80px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(30px) scale(0.95);
+      transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border: 1px solid rgba(27, 63, 160, 0.08);
+      overflow-y: auto;
+      /* Just in case content is too long on small screens */
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      z-index: 10;
+    }
+
+    /* ── Customizing Scrollbar inside slides ── */
+    .slide::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .slide::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .slide::-webkit-scrollbar-thumb {
+      background: rgba(27, 63, 160, 0.2);
+      border-radius: 99px;
+    }
+
+    /* ── Content Typography ── */
+    .slide-badge {
+      display: inline-block;
+      background: rgba(27, 63, 160, 0.1);
+      color: var(--color-primary);
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 6px 16px;
+      border-radius: 99px;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .slide h2 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--color-primary-dark);
+      margin-bottom: 24px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .slide .lead-text {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .slide .key-message {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: linear-gradient(135deg, rgba(27, 63, 160, 0.04), rgba(255, 215, 0, 0.06));
+      border-left: 4px solid var(--color-accent);
+      padding: 24px;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-bottom: 30px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      line-height: 1.5;
+    }
+
+    .slide .key-message .icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      margin-top: -2px;
+    }
+
+    .slide-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding-left: 0;
+    }
+
+    .slide-list li {
+      position: relative;
+      padding-left: 32px;
+      font-size: 1.1rem;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .slide-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--color-primary);
+      font-size: 1.2rem;
+    }
+
+    .slide-list li strong {
+      color: var(--color-primary-dark);
+    }
+
+    .slide-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+
+    .slide-table th {
+      background: rgba(27, 63, 160, 0.07);
+      color: var(--color-primary);
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .slide-table td {
+      padding: 12px 16px;
+      border: 1px solid var(--border-subtle);
+      color: #334155;
+    }
+
+    /* ── Two-Column Slide Layout ── */
+    .slide.two-col {
+      flex-direction: row;
+      gap: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    .slide.two-col .col-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 50px 56px;
+      overflow-y: auto;
+    }
+    .slide.two-col .col-img {
+      width: 38%;
+      flex-shrink: 0;
+      background: linear-gradient(150deg, #f0f4ff 0%, #e8eeff 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      border-left: 1px solid rgba(27, 63, 160, 0.08);
+    }
+    .slide.two-col .col-img img {
+      width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      filter: drop-shadow(0 8px 24px rgba(27,63,160,0.12));
+    }
+    /* Cover with image */
+    .slide.cover-slide.two-col {
+      text-align: left;
+    }
+    .slide.cover-slide.two-col .col-text {
+      padding: 60px 64px;
+    }
+    .slide.cover-slide.two-col .col-img {
+      background: rgba(255,255,255,0.08);
+      border-left: 1px solid rgba(255,255,255,0.15);
+    }
+
+    /* ── Special Slide Types ── */
+    .slide.cover-slide {
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
+      color: white;
+      border: none;
+    }
+
+    .slide.cover-slide h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      margin-bottom: 24px;
+      color: white;
+      letter-spacing: -0.03em;
+    }
+
+    .slide.cover-slide p {
+      font-size: 1.4rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 700px;
+      margin-bottom: 40px;
+    }
+
+    .slide.cover-slide .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 99px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 24px;
+    }
+
+    .slide.section-slide {
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .slide.section-slide .section-num {
+      font-size: 8rem;
+      font-weight: 900;
+      color: rgba(27, 63, 160, 0.1);
+      line-height: 1;
+      margin-bottom: -30px;
+    }
+
+    .slide.section-slide h2 {
+      font-size: 3.5rem;
+      color: var(--color-primary-dark);
+      margin-bottom: 16px;
+    }
+
+    .slide.section-slide p {
+      font-size: 1.4rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Bottom Controls ── */
+    .slide-controls {
+      height: 70px;
+      background: white;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
+      z-index: 1001;
+    }
+
+    .btn-nav {
+      background: var(--color-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 10px 24px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: var(--color-primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-nav:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-nav.secondary {
+      background: rgba(27, 63, 160, 0.1);
+      color: var(--color-primary);
+    }
+
+    .btn-nav.secondary:hover:not(:disabled) {
+      background: rgba(27, 63, 160, 0.2);
+    }
+
+    .slide-progress-wrapper {
+      flex: 1;
+      margin: 0 60px;
+      text-align: center;
+    }
+
+    .slide-progress-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .slide-progress-bar {
+      height: 6px;
+      background: rgba(27, 63, 160, 0.1);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .slide-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .slide {
+        padding: 40px;
+        width: 96%;
+        height: 90%;
+      }
+
+      .slide h2 {
+        font-size: 2rem;
+      }
+
+      .slide .lead-text {
+        font-size: 1.1rem;
+      }
+
+      .slide-list li {
+        font-size: 1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .slide-controls {
+        padding: 0 20px;
+      }
+
+      .btn-nav span {
+        display: none;
+      }
+
+      .slide {
+        height: 85%;
+        width: 95%;
+        padding: 30px 20px;
+      }
+
+      .slide.cover-slide h1 {
+        font-size: 2.2rem;
+      }
+
+      .slide.section-slide h2 {
+        font-size: 2.5rem;
+      }
+
+      .slide-progress-wrapper {
+        margin: 0 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="slide-viewer">
+
+    <div class="slide-navbar">
+      <a href="../../index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <path d="M19 12H5M12 19l-7-7 7-7" />
+        </svg>
+        Kembali ke Beranda
+      </a>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">VINIX7 Web Developer</div>
+        <button id="btn-fullscreen"
+          style="background: none; border: none; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 4px; transition: background 0.2s, color 0.2s;"
+          title="Toggle Fullscreen (Tekan F)"
+          onmouseover="this.style.background='rgba(27, 63, 160, 0.1)'; this.style.color='var(--color-primary)'"
+          onmouseout="this.style.background='none'; this.style.color='var(--text-muted)'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="slide-container" id="slide-container">
+
+      <!-- SLIDE 1: COVER -->
+      <div class="slide cover-slide two-col" id="slide-1">
+        <div class="col-text">
+          <div style="display:inline-block; background: rgba(255,255,255,0.15); color: white; padding: 7px 18px; border-radius: 99px; border: 1px solid rgba(255,255,255,0.3); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; margin-bottom: 28px;">📐 KURIKULUM DESAIN</div>
+          <h1 style="text-align:left; font-size: 3.2rem; margin-bottom: 20px;">User-Centered Design</h1>
+          <p style="text-align:left; font-size: 1.25rem; max-width: 520px; margin-bottom: 36px;">Metodologi menempatkan pengguna sebagai pusat keputusan desain — dari riset hingga evaluasi.</p>
+          <div style="font-size: 0.85rem; opacity: 0.7; background: rgba(0,0,0,0.15); padding: 8px 18px; border-radius: 99px; display: inline-block;">← → untuk navigasi &nbsp;|&nbsp; F untuk fullscreen</div>
+        </div>
+        <div class="col-img">
+          <img src="img/cover.png" alt="UX Design Illustration" />
+        </div>
+      </div>
+
+      <!-- SECTION 1 COVER -->
+      <div class="slide section-slide" id="slide-2">
+        <div class="section-num">1</div>
+        <h2>Fondasi</h2>
+        <p>Memahami dasar-dasar UX dan filosofi dasar UCD</p>
+      </div>
+
+      <!-- POINT 1 -->
+      <div class="slide" id="slide-3">
+        <div class="slide-badge">Bagian 1: Fondasi</div>
+        <h2>1. Apa Itu UX & Mengapa Penting?</h2>
+        <p class="lead-text">User Experience (UX) adalah keseluruhan pengalaman dan interaksi yang dirasakan oleh
+          pengguna saat menggunakan sebuah produk digital maupun fisik.</p>
+        <div class="key-message">
+          <span class="icon">💡</span>
+          <div>UX bukan sekadar mempercantik tampilan antarmuka, tetapi tentang menyelesaikan masalah pengguna dengan
+            efektif.</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Menentukan Hidup Matinya Produk:</strong> Di era persaingan ketat, produk dengan fitur melimpah
+            namun membingungkan akan cepat ditinggalkan.</li>
+          <li><strong>Loyalitas Pelanggan:</strong> UX yang baik menciptakan ikatan emosional positif. Pengguna yang
+            merasa terbantu akan kembali.</li>
+          <li><strong>Mengurangi Biaya Jangka Panjang:</strong> Memperbaiki masalah UX di fase desain 10x lipat lebih
+            murah daripada memperbaikinya setelah produk diluncurkan (fase development).</li>
+        </ul>
+      </div>
+
+      <!-- POINT 2 -->
+      <div class="slide" id="slide-4">
+        <div class="slide-badge">Bagian 1: Fondasi</div>
+        <h2>2. Dari UX ke UCD — Apa Bedanya?</h2>
+        <p class="lead-text">Banyak orang menyamakan UX dengan UCD, padahal keduanya memiliki peran yang berbeda. UX
+          adalah tujuan akhirnya, sedangkan UCD adalah kendaraannya.</p>
+        <div class="key-message">
+          <span class="icon">💡</span>
+          <div>UCD adalah cara memasak sambil terus mencicipi, sedangkan UX adalah rasa yang dirasakan oleh tamu di
+            restoran.</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>UX (User Experience):</strong> Hasil akhir yang dirasakan (kepuasan, kemudahan, kesan). Ini adalah
+            *Output*.</li>
+          <li><strong>UCD (User-Centered Design):</strong> Proses dan metodologi yang dilakukan tim desain untuk
+            memastikan hasil akhirnya mencapai UX yang baik. Ini adalah *Proses*.</li>
+          <li>Anda tidak bisa langsung mendesain "UX yang bagus". Anda menerapkan "Proses UCD" untuk secara konsisten
+            menghasilkan UX yang bagus.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 3 -->
+      <div class="slide" id="slide-5">
+        <div class="slide-badge">Bagian 1: Fondasi</div>
+        <h2>3. Definisi Resmi UCD (ISO 9241-210)</h2>
+        <p class="lead-text">Standar internasional ISO mendefinisikan UCD sebagai pendekatan desain yang secara
+          eksplisit berfokus pada kebutuhan, tujuan, dan konteks pengguna.</p>
+        <div class="key-message">
+          <span class="icon">📜</span>
+          <div>Pengguna bukanlah sekadar target market di akhir produksi, melainkan mitra aktif di seluruh siklus
+            desain.</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Tidak Asumsi:</strong> Desainer tidak menebak apa yang pengguna inginkan, melainkan menelitinya.
+          </li>
+          <li><strong>Melibatkan Pengguna:</strong> UCD mengharuskan keterlibatan pengguna dalam evaluasi purwarupa,
+            bukan hanya sekadar wawancara awal.</li>
+          <li><strong>Siklus Iteratif:</strong> UCD memandang desain sebagai sebuah siklus yang berulang
+            (desain-uji-perbaiki), bukan jalan satu arah (waterfall).</li>
+        </ul>
+      </div>
+
+      <!-- POINT 4 -->
+      <div class="slide" id="slide-6">
+        <div class="slide-badge">Bagian 1: Fondasi</div>
+        <h2>4. Sejarah Singkat UCD</h2>
+        <p class="lead-text">UCD tidak lahir tiba-tiba. Metodologi ini merupakan evolusi dari interaksi manusia dengan
+          mesin industri menuju ke perangkat digital.</p>
+        <ul class="slide-list">
+          <li><strong>1980-an:</strong> Don Norman (penulis The Design of Everyday Things) memperkenalkan konsep
+            "User-Centered" saat bekerja di lab Apple dan UCSD.</li>
+          <li><strong>1990-an:</strong> Jakob Nielsen mempopulerkan evaluasi heuristik dan usability testing, membuat
+            UCD lebih terukur.</li>
+          <li><strong>2000-an:</strong> Internet meledak. UCD berekspansi dari sekadar desain perangkat keras ke desain
+            web, e-commerce, dan software.</li>
+          <li><strong>Masa Kini:</strong> UCD adalah standar industri di hampir seluruh perusahaan teknologi global yang
+            dipimpin oleh posisi khusus seperti UX Researcher.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 5 -->
+      <div class="slide" id="slide-7">
+        <div class="slide-badge">Bagian 1: Fondasi</div>
+        <h2>5. 5 Prinsip Inti UCD</h2>
+        <p class="lead-text">Ada lima prinsip yang menjadi landasan tak tergoyahkan jika sebuah tim ingin mengklaim
+          mereka menggunakan pendekatan UCD.</p>
+        <ul class="slide-list">
+          <li><strong>1. Pemahaman Eksplisit:</strong> Selalu mulai dari memahami siapa pengguna, apa tugasnya, dan di
+            mana konteksnya.</li>
+          <li><strong>2. Partisipasi Pengguna:</strong> Libatkan pengguna sungguhan sepanjang proses, bukan orang
+            internal.</li>
+          <li><strong>3. Evidence-Based (Berbasis Bukti):</strong> Keputusan diambil berdasarkan data riset, bukan
+            argumen internal (HiPPO - Highest Paid Person's Opinion).</li>
+          <li><strong>4. Proses Iteratif:</strong> Bersiaplah untuk mengulang desain. Prototipe awal jarang langsung
+            sempurna.</li>
+          <li><strong>5. Tim Multidisiplin:</strong> Libatkan engineer, designer, dan bisnis agar solusi tidak hanya
+            "bagus", tapi juga bisa dibangun.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 6 -->
+      <div class="slide" id="slide-8">
+        <div class="slide-badge">Bagian 1: Fondasi</div>
+        <h2>6. UCD vs Pendekatan Lain</h2>
+        <p class="lead-text">Bagaimana UCD berbeda dari gaya mendesain lainnya? Mengenali perbedaannya penting untuk
+          menjaga arah desain.</p>
+        <table class="slide-table">
+          <tr>
+            <th>Pendekatan</th>
+            <th>Fokus Utama</th>
+            <th>Kelemahan jika tanpa UCD</th>
+          </tr>
+          <tr>
+            <td><strong>Technology-Centered</strong></td>
+            <td>Apa fitur terbaru dan tercanggih yang bisa kita buat?</td>
+            <td>Teknologi canggih tapi tidak relevan/terlalu rumit dipakai manusia.</td>
+          </tr>
+          <tr>
+            <td><strong>Activity-Centered</strong></td>
+            <td>Tugas apa yang dilakukan? (Fokus pada efisiensi tugas)</td>
+            <td>Mengabaikan emosi dan konteks personal pengguna.</td>
+          </tr>
+          <tr>
+            <td><strong>User-Centered (UCD)</strong></td>
+            <td>Siapa yang melakukan, dan apa batasan mereka?</td>
+            <td>Membutuhkan waktu riset yang lebih lama.</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- SECTION 2 COVER -->
+      <div class="slide section-slide" id="slide-9">
+        <div class="section-num">2</div>
+        <h2>Memahami Pengguna</h2>
+        <p>Segmentasi, Riset Kualitatif/Kuantitatif, dan Empathy Mapping</p>
+      </div>
+
+      <!-- POINT 7 -->
+      <div class="slide" id="slide-10">
+        <div class="slide-badge">Bagian 2: Memahami Pengguna</div>
+        <h2>7. Siapa Pengguna Kita?</h2>
+        <p class="lead-text">Miskonsepsi terbesar desainer dan developer pemula adalah berpikir: "Saya adalah
+          representasi pengguna saya."</p>
+        <div class="key-message">
+          <span class="icon">⚠️</span>
+          <div>"Kamu bukanlah penggunamu" (You are not your user). Asumsi pribadi sangat bias.</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Kesenjangan Keterampilan:</strong> Desainer memiliki literasi digital yang tinggi, perangkat
+            canggih, dan internet cepat. Pengguna nyata mungkin memakai ponsel lama dengan sinyal buruk.</li>
+          <li><strong>Konteks Berbeda:</strong> Anda mendesain aplikasi di ruang ber-AC sambil duduk santai, sementara
+            pengguna mungkin memakainya sambil berdiri di KRL yang sesak.</li>
+          <li><strong>Segmentasi Diperlukan:</strong> Pisahkan pengguna ke dalam kelompok (misal: pengguna baru vs
+            pengguna ahli, usia muda vs lansia) karena kebutuhan mereka bertolak belakang.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 8 -->
+      <div class="slide two-col" id="slide-11">
+        <div class="col-img">
+          <img src="img/research.png" alt="User Research Methods" />
+        </div>
+        <div class="col-text">
+          <div class="slide-badge">Bagian 2: Memahami Pengguna</div>
+          <h2>8. Peta Metode Riset Pengguna</h2>
+          <p class="lead-text">Riset pengguna tidak sekadar "menyebar survei". Pemilihan metode sangat bergantung pada jenis informasi yang Anda cari.</p>
+          <table class="slide-table">
+            <tr>
+              <th></th>
+              <th>Attitudinal (Dikatakan)</th>
+              <th>Behavioral (Dilakukan)</th>
+            </tr>
+            <tr>
+              <td><strong>Qualitative</strong><br><small>Mengapa?</small></td>
+              <td>User Interview, FGD</td>
+              <td>Contextual Inquiry</td>
+            </tr>
+            <tr>
+              <td><strong>Quantitative</strong><br><small>Berapa Banyak?</small></td>
+              <td>Survei, Kuesioner</td>
+              <td>A/B Testing, Analytics</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- POINT 9 -->
+      <div class="slide" id="slide-12">
+        <div class="slide-badge">Bagian 2: Memahami Pengguna</div>
+        <h2>9. User Interview (Wawancara Pengguna)</h2>
+        <p class="lead-text">Wawancara adalah seni menggali cerita. Jangan menanyakan solusi, tanyakanlah pengalaman dan
+          penderitaan mereka.</p>
+        <div class="key-message">
+          <span class="icon">💬</span>
+          <div>Hindari pertanyaan tertutup (Ya/Tidak). Gunakan metode "5 Whys" untuk menemukan akar masalah.</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Pertanyaan Buruk:</strong> "Apakah kamu suka aplikasi pemesanan tiket kami?" (Bias & Tertutup).
+          </li>
+          <li><strong>Pertanyaan Baik:</strong> "Ceritakan pengalaman terakhir kali Anda memesan tiket secara mendadak."
+            (Terbuka & Berbasis Pengalaman).</li>
+          <li><strong>Hindari Leading Question:</strong> Jangan arahkan pengguna untuk setuju dengan ide Anda. Biarkan
+            mereka bercerita dengan jujur.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 10 -->
+      <div class="slide" id="slide-13">
+        <div class="slide-badge">Bagian 2: Memahami Pengguna</div>
+        <h2>10. Observasi & Contextual Inquiry</h2>
+        <p class="lead-text">Terkadang pengguna tidak sadar akan masalah yang mereka alami karena sudah terbiasa
+          beradaptasi (workaround).</p>
+        <div class="key-message">
+          <span class="icon">👀</span>
+          <div>Apa yang dikatakan pengguna saat wawancara seringkali berbeda dengan apa yang mereka lakukan di lapangan.
+          </div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Contextual Inquiry:</strong> Menggabungkan wawancara ringan dengan observasi langsung di tempat
+            pengguna beraktivitas.</li>
+          <li><strong>Contoh Kasus:</strong> Anda mewawancarai kasir, dia bilang aplikasinya "mudah". Tapi saat
+            diobservasi, dia menempel banyak *sticky notes* berisi kode barang di layar komputernya. Itulah masalah UX
+            yang sebenarnya!</li>
+          <li><strong>Jujur Tanpa Filter:</strong> Observasi menyingkap kebiasaan alamiah yang sulit diekspresikan
+            pengguna dengan kata-kata.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 11 -->
+      <div class="slide" id="slide-14">
+        <div class="slide-badge">Bagian 2: Memahami Pengguna</div>
+        <h2>11. Survei & Kuesioner</h2>
+        <p class="lead-text">Survei sangat efisien untuk memvalidasi temuan dari wawancara/observasi kepada ratusan
+          pengguna lain.</p>
+        <ul class="slide-list">
+          <li><strong>Kapan Menggunakannya:</strong> Saat Anda sudah punya hipotesis dari wawancara kualitatif dan ingin
+            tahu "seberapa banyak" pengguna lain yang merasakan hal sama.</li>
+          <li><strong>Aturan Survei:</strong> Buatlah singkat (maksimal 5-10 menit). Gunakan pertanyaan skala Likert
+            (Sangat Tidak Setuju hingga Sangat Setuju).</li>
+          <li><strong>Kelemahan:</strong> Anda tidak bisa melakukan "probing" atau bertanya balik jika jawaban pengguna
+            tidak jelas.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 12 -->
+      <div class="slide" id="slide-15">
+        <div class="slide-badge">Bagian 2: Memahami Pengguna</div>
+        <h2>12. Empathy Map</h2>
+        <p class="lead-text">Tools sintesis data untuk membantu seluruh tim berempati dan melihat pengguna sebagai
+          manusia yang utuh, bukan sekadar angka.</p>
+        <div class="key-message">
+          <span class="icon">🗺️</span>
+          <div>Dibagi menjadi 4 Kuadran: SAYS (Berkata), THINKS (Berpikir), DOES (Melakukan), dan FEELS (Merasakan).
+          </div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>SAYS:</strong> "Aplikasi ini sering loading lama kalau jam 12 siang."</li>
+          <li><strong>THINKS:</strong> "Saya takut salah transfer karena tombolnya tidak jelas."</li>
+          <li><strong>DOES:</strong> Me-refresh halaman tiga kali berturut-turut; mengecek ulang mutasi rekening.</li>
+          <li><strong>FEELS:</strong> Cemas, Frustrasi, atau Terburu-buru.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 13 -->
+      <div class="slide" id="slide-16">
+        <div class="slide-badge">Bagian 2: Memahami Pengguna</div>
+        <h2>13. Affinity Diagram</h2>
+        <p class="lead-text">Setelah wawancara dengan 10 orang, Anda akan memiliki ratusan catatan acak. Affinity
+          Diagram menyusun kekacauan ini menjadi insight.</p>
+        <ul class="slide-list">
+          <li><strong>Cara Kerja:</strong> Tulis setiap keluhan/temuan tunggal di selembar *sticky note*. Tempel
+            semuanya di papan tulis kosong.</li>
+          <li><strong>Clustering (Pengelompokan):</strong> Tim secara diam-diam memindahkan catatan-catatan yang mirip
+            ke dalam satu kelompok.</li>
+          <li><strong>Penamaan Tema:</strong> Setelah mengelompok, beri nama pada kelompok tersebut. Misalnya: "Masalah
+            Pembayaran", "Kebingungan Navigasi", dll.</li>
+          <li><strong>Output:</strong> Pola kebutuhan pengguna yang kuat dan siap dijadikan dasar pembuatan persona dan
+            fitur.</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 3 COVER -->
+      <div class="slide section-slide" id="slide-17">
+        <div class="section-num">3</div>
+        <h2>Mendefinisikan Kebutuhan</h2>
+        <p>Personas, User Stories, Skenario, dan Prioritisasi (MoSCoW)</p>
+      </div>
+
+      <!-- POINT 14 -->
+      <div class="slide two-col" id="slide-18">
+        <div class="col-text">
+          <div class="slide-badge">Bagian 3: Mendefinisikan Kebutuhan</div>
+          <h2>14. Personas (Karakter Fiktif)</h2>
+          <p class="lead-text">Persona adalah representasi fiktif namun realistis dari segmen target audiens utama Anda, disusun berdasarkan data riset, bukan imajinasi.</p>
+          <div class="key-message">
+            <span class="icon">👤</span>
+            <div>Berfungsi sebagai kompas saat berdebat: "Apakah fitur ini dibutuhkan oleh Budi si Kurir?"</div>
+          </div>
+          <ul class="slide-list">
+            <li><strong>Komponen Persona:</strong> Nama, Foto, Demografi, Motivasi (Goals), dan Frustrasi (Pain points).</li>
+            <li><strong>Jumlah Ideal:</strong> Buatlah 2-4 persona utama agar seluruh tim ingat profilnya.</li>
+            <li><strong>Anti-Pattern:</strong> Persona gagal jika hanya berisi demografi kosong tanpa penjelasan perilaku.</li>
+          </ul>
+        </div>
+        <div class="col-img">
+          <img src="img/persona.png" alt="UX Persona Illustration" />
+        </div>
+      </div>
+
+      <!-- POINT 15 -->
+      <div class="slide" id="slide-19">
+        <div class="slide-badge">Bagian 3: Mendefinisikan Kebutuhan</div>
+        <h2>15. User Stories</h2>
+        <p class="lead-text">Sebuah kalimat singkat yang mendeskripsikan fitur dari sudut pandang nilai dan manfaat bagi
+          pengguna, bukan spesifikasi teknis.</p>
+        <div class="key-message">
+          <span class="icon">📝</span>
+          <div>Format Standar: "Sebagai [Persona], saya ingin [Lakukan Aksi], agar [Tujuan Tercapai]."</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Contoh Buruk (Teknis):</strong> "Sistem harus memiliki database filter radius pengiriman 5km."
+          </li>
+          <li><strong>Contoh Baik (User Story):</strong> "Sebagai pembeli yang lapar, saya ingin menyaring restoran yang
+            jaraknya di bawah 5km, agar makanan tiba saat masih hangat."</li>
+          <li>User story memaksa developer dan desainer untuk selalu berfokus pada *nilai akhir* yang diterima pengguna.
+          </li>
+        </ul>
+      </div>
+
+      <!-- POINT 16 -->
+      <div class="slide" id="slide-20">
+        <div class="slide-badge">Bagian 3: Mendefinisikan Kebutuhan</div>
+        <h2>16. Skenario Pengguna</h2>
+        <p class="lead-text">Skenario adalah cerita singkat yang menggambarkan situasi spesifik di mana persona
+          menggunakan produk Anda untuk mencapai tujuannya.</p>
+        <ul class="slide-list">
+          <li><strong>Menambahkan Konteks Lingkungan:</strong> Skenario menjabarkan "Kapan" dan "Di Mana" interaksi
+            terjadi.</li>
+          <li><strong>Contoh:</strong> "Sari (Persona) sedang berada di dapur jam 6 pagi. Dengan tangan berlumur tepung,
+            ia membuka aplikasi dari layar ponsel yang retak menggunakan satu jari untuk memesan bahan baku darurat."
+          </li>
+          <li><strong>Dampak pada Desain:</strong> Skenario di atas akan memaksa desainer untuk membuat tombol yang
+            besar, kontras tinggi, dan navigasi yang sangat sederhana karena situasi pengguna tidak ideal.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 17 -->
+      <div class="slide" id="slide-21">
+        <div class="slide-badge">Bagian 3: Mendefinisikan Kebutuhan</div>
+        <h2>17. User Requirements (Persyaratan Sistem)</h2>
+        <p class="lead-text">Menerjemahkan cerita dan skenario pengguna menjadi instruksi yang bisa dieksekusi oleh tim
+          teknis dan desain.</p>
+        <table class="slide-table">
+          <tr>
+            <th>Tipe Requirement</th>
+            <th>Definisi & Fokus</th>
+            <th>Contoh Implementasi</th>
+          </tr>
+          <tr>
+            <td><strong>Functional (Fungsional)</strong></td>
+            <td>Sistem harus BISA MELAKUKAN apa? (Fitur aksi)</td>
+            <td>"Pengguna harus bisa mereset password melalui email."</td>
+          </tr>
+          <tr>
+            <td><strong>Non-Functional (Kualitas)</strong></td>
+            <td>SEBERAPA BAIK sistem melakukannya? (Performa, Keamanan)</td>
+            <td>"Halaman harus dimuat di bawah 2 detik dengan koneksi 3G."</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- POINT 18 -->
+      <div class="slide" id="slide-22">
+        <div class="slide-badge">Bagian 3: Mendefinisikan Kebutuhan</div>
+        <h2>18. Prioritisasi — Metode MoSCoW</h2>
+        <p class="lead-text">Tidak semua ide cemerlang bisa dikerjakan sekaligus. Sumber daya waktu dan uang sangat
+          terbatas. Tim butuh kerangka prioritas.</p>
+        <div class="key-message">
+          <span class="icon">⚖️</span>
+          <div>Prioritas adalah mengatakan "TIDAK" pada hal-hal yang bagus, agar bisa fokus pada hal yang esensial.
+          </div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>M - Must have:</strong> Wajib ada. Tanpa ini, aplikasi gagal berfungsi (misal: fitur Checkout di
+            e-commerce).</li>
+          <li><strong>S - Should have:</strong> Sangat penting, tapi aplikasi masih bisa dipakai tanpanya sementara
+            waktu.</li>
+          <li><strong>C - Could have:</strong> "Nice to have". Fitur tambahan yang bagus jika ada waktu (misal: Dark
+            Mode).</li>
+          <li><strong>W - Won't have:</strong> Secara sadar disepakati untuk TIDAK dibuat pada versi ini.</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 4 COVER -->
+      <div class="slide section-slide" id="slide-23">
+        <div class="section-num">4</div>
+        <h2>Proses & Siklus UCD</h2>
+        <p>Ideasi, Wireframing, dan Integrasi dengan Metodologi Agile</p>
+      </div>
+
+      <!-- POINT 19 -->
+      <div class="slide two-col" id="slide-24">
+        <div class="col-img">
+          <img src="img/cycle.png" alt="UCD Cycle Illustration" />
+        </div>
+        <div class="col-text">
+          <div class="slide-badge">Bagian 4: Proses & Siklus UCD</div>
+          <h2>19. Proses 4 Tahap UCD</h2>
+          <p class="lead-text">Berdasarkan ISO 9241-210, UCD berjalan dalam empat tahapan yang saling terhubung membentuk siklus (loop).</p>
+          <ul class="slide-list">
+            <li><strong>1. Understand (Pahami Konteks):</strong> Observasi dan wawancara. Siapa yang pakai, di mana, dan mengapa.</li>
+            <li><strong>2. Specify (Tetapkan Kebutuhan):</strong> Pembuatan persona, user stories, dan business requirement.</li>
+            <li><strong>3. Design (Rancang Solusi):</strong> Brainstorming, wireframe, dan prototipe.</li>
+            <li><strong>4. Evaluate (Evaluasi Desain):</strong> Tes prototipe ke pengguna nyata. Jika belum memadai, kembali ke tahap sebelumnya!</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- POINT 20 -->
+      <div class="slide" id="slide-25">
+        <div class="slide-badge">Bagian 4: Proses & Siklus UCD</div>
+        <h2>20. Ideasi & Sketsa Awal</h2>
+        <p class="lead-text">Ideasi adalah fase "divergen" (melebar) di mana kuantitas ide lebih penting dari kualitas.
+          Jangan lakukan sensor mandiri di fase ini.</p>
+        <div class="key-message">
+          <span class="icon">✏️</span>
+          <div>Sketsa kertas adalah alat untuk "berpikir", bukan karya seni untuk dipresentasikan.</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Metode Crazy 8s:</strong> Lipat kertas jadi 8 kotak. Gambar 8 variasi desain kasar dalam waktu 8
+            menit (1 menit per ide). Memaksa otak keluar dari ide yang klise.</li>
+          <li><strong>Kecepatan Kertas:</strong> Sketsa di kertas mencegah tim berdebat soal warna atau jenis font di
+            tahap terlalu awal, fokus pada struktur dan aliran pengguna (flow).</li>
+        </ul>
+      </div>
+
+      <!-- POINT 21 -->
+      <div class="slide" id="slide-26">
+        <div class="slide-badge">Bagian 4: Proses & Siklus UCD</div>
+        <h2>21. Wireframing</h2>
+        <p class="lead-text">Kerangka tulang (blueprint) dari layar aplikasi. Menghubungkan ide abstrak dari sketsa
+          menjadi struktur visual terukur tanpa elemen desain grafis.</p>
+        <ul class="slide-list">
+          <li><strong>Low-fidelity (Lo-Fi):</strong> Wireframe kotak-kotak sederhana hitam putih (Balsamiq/Kertas).
+            Sangat murah untuk direvisi ratusan kali.</li>
+          <li><strong>High-fidelity (Hi-Fi):</strong> Mendekati tampilan akhir, memiliki tipografi, jarak yang presisi,
+            warna, dan konten asli (Figma/Sketch).</li>
+          <li><strong>Tujuan Utama:</strong> Mendiskusikan penempatan elemen (Information Architecture) dan aliran layar
+            sebelum developer menulis kode.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 22 -->
+      <div class="slide" id="slide-27">
+        <div class="slide-badge">Bagian 4: Proses & Siklus UCD</div>
+        <h2>22. Iterasi — Siklus Tanpa Henti</h2>
+        <p class="lead-text">Desain tidak pernah "selesai". Produk digital adalah benda hidup yang terus beradaptasi
+          dengan perubahan perilaku penggunanya.</p>
+        <div class="key-message">
+          <span class="icon">🔄</span>
+          <div>Iterasi (Revisi) bukanlah tanda Anda gagal di desain pertama. Itu adalah tanda bahwa Anda bersedia
+            belajar dari pengguna.</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Build - Measure - Learn:</strong> Buat prototipe, ukur respons pengguna, pelajari masalahnya, lalu
+            buat lagi.</li>
+          <li><strong>Kapan Berhenti?</strong> Secara teknis tidak pernah. Namun sebuah iterasi bisa diluncurkan
+            (deploy) jika pengguna berhasil menyelesaikan tugas utamanya tanpa kebingungan kritis.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 23 -->
+      <div class="slide" id="slide-28">
+        <div class="slide-badge">Bagian 4: Proses & Siklus UCD</div>
+        <h2>23. UCD di dalam Lingkungan Agile</h2>
+        <p class="lead-text">Bagaimana memasukkan siklus desain iteratif ke dalam metode Agile (Scrum) yang serba cepat
+          dan menuntut peluncuran konstan?</p>
+        <ul class="slide-list">
+          <li><strong>Dual-Track Agile:</strong> Track 'Discovery' (Riset & Desain UX) harus berjalan 1 atau 2 Sprint
+            lebih awal dari track 'Delivery' (Coding oleh Developer).</li>
+          <li><strong>Sprint N-1:</strong> UX Researcher mewawancara, Desainer membuat Wireframe dan mengujinya.</li>
+          <li><strong>Sprint N:</strong> Desain matang diserahkan ke Developer. Selama developer coding, tim UX mulai
+            meriset fitur untuk sprint berikutnya. Mencegah tim coding menganggur!</li>
+        </ul>
+      </div>
+
+      <!-- SECTION 5 COVER -->
+      <div class="slide section-slide" id="slide-29">
+        <div class="section-num">5</div>
+        <h2>Evaluasi & Pengukuran</h2>
+        <p>Usability Testing, Heuristic Evaluation, dan Metrics UX</p>
+      </div>
+
+      <!-- POINT 24 -->
+      <div class="slide" id="slide-30">
+        <div class="slide-badge">Bagian 5: Evaluasi & Pengukuran</div>
+        <h2>24. Usability Testing (UT)</h2>
+        <p class="lead-text">Metode evaluasi di mana Anda meminta pengguna untuk melakukan sekumpulan skenario tugas
+          nyata di dalam prototipe atau aplikasi Anda.</p>
+        <div class="key-message">
+          <span class="icon">🔍</span>
+          <div>Tujuan UT BUKAN untuk membuktikan desain Anda bagus, melainkan secara aktif mencari letak kerusakannya.
+          </div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Moderated:</strong> Fasilitator memandu sesi secara langsung via Zoom/Offline, bisa bertanya
+            (probing) lebih dalam. (Insight tinggi, biaya tinggi).</li>
+          <li><strong>Unmoderated:</strong> Pengguna direkam saat menggunakan aplikasi sendiri lewat alat seperti Maze.
+            (Cepat, skala besar, tapi tidak bisa tanya balik).</li>
+          <li><strong>Aturan Emas:</strong> Jangan pernah membantu pengguna saat mereka kebingungan di tengah tes. Amati
+            di mana mereka tersandung!</li>
+        </ul>
+      </div>
+
+      <!-- POINT 25 -->
+      <div class="slide" id="slide-31">
+        <div class="slide-badge">Bagian 5: Evaluasi & Pengukuran</div>
+        <h2>25. Nielsen's 5-User Rule</h2>
+        <p class="lead-text">Berapa banyak orang yang harus dites? Menurut penelitian Nielsen Norman Group (NN/g),
+          menguji 5 pengguna per segmen itu cukup optimal.</p>
+        <ul class="slide-list">
+          <li><strong>85% Masalah Ditemukan:</strong> 5 pengguna pertama akan mengungkap sekitar 85% dari total masalah
+            usabilitas kritis yang ada.</li>
+          <li><strong>Diminishing Returns:</strong> Menambah pengguna ke-6, 7, 8 hanya akan mengulangi masalah yang
+            sama. Biaya bertambah namun insight baru menipis.</li>
+          <li><strong>Strategi Terbaik:</strong> Uji 5 orang -> Perbaiki desainnya -> Uji lagi 5 orang baru. (Total 10
+            orang dipecah jadi 2 iterasi jauh lebih baik dari 10 orang dites sekaligus).</li>
+        </ul>
+      </div>
+
+      <!-- POINT 26 -->
+      <div class="slide" id="slide-32">
+        <div class="slide-badge">Bagian 5: Evaluasi & Pengukuran</div>
+        <h2>26. Heuristic Evaluation</h2>
+        <p class="lead-text">Metode audit cepat (expert review) di mana desainer senior atau evaluator ahli menilai
+          antarmuka berdasarkan prinsip desain universal (10 Heuristic Nielsen).</p>
+        <div class="key-message">
+          <span class="icon">📋</span>
+          <div>Audit heuristik menambal masalah dasar sebelum prototipe diuji ke pengguna. Ini bukan pengganti Usability
+            Testing!</div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Contoh Heuristik:</strong> <em>"Visibility of System Status"</em> - Aplikasi harus selalu memberi
+            tahu pengguna apa yang sedang terjadi (misal: Loading spinner).</li>
+          <li><strong>Contoh Heuristik:</strong> <em>"User Control & Freedom"</em> - Harus selalu ada tombol "Batal"
+            atau "Undo" jika pengguna tidak sengaja menekan sesuatu.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 27 -->
+      <div class="slide" id="slide-33">
+        <div class="slide-badge">Bagian 5: Evaluasi & Pengukuran</div>
+        <h2>27. Metrics Keberhasilan UCD</h2>
+        <p class="lead-text">Banyak eksekutif yang ragu pada "UX" karena dianggap sebagai hal yang subjektif. Padahal UX
+          bisa, dan HARUS, diukur dengan metrik pasti.</p>
+        <table class="slide-table">
+          <tr>
+            <th>Metrik Pengukuran</th>
+            <th>Cara Kerja / Indikator</th>
+          </tr>
+          <tr>
+            <td><strong>System Usability Scale (SUS)</strong></td>
+            <td>Kuesioner standar industri berisi 10 pertanyaan (Skala 0-100). Skor di atas 68 dianggap rata-rata wajar.
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Task Completion Rate</strong></td>
+            <td>Persentase pengguna yang berhasil menyelesaikan skenario tugas hingga akhir tanpa gagal/menyerah.</td>
+          </tr>
+          <tr>
+            <td><strong>Time on Task</strong></td>
+            <td>Waktu yang dibutuhkan pengguna. Semakin cepat (untuk task utilitas), semakin baik UX-nya.</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- SECTION 6 COVER -->
+      <div class="slide section-slide" id="slide-34">
+        <div class="section-num">6</div>
+        <h2>Konteks & Penutup</h2>
+        <p>Studi Kasus Kesuksesan, Kegagalan, dan Ekosistem Karier</p>
+      </div>
+
+      <!-- POINT 28 -->
+      <div class="slide" id="slide-35">
+        <div class="slide-badge">Bagian 6: Konteks & Penutup</div>
+        <h2>28. Studi Kasus Sukses (Airbnb)</h2>
+        <p class="lead-text">Desain berbasis empati pernah menyelamatkan perusahaan rintisan dari kebangkrutan.</p>
+        <div class="key-message">
+          <span class="icon">📈</span>
+          <div>Di tahun 2009, revenue Airbnb mandek di $200 per minggu. Riset lapangan adalah kunci kebangkitan mereka.
+          </div>
+        </div>
+        <ul class="slide-list">
+          <li><strong>Riset Lapangan (Contextual Inquiry):</strong> Pendiri Airbnb pergi langsung ke New York menemui
+            pemilik rumah sewaan.</li>
+          <li><strong>Temuan (Akar Masalah):</strong> Mereka menyadari bahwa masalahnya bukan pada kode website,
+            melainkan foto properti dari HP jelek membuat orang takut memesan.</li>
+          <li><strong>Solusi & Hasil:</strong> Airbnb menyewa fotografer profesional. Revenue naik dua kali lipat minggu
+            itu juga, membuktikan validasi UCD mengubah trajektori bisnis.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 29 -->
+      <div class="slide" id="slide-36">
+        <div class="slide-badge">Bagian 6: Konteks & Penutup</div>
+        <h2>29. Studi Kasus Gagal (Snapchat & Healthcare.gov)</h2>
+        <p class="lead-text">Mengabaikan pengguna dan memaksakan kehendak bisnis bisa berakibat bencana publik.</p>
+        <ul class="slide-list">
+          <li><strong>Snapchat Redesign 2018:</strong> Tim internal merombak total struktur UI tanpa iterasi dan tes
+            ekstensif ke pengguna muda mereka. Hasilnya? 1,2 juta orang menandatangani petisi penolakan, nilai saham
+            anjlok triliunan rupiah dalam sehari.</li>
+          <li><strong>Healthcare.gov:</strong> Web asuransi Amerika dikembangkan layaknya proyek IT jadul tanpa
+            User-Centered Design. Di hari peluncuran, dari 9 juta pengunjung, kurang dari 10 orang berhasil mendaftar
+            karena flow yang membingungkan dan bottleneck sistem.</li>
+        </ul>
+      </div>
+
+      <!-- POINT 30 -->
+      <div class="slide" id="slide-37">
+        <div class="slide-badge">Bagian 6: Konteks & Penutup</div>
+        <h2>30. UCD di Dunia Kerja & Karier</h2>
+        <p class="lead-text">Siapa yang bertugas menjalankan UCD di dalam sebuah perusahaan teknologi (startup maupun
+          enterprise)?</p>
+        <ul class="slide-list">
+          <li><strong>UX Researcher (UXR):</strong> Bertanggung jawab di fase 1 & 2 (Riset, Empati, Testing). Ahli dalam
+            psikologi, statistika, dan interview.</li>
+          <li><strong>UX/UI Designer:</strong> Bertanggung jawab di fase 3 (Desain, Wireframe, UI akhir). Ahli Figma,
+            arsitektur informasi, dan visual.</li>
+          <li><strong>Product Manager (PM):</strong> Menjembatani kebutuhan Pengguna (UX) dengan Tujuan Bisnis dan
+            Kelayakan Teknis (Developer).</li>
+          <li><em>Di perusahaan kecil (startup early-stage), satu orang "Product Designer" sering kali merangkap ketiga
+              peran ini secara mandiri.</em></li>
+        </ul>
+      </div>
+
+      <!-- ENDING SLIDE -->
+      <div class="slide cover-slide" id="slide-38">
+        <h1>Terima Kasih</h1>
+        <p>Berhentilah berasumsi, mulailah berempati.</p>
+        <div style="margin-top: 50px;">
+          <a href="../../index.html"
+            style="color: white; text-decoration: none; font-weight: bold; padding: 12px 30px; border: 2px solid white; border-radius: 99px; transition: background 0.3s; display: inline-block;"
+            onmouseover="this.style.background='white'; this.style.color='var(--color-primary-dark)'"
+            onmouseout="this.style.background='transparent'; this.style.color='white'">
+            Kembali ke Halaman Utama
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Controls ── -->
+    <div class="slide-controls">
+      <button class="btn-nav secondary" id="btn-prev" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+        <span>Sebelumnya</span>
+      </button>
+
+      <div class="slide-progress-wrapper">
+        <div class="slide-progress-text">Slide <span id="current-slide-num">1</span> dari <span
+            id="total-slide-num">38</span></div>
+        <div class="slide-progress-bar">
+          <div class="slide-progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <button class="btn-nav" id="btn-next">
+        <span>Selanjutnya</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+          stroke-linecap="round">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Presentation Logic ── -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentIdx = 0;
+
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const textCurrent = document.getElementById('current-slide-num');
+      const textTotal = document.getElementById('total-slide-num');
+      const progressFill = document.getElementById('progress-fill');
+
+      textTotal.textContent = totalSlides;
+
+      function updateSlide() {
+        slides.forEach((slide, index) => {
+          if (index === currentIdx) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        });
+
+        // Update UI
+        textCurrent.textContent = currentIdx + 1;
+        const progressPercent = ((currentIdx + 1) / totalSlides) * 100;
+        progressFill.style.width = progressPercent + '%';
+
+        // Update Buttons
+        btnPrev.disabled = currentIdx === 0;
+        btnNext.disabled = currentIdx === totalSlides - 1;
+      }
+
+      function nextSlide() {
+        if (currentIdx < totalSlides - 1) {
+          currentIdx++;
+          updateSlide();
+        }
+      }
+
+      function prevSlide() {
+        if (currentIdx > 0) {
+          currentIdx--;
+          updateSlide();
+        }
+      }
+
+      // Event Listeners Buttons
+      btnNext.addEventListener('click', nextSlide);
+      btnPrev.addEventListener('click', prevSlide);
+
+      // Fullscreen Logic
+      const btnFullscreen = document.getElementById('btn-fullscreen');
+      const viewer = document.documentElement;
+
+      btnFullscreen.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          viewer.requestFullscreen().catch(err => {
+            console.log("Error attempting to enable fullscreen:", err.message);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      });
+
+      // Event Listeners Keyboard
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+          nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+          prevSlide();
+        } else if (e.key.toLowerCase() === 'f') {
+          btnFullscreen.click();
+        }
+      });
+
+      // Initialize
+      updateSlide();
+    });
+  </script>
+</body>
+
+</html>
