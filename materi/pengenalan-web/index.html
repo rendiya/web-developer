@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,428 +7,285 @@
   <link rel="stylesheet" href="../../style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ── Slide Viewer Global Reset ── */
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: #0f172a;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .slide-viewer {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      width: 100vw;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 1000;
-      background: #0f172a;
-    }
-
-    /* ── Navbar over Slide (Optional) ── */
-    .slide-navbar {
-      height: 60px;
-      display: flex;
-      align-items: center;
-      padding: 0 32px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid #e2e8f0;
-      justify-content: space-between;
-      z-index: 1001;
-    }
-
-    .slide-navbar a {
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #64748b;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .slide-navbar a:hover {
-      color: #2563eb;
-    }
-
-    /* ── Slide Container ── */
-    .slide-container {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      background: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* ── Slide Element ── */
-    .slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
-      background: #ffffff;
-      padding: 60px 80px;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateX(50px);
-      transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      overflow-y: auto;
-      box-sizing: border-box;
-    }
-
-    .slide.active {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(0);
-      z-index: 10;
-    }
-
-    /* ── Customizing Scrollbar inside slides ── */
-    .slide::-webkit-scrollbar {
-      width: 8px;
-    }
-    .slide::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .slide::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 99px;
-    }
-
-    /* ── Special Slide Types (Cover & Section) ── */
-    .slide.cover-slide, .slide.section-slide {
-      background: #0f172a; /* Dark navy */
-      color: white;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    /* Decorative Circles */
-    .slide.cover-slide::before, .slide.section-slide::before {
-      content: '';
-      position: absolute;
-      top: -150px;
-      left: -100px;
-      width: 400px;
-      height: 400px;
-      background: #1e3a8a;
-      border-radius: 50%;
-      opacity: 0.8;
-      z-index: 0;
-    }
+    /* GLOBAL */
+    body { margin:0; padding:0; overflow:hidden; background:#0f172a; font-family:'Inter',sans-serif; }
+    .slide-viewer { display:flex; flex-direction:column; height:100vh; width:100vw; position:fixed; top:0; left:0; z-index:1000; background:#0f172a; }
+    .slide-navbar { height:60px; display:flex; align-items:center; padding:0 32px; background:rgba(255,255,255,0.95); backdrop-filter:blur(10px); border-bottom:1px solid #e2e8f0; justify-content:space-between; z-index:1001; }
+    .slide-navbar a { text-decoration:none; font-size:0.85rem; font-weight:700; color:#64748b; display:flex; align-items:center; gap:8px; }
+    .slide-navbar a:hover { color:#2563eb; }
+    .slide-container { flex:1; position:relative; overflow:hidden; background:#ffffff; display:flex; align-items:center; justify-content:center; }
+    .slide { position:absolute; top:0; left:0; right:0; bottom:0; width:100%; height:100%; background:#ffffff; padding:48px 72px; opacity:0; visibility:hidden; transform:translateX(50px); transition:all 0.5s cubic-bezier(0.25,1,0.5,1); display:flex; flex-direction:column; justify-content:flex-start; overflow-y:auto; box-sizing:border-box; }
+    .slide.active { opacity:1; visibility:visible; transform:translateX(0); z-index:10; }
+    .slide::-webkit-scrollbar { width:6px; }
+    .slide::-webkit-scrollbar-track { background:transparent; }
+    .slide::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:99px; }
+    .slide.cover-slide, .slide.section-slide { background:#0f172a; color:white; justify-content:center; align-items:center; text-align:center; overflow:hidden; }
+    .slide.cover-slide::before, .slide.section-slide::before { content:''; position:absolute; top:-150px; left:-100px; width:400px; height:400px; background:#1e3a8a; border-radius:50%; opacity:0.8; z-index:0; }
+    .slide.cover-slide::after, .slide.section-slide::after { content:''; position:absolute; bottom:-200px; right:-150px; width:600px; height:600px; background:#4c1d95; border-radius:50%; opacity:0.6; z-index:0; }
+    .section-slide .bg-blob { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:800px; height:800px; background:radial-gradient(circle, rgba(56,189,248,0.15) 0%, rgba(15,23,42,0) 70%); z-index:0; pointer-events:none; }
+    .slide.cover-slide > *, .slide.section-slide > * { z-index:1; position:relative; }
+    .slide.cover-slide h1, .slide.section-slide h2 { font-family:'Merriweather',serif; font-size:4rem; font-weight:900; margin-bottom:24px; color:white; line-height:1.2; }
+    .slide.cover-slide .accent-line { width:150px; height:6px; background:#06b6d4; margin:0 auto 30px auto; }
+    .slide.cover-slide.left-align { text-align:left; align-items:flex-start; padding-left:120px; }
+    .slide.cover-slide.left-align .accent-line { margin-left:0; }
+    .slide.cover-slide p, .slide.section-slide p { font-size:1.4rem; color:#cbd5e1; max-width:800px; font-weight:400; }
+    .slide.section-slide .icon-wrapper { font-size:3.5rem; margin-bottom:20px; color:#38bdf8; }
+    .slide-header { display:inline-flex; align-items:center; gap:16px; margin-bottom:32px; border-bottom:4px solid #3b82f6; padding-bottom:14px; }
+    .slide h2 { font-family:'Merriweather',serif; font-size:2.4rem; font-weight:700; color:#1e40af; margin:0; }
+    .slide .lead-text { font-size:1.2rem; color:#334155; margin-bottom:24px; line-height:1.6; background:#f8fafc; padding:20px 24px; border-radius:12px; border:1px solid #e2e8f0; }
     
-    .slide.cover-slide::after, .slide.section-slide::after {
-      content: '';
-      position: absolute;
-      bottom: -200px;
-      right: -150px;
-      width: 600px;
-      height: 600px;
-      background: #4c1d95;
-      border-radius: 50%;
-      opacity: 0.6;
-      z-index: 0;
-    }
+    /* LAYOUT & UTILS */
+    .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; margin-top:16px; }
+    .content-card { background:#f1f5f9; padding:22px; border-radius:16px; border:1px solid #e2e8f0; text-align:center; transition:0.2s; }
+    .content-card:hover { transform:translateY(-4px); box-shadow:0 10px 25px rgba(0,0,0,0.05); border-color:#93c5fd; }
+    .content-card h3 { font-family:'Merriweather',serif; color:#1e3a8a; font-size:1.2rem; margin-bottom:10px; margin-top:14px; }
+    .content-card p { color:#475569; font-size:1rem; line-height:1.5; }
+    .icon-large { font-size:2.2rem; }
+    .slide-list { list-style:none; display:flex; flex-direction:column; gap:18px; padding-left:0; }
+    .slide-list li { position:relative; padding-left:36px; font-size:1.1rem; color:#334155; line-height:1.6; }
+    .slide-list li::before { content:'●'; position:absolute; left:0; top:2px; color:#3b82f6; font-size:1.1rem; }
+    .slide-list li strong { color:#1e3a8a; font-weight:700; }
+    .slide-table { width:100%; border-collapse:separate; border-spacing:0; margin-top:16px; font-size:1.05rem; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0; }
+    .slide-table th { background:#f8fafc; color:#1e40af; padding:14px 18px; text-align:left; border-bottom:2px solid #e2e8f0; }
+    .slide-table td { padding:14px 18px; border-bottom:1px solid #e2e8f0; color:#475569; background:white; }
+    .slide-table tr:hover td { background:#f8fafc; }
+    .slide-controls { height:70px; background:white; border-top:1px solid #e2e8f0; display:flex; align-items:center; justify-content:space-between; padding:0 40px; z-index:1001; }
+    .btn-nav { background:#2563eb; color:white; border:none; border-radius:8px; padding:10px 24px; font-weight:700; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all 0.2s; }
+    .btn-nav:hover:not(:disabled) { background:#1d4ed8; transform:translateY(-2px); }
+    .btn-nav:disabled { background:#cbd5e1; cursor:not-allowed; transform:none; }
+    .btn-nav.secondary { background:#f1f5f9; color:#3b82f6; }
+    .btn-nav.secondary:hover:not(:disabled) { background:#e2e8f0; }
+    .slide-progress-wrapper { flex:1; margin:0 60px; text-align:center; }
+    .slide-progress-text { font-size:0.8rem; font-weight:700; color:#64748b; margin-bottom:8px; letter-spacing:0.05em; text-transform:uppercase; }
+    .slide-progress-bar { height:6px; background:#f1f5f9; border-radius:99px; overflow:hidden; }
+    .slide-progress-fill { height:100%; background:#3b82f6; width:0%; transition:width 0.4s ease; }
+    .slide-two-col { display:grid; grid-template-columns:1fr 1.1fr; gap:36px; align-items:center; flex:1; }
+    .slide-two-col-equal { display:grid; grid-template-columns:1fr 1fr; gap:36px; align-items:start; }
 
-    .slide.cover-slide > *, .slide.section-slide > * {
-      z-index: 1;
-      position: relative;
-    }
-
-    /* Typography for Cover */
-    .slide.cover-slide h1, .slide.section-slide h2 {
-      font-family: 'Merriweather', serif;
-      font-size: 4.5rem;
-      font-weight: 900;
-      margin-bottom: 24px;
-      color: white;
-      line-height: 1.2;
-    }
-
-    .slide.cover-slide .accent-line {
-      width: 150px;
-      height: 6px;
-      background: #06b6d4; /* Teal accent */
-      margin: 0 auto 30px auto;
-    }
-
-    .slide.cover-slide.left-align {
-      text-align: left;
-      align-items: flex-start;
-      padding-left: 120px;
-    }
+    /* ILLUSTRATIONS (WWW & INTERNET) */
+    .net-wrap { position:relative; width:100%; height:320px; background:#f8fafc; border-radius:20px; border:2px solid #e2e8f0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .net-center { width:120px; height:120px; background:linear-gradient(135deg,#2563eb,#1e3a8a); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; box-shadow:0 0 40px rgba(37,99,235,0.4); position:relative; z-index:10; }
+    .net-node { position:absolute; width:80px; height:80px; background:white; border:3px solid #bfdbfe; border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; font-weight:700; font-size:0.75rem; color:#1e3a8a; box-shadow:0 8px 16px rgba(0,0,0,0.05); z-index:10; }
+    .vs-box { padding:24px; border-radius:16px; border:2px solid #e2e8f0; background:white; height:100%; box-sizing:border-box; display:flex; flex-direction:column; }
+    .vs-graphic { height:160px; background:#f1f5f9; border-radius:12px; margin:16px 0; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; border:1px solid #cbd5e1; }
     
-    .slide.cover-slide.left-align .accent-line {
-      margin-left: 0;
-    }
+    /* ANALOGI PILAR (HTML/CSS/JS) */
+    .pilar-diag { display:flex; align-items:center; justify-content:center; gap:16px; margin-top:20px; background:#f8fafc; padding:30px; border-radius:20px; border:2px solid #e2e8f0; }
+    .pd-box { width:160px; height:160px; background:white; border-radius:16px; border:2px solid #cbd5e1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px; box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+    .pd-icon { font-size:2.5rem; margin-bottom:8px; }
+    .pd-box strong { font-size:1.1rem; color:#1e3a8a; margin-bottom:4px; }
+    .pd-box span { font-size:0.8rem; color:#64748b; line-height:1.4; }
+    .pd-plus { font-size:2rem; font-weight:800; color:#94a3b8; }
+    .pd-final { background:linear-gradient(135deg,#3b82f6,#2563eb); color:white; border-color:#1d4ed8; }
+    .pd-final strong { color:white; }
+    .pd-final span { color:#bfdbfe; }
 
-    .slide.cover-slide p, .slide.section-slide p {
-      font-size: 1.5rem;
-      color: #cbd5e1;
-      max-width: 800px;
-      font-weight: 400;
-    }
+    /* CODE & BROWSER MOCKUP */
+    .code-box { background:#1e293b; color:#e2e8f0; padding:20px 24px; border-radius:12px; font-family:'Courier New',monospace; font-size:0.9rem; line-height:1.8; flex:1; }
+    .code-box .kw { color:#93c5fd; } .code-box .str { color:#86efac; } .code-box .tag { color:#f9a8d4; } .code-box .attr { color:#fde68a; } .code-box .com { color:#475569; }
+    .bm-wrap { border:2px solid #cbd5e1; border-radius:12px; overflow:hidden; background:white; flex:1; display:flex; flex-direction:column; box-shadow:0 10px 25px rgba(0,0,0,0.05); }
+    .bm-head { background:#e2e8f0; padding:10px 14px; display:flex; gap:6px; border-bottom:1px solid #cbd5e1; }
+    .bm-dot { width:12px; height:12px; border-radius:50%; }
+    .bm-dot.r { background:#ef4444; } .bm-dot.y { background:#f59e0b; } .bm-dot.g { background:#10b981; }
+    .bm-body { padding:20px; flex:1; background:#f8fafc; display:flex; flex-direction:column; gap:12px; }
+    .skel .sk-img { height:100px; border:2px dashed #94a3b8; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-weight:700; border-radius:8px; }
+    .skel .sk-h { height:24px; background:#cbd5e1; width:70%; border-radius:4px; }
+    .skel .sk-p { height:12px; background:#e2e8f0; width:100%; border-radius:4px; }
+    .skel .sk-btn { height:36px; background:#cbd5e1; width:100px; margin-top:10px; border-radius:4px; }
+    .styled .st-img { height:100px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); border-radius:8px; }
+    .styled .st-h { font-size:1.5rem; font-weight:800; color:#1e3a8a; margin:0; font-family:'Merriweather',serif; }
+    .styled .st-p { font-size:0.9rem; color:#475569; margin:0; }
+    .styled .st-btn { background:#2563eb; color:white; padding:8px 16px; border-radius:6px; font-weight:700; border:none; width:max-content; margin-top:10px; box-shadow:0 4px 10px rgba(37,99,235,0.3); }
+    .interact .st-btn { cursor:pointer; position:relative; }
+    .interact .st-btn::after { content:'Terkirim! ✓'; position:absolute; top:-35px; left:50%; transform:translateX(-50%); background:#10b981; color:white; padding:4px 10px; border-radius:6px; font-size:0.75rem; white-space:nowrap; animation:popUp 2s infinite; }
+    @keyframes popUp { 0%,100%{opacity:0;transform:translate(-50%,10px);} 50%{opacity:1;transform:translate(-50%,0);} }
 
-    .slide.section-slide .icon-wrapper {
-      font-size: 4rem;
-      margin-bottom: 20px;
-      color: #38bdf8;
-    }
+    /* UI SHOWCASE & HONEYCOMB & ICEBERG */
+    .ui-showcase { display:flex; gap:20px; align-items:center; justify-content:center; background:#f8fafc; padding:30px; border-radius:16px; border:2px solid #e2e8f0; margin-top:20px; flex-wrap:wrap; }
+    .ui-panel { background:white; padding:20px; border-radius:12px; border:1px solid #e2e8f0; box-shadow:0 4px 12px rgba(0,0,0,0.05); display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .real-btn { background:#2563eb; color:white; padding:12px 24px; border-radius:8px; border:none; font-weight:700; cursor:pointer; transition:0.2s; box-shadow:0 4px 12px rgba(37,99,235,0.2); font-size:1rem; }
+    .real-btn:hover { background:#1d4ed8; transform:translateY(-2px); }
+    .real-input { padding:12px 16px; border-radius:8px; border:2px solid #cbd5e1; outline:none; font-size:1rem; width:200px; transition:0.2s; }
+    .real-input:focus { border-color:#2563eb; box-shadow:0 0 0 3px rgba(37,99,235,0.2); }
+    .real-toggle { width:50px; height:28px; background:#10b981; border-radius:99px; position:relative; cursor:pointer; box-shadow:inset 0 2px 4px rgba(0,0,0,0.1); }
+    .real-toggle::after { content:''; position:absolute; width:22px; height:22px; background:white; border-radius:50%; top:3px; right:3px; box-shadow:0 2px 4px rgba(0,0,0,0.2); }
+    .honeycomb { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; max-width:650px; margin:20px auto; }
+    .hex { width:150px; height:170px; background:#f1f5f9; clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px; transition:0.3s; cursor:default; box-sizing:border-box; }
+    .hex:hover { transform:scale(1.05); background:#dbeafe; }
+    .hex-icon { font-size:2rem; margin-bottom:8px; }
+    .hex-title { font-weight:800; font-size:0.9rem; color:#1e3a8a; }
+    .ice-wrap { display:flex; flex-direction:column; border-radius:24px; overflow:hidden; border:2px solid #cbd5e1; background:white; margin-top:20px; box-shadow:0 10px 30px rgba(0,0,0,0.1); }
+    .ice-sky { background:linear-gradient(180deg,#e0f2fe,#bae6fd); padding:40px; text-align:center; position:relative; }
+    .ice-water { height:4px; background:#0284c7; position:relative; z-index:10; }
+    .ice-sea { background:linear-gradient(180deg,#0ea5e9,#1e3a8a); padding:50px 30px; position:relative; display:flex; flex-direction:column; align-items:center; }
+    .ice-tip { background:white; width:220px; height:100px; margin:0 auto; border-radius:110px 110px 0 0; display:flex; align-items:center; justify-content:center; font-size:1.6rem; font-weight:900; color:#0369a1; box-shadow:0 -10px 30px rgba(255,255,255,0.6); position:relative; z-index:5; }
+    .ice-base { background:rgba(255,255,255,0.15); width:380px; height:220px; margin:0 auto; border-radius:0 0 190px 190px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:white; backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.2); }
+    .ice-tags { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:16px; max-width:80%; }
+    .ice-tag { background:rgba(255,255,255,0.25); padding:6px 14px; border-radius:99px; font-size:0.85rem; font-weight:700; color:white; border:1px solid rgba(255,255,255,0.4); }
 
-    /* ── Content Slides ── */
-    .slide-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 40px;
-      border-bottom: 4px solid #3b82f6;
-      padding-bottom: 15px;
-      display: inline-flex;
-    }
+    /* WIREFRAME & PROTO & SITEMAP */
+    .wf-three-col { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:16px; }
+    .wf-card { border-radius:16px; padding:18px; border:2px solid; }
+    .wf-badge { display:inline-block; padding:3px 12px; border-radius:99px; font-size:0.68rem; font-weight:800; letter-spacing:0.08em; margin-bottom:12px; }
+    .wf-mock { border-radius:6px; padding:8px; margin-bottom:12px; }
+    .wf-bar { border-radius:99px; margin-bottom:4px; background:currentColor; }
+    .wf-card-title { font-family:'Merriweather',serif; font-size:0.95rem; font-weight:700; margin:0 0 4px 0; }
+    .wf-card-desc { font-size:0.82rem; color:#475569; margin:0; }
+    .wf-for { margin-top:10px; font-size:0.76rem; font-weight:700; padding:4px 10px; border-radius:6px; display:inline-block; }
+    .wf-visual { border:2px solid #94a3b8; border-radius:8px; overflow:hidden; background:white; }
+    .wf-v-nav { background:#e2e8f0; padding:8px 12px; display:flex; justify-content:space-between; align-items:center; }
+    .wf-v-hero { background:#f1f5f9; padding:14px 12px; display:flex; gap:10px; align-items:center; border-bottom:1px solid #e2e8f0; }
+    .wf-v-text { padding:8px 12px; border-bottom:1px solid #f1f5f9; display:flex; flex-direction:column; gap:3px; }
+    .wf-v-cards { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:8px 12px; border-bottom:1px solid #f1f5f9; }
+    .wf-v-footer { background:#f1f5f9; padding:8px 12px; }
+    .wf-box { background:#e2e8f0; border-radius:3px; }
+    .wf-placeholder { background:#e2e8f0; border:1px solid #94a3b8; border-radius:4px; display:flex; align-items:center; justify-content:center; font-size:1rem; color:#94a3b8; position:relative; overflow:hidden; }
+    .wf-placeholder::before { content:''; position:absolute; width:120%; height:1.5px; background:#94a3b8; transform:rotate(12deg); top:50%; left:-10%; }
+    .wf-placeholder::after { content:''; position:absolute; width:120%; height:1.5px; background:#94a3b8; transform:rotate(-12deg); top:50%; left:-10%; }
+    .wf-callout { display:flex; align-items:center; gap:8px; font-size:0.8rem; margin-bottom:7px; }
+    .wf-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .wf-callout-label { font-weight:700; color:#1e3a8a; }
+    .feature-badges { display:flex; flex-direction:column; gap:12px; margin-top:20px; }
+    .f-badge { background:#f1f5f9; border:2px solid #cbd5e1; padding:12px 20px; border-radius:12px; font-weight:700; color:#334155; display:flex; align-items:center; gap:12px; font-size:1.05rem; }
+    .f-badge span { font-size:1.5rem; }
+    .proto-types { display:flex; justify-content:space-between; align-items:center; gap:14px; margin-top:16px; background:#f8fafc; padding:30px; border-radius:20px; border:2px solid #e2e8f0; }
+    .proto-card { border-radius:12px; padding:20px; text-align:center; border:2px solid; flex:1; background:white; }
+    .proto-icon { font-size:2.5rem; margin-bottom:12px; }
+    .proto-arr { font-size:2rem; color:#94a3b8; font-weight:800; }
+    .tools-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; margin-top:16px; }
+    .tool-card { border-radius:12px; padding:16px; background:white; border:1px solid #e2e8f0; transition:all 0.25s; cursor:default; }
+    .tool-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.07); border-color:#93c5fd; }
+    .process-flow-grid { display:grid; grid-template-columns:1fr 1fr; gap:0 48px; margin-top:16px; }
+    .pf-step { display:grid; grid-template-columns:38px 1fr; gap:12px; margin-bottom:0; position:relative; }
+    .pf-left { display:flex; flex-direction:column; align-items:center; }
+    .pf-num { width:36px; height:36px; background:#2563eb; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.8rem; flex-shrink:0; position:relative; z-index:2; }
+    .pf-line { width:2px; flex:1; min-height:14px; background:#dbeafe; }
+    .pf-content { padding:4px 0 14px; }
+    .sitemap-wrap { display:flex; flex-direction:column; align-items:center; gap:0; margin-top:16px; }
+    .st-home { background:#2563eb; color:white; padding:10px 28px; border-radius:8px; font-weight:800; font-size:0.9rem; }
+    .st-vline { width:2px; height:20px; background:#94a3b8; margin:0 auto; }
+    .st-item-wrap { display:flex; flex-direction:column; align-items:center; }
+    .st-drop { width:2px; height:20px; background:#94a3b8; }
+    .st-box { border:2px solid #94a3b8; border-radius:8px; padding:8px 16px; font-size:0.82rem; font-weight:600; color:#334155; background:white; white-space:nowrap; }
+    .st-box.highlight { border-color:#3b82f6; background:#eff6ff; color:#1e40af; }
+    .st-sub-item { display:flex; flex-direction:column; align-items:center; }
+    .st-sub-drop { width:2px; height:16px; background:#cbd5e1; }
+    .st-sub-box { background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:5px 10px; font-size:0.74rem; color:#64748b; white-space:nowrap; }
+    .fc-center { display:flex; flex-direction:column; align-items:center; gap:0; }
+    .fc-oval { background:#1e3a8a; color:white; padding:8px 22px; border-radius:99px; font-weight:700; font-size:0.85rem; }
+    .fc-rect { border:2px solid #3b82f6; border-radius:8px; padding:9px 18px; font-size:0.85rem; font-weight:600; color:#1e40af; background:#eff6ff; text-align:center; min-width:170px; }
+    .fc-arrow { width:2px; height:14px; background:#94a3b8; }
+    .fc-diamond-wrap { position:relative; width:80px; height:80px; flex-shrink:0; }
+    .fc-diamond { position:absolute; width:56px; height:56px; background:#f59e0b; transform:rotate(45deg); top:12px; left:12px; }
+    .fc-diamond-label { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-weight:800; font-size:0.8rem; color:white; white-space:nowrap; }
+    .fc-branch { flex:1; display:flex; flex-direction:column; align-items:center; gap:0; }
+    .fc-rect-yes { border:2px solid #10b981; border-radius:8px; padding:7px 14px; font-size:0.82rem; font-weight:600; color:#065f46; background:#f0fdf4; text-align:center; }
+    .fc-rect-no { border:2px solid #ef4444; border-radius:8px; padding:7px 14px; font-size:0.82rem; font-weight:600; color:#991b1b; background:#fff1f2; text-align:center; }
+    .fc-sym-box { background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-top:16px; }
 
-    .slide h2 {
-      font-family: 'Merriweather', serif;
-      font-size: 2.8rem;
-      font-weight: 700;
-      color: #1e40af;
-      margin: 0;
-    }
+    /* RESPONSIVE & A11Y */
+    .devices-row { display:flex; gap:28px; align-items:flex-end; justify-content:center; margin-top:16px; }
+    .device-wrap { display:flex; flex-direction:column; align-items:center; gap:10px; }
+    .device-frame { border:3.5px solid #1e293b; background:#f8fafc; overflow:hidden; position:relative; }
+    .device-desktop .device-frame { width:240px; height:155px; border-radius:6px; }
+    .device-tablet .device-frame { width:120px; height:168px; border-radius:14px; }
+    .device-mobile .device-frame { width:66px; height:125px; border-radius:18px; }
+    .dc { padding:6px; display:flex; flex-direction:column; gap:4px; height:100%; box-sizing:border-box; }
+    .dc-nav { height:11px; background:#1e293b; border-radius:2px; }
+    .dc-hero { background:#2563eb; border-radius:3px; display:flex; align-items:center; padding:4px 6px; gap:5px; }
+    .dc-ht { flex:1; display:flex; flex-direction:column; gap:2px; }
+    .dc-hb { height:4px; background:rgba(255,255,255,0.7); border-radius:2px; }
+    .dc-hi { background:rgba(255,255,255,0.25); border-radius:2px; }
+    .dc-cards { display:grid; gap:3px; }
+    .dc-c { background:#e2e8f0; border-radius:3px; }
+    .device-desktop .dc-hero { height:60px; } .device-desktop .dc-hi { width:40px; height:40px; } .device-desktop .dc-cards { grid-template-columns:repeat(3,1fr); } .device-desktop .dc-c { height:26px; }
+    .device-tablet .dc-hero { height:58px; } .device-tablet .dc-hi { width:28px; height:28px; } .device-tablet .dc-cards { grid-template-columns:1fr 1fr; } .device-tablet .dc-c { height:26px; }
+    .device-mobile .dc-hero { height:44px; } .device-mobile .dc-hi { width:18px; height:18px; } .device-mobile .dc-cards { grid-template-columns:1fr; } .device-mobile .dc-c { height:20px; }
+    .wcag-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:16px; }
+    .wcag-card { border-radius:14px; padding:20px; border:2px solid; }
+
+    /* KOMPONEN WEBSITE (FBD) */
+    .anatomi-container { display:flex; align-items:center; justify-content:space-between; padding:40px; background:#f8fafc; border:2px solid #e2e8f0; border-radius:20px; margin-top:20px; }
+    .ana-node { width:140px; text-align:center; }
+    .ana-box { width:100px; height:100px; margin:0 auto 16px; border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:3.5rem; color:white; position:relative; z-index:2; }
+    .ana-fe { background:linear-gradient(135deg,#0ea5e9,#3b82f6); box-shadow:0 10px 25px rgba(59,130,246,0.3); }
+    .ana-be { background:linear-gradient(135deg,#10b981,#059669); box-shadow:0 10px 25px rgba(16,185,129,0.3); }
+    .ana-db { background:linear-gradient(135deg,#f59e0b,#d97706); box-shadow:0 10px 25px rgba(245,158,11,0.3); }
+    .ana-line { flex:1; height:6px; background:#cbd5e1; position:relative; z-index:1; display:flex; align-items:center; justify-content:center; border-radius:99px; }
+    .ana-label { background:white; border:2px solid #cbd5e1; padding:6px 14px; border-radius:99px; font-weight:800; font-size:0.8rem; color:#475569; position:absolute; top:-35px; white-space:nowrap; box-shadow:0 4px 10px rgba(0,0,0,0.05); }
+    .resto-container { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; margin-top:20px; }
+    .resto-card { background:white; border:2px solid #e2e8f0; border-radius:20px; padding:30px 20px; text-align:center; position:relative; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,0.03); }
+    .resto-card::before { content:''; position:absolute; top:0; left:0; right:0; height:8px; }
+    .resto-card.fe::before { background:#3b82f6; } .resto-card.be::before { background:#10b981; } .resto-card.db::before { background:#f59e0b; }
+
+    /* MONOLITH VS MICROSERVICES */
+    .req-flow-bar { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+    .req-badge { background:#3b82f6; color:white; padding:4px 12px; border-radius:99px; font-size:0.72rem; font-weight:800; white-space:nowrap; }
+    .req-flow-line { flex:1; height:3px; background:linear-gradient(90deg,#3b82f6,#8b5cf6); border-radius:99px; position:relative; overflow:hidden; }
+    .req-flow-line::after { content:''; position:absolute; top:0; left:-50%; width:50%; height:100%; background:rgba(255,255,255,0.6); animation:reqFlow 1.8s linear infinite; }
+    @keyframes reqFlow { 0%{left:-50%} 100%{left:150%} }
+    .mono-diagram { background:#f0f9ff; border:2px solid #bfdbfe; border-radius:18px; padding:18px; }
+    .mono-outer { border:2.5px solid #2563eb; border-radius:12px; padding:14px; background:white; position:relative; }
+    .mono-outer-label { position:absolute; top:-11px; left:14px; background:#2563eb; color:white; font-size:0.65rem; font-weight:800; padding:2px 10px; border-radius:99px; letter-spacing:0.07em; text-transform:uppercase; }
+    .mono-modules-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:8px; }
+    .mono-mod { padding:10px 6px; border-radius:8px; text-align:center; font-size:0.74rem; font-weight:700; color:white; display:flex; flex-direction:column; align-items:center; gap:4px; position:relative; overflow:hidden; }
+    .mono-mod::after { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent); animation:mShimmer 3s infinite; }
+    .mono-mod:nth-child(2)::after{animation-delay:.75s} .mono-mod:nth-child(3)::after{animation-delay:1.5s} .mono-mod:nth-child(4)::after{animation-delay:2.25s}
+    @keyframes mShimmer{0%{left:-100%}100%{left:200%}}
+    .mono-db { grid-column:1/-1; background:#1e293b; border-radius:8px; padding:9px; text-align:center; font-size:0.74rem; font-weight:700; color:#64748b; display:flex; align-items:center; justify-content:center; gap:6px; margin-top:6px; }
+    .ms-diagram { display:flex; flex-direction:column; align-items:center; gap:0; width:100%; }
+    .ms-client { background:#f1f5f9; border:2px solid #cbd5e1; border-radius:8px; padding:7px 22px; font-size:0.78rem; font-weight:700; color:#475569; }
+    .ms-vline { width:2px; height:18px; background:#94a3b8; }
+    .ms-gateway { background:linear-gradient(135deg,#1d4ed8,#2563eb); color:white; padding:10px 0; border-radius:10px; font-size:0.82rem; font-weight:800; letter-spacing:0.06em; box-shadow:0 4px 14px rgba(37,99,235,0.4); text-align:center; width:82%; }
+    .ms-branch { position:relative; width:82%; height:24px; }
+    .ms-branch-h { position:absolute; top:0; left:0; right:0; height:2px; background:#94a3b8; }
+    .ms-branch-drop { position:absolute; top:0; width:2px; height:24px; background:#94a3b8; }
+    .ms-services { display:flex; gap:8px; width:82%; }
+    .ms-svc { flex:1; border-radius:10px; padding:10px 6px; text-align:center; color:white; transition:transform 0.2s; cursor:default; animation:svcGlow 2.5s ease-in-out infinite; }
+    .ms-svc:nth-child(1){animation-delay:0s} .ms-svc:nth-child(2){animation-delay:.5s} .ms-svc:nth-child(3){animation-delay:1s}
+    @keyframes svcGlow{0%,100%{box-shadow:0 2px 8px rgba(0,0,0,.15)}50%{box-shadow:0 4px 18px rgba(0,0,0,.32)}}
+    .ms-svc:hover{transform:translateY(-4px)}
+    .ms-svc-icon{font-size:1.1rem;display:block;margin-bottom:4px} .ms-svc-name{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px} .ms-svc-db{font-size:.6rem;opacity:.78;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.25)}
+    .pc-row{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:18px}
+    .pc-pros{background:#f0fdf4;border:2px solid #4ade80;border-radius:14px;padding:20px}
+    .pc-cons{background:#fff1f2;border:2px solid #fb7185;border-radius:14px;padding:20px}
+    .cmp-table{width:100%;border-collapse:separate;border-spacing:0;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0;font-size:.9rem;margin-top:14px}
+    .cmp-table th{padding:12px 14px;font-weight:800;border-bottom:2px solid #e2e8f0}
+    .cmp-table td{padding:10px 14px;border-bottom:1px solid #f1f5f9;color:#475569;}
+    .dec-row{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+    .dec-card{border-radius:16px;padding:22px} .dec-mono{background:#eff6ff;border:2px solid #93c5fd} .dec-micro{background:#faf5ff;border:2px solid #c4b5fd}
+    .dec-card ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+    .dec-card ul li{font-size:.92rem;color:#334155;padding-left:20px;position:relative;}
+    .dec-card ul li::before{content:'✓';position:absolute;left:0;font-weight:700;color:#2563eb}
+    .co-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:20px}
+    .co-card{border-radius:12px;padding:16px;background:white;border:1px solid #e2e8f0;transition:all .25s;}
+    .co-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.08);border-color:#93c5fd}
+    .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:20px}
+    .tech-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px;}
+    .tech-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;}
+    .tech-tag{padding:3px 9px;background:white;border:1px solid #e2e8f0;border-radius:99px;font-size:.75rem;font-weight:700;color:#334155;}
     
-    .slide-badge {
-      display: none; /* Hide badge, use header instead */
-    }
-
-    .slide .lead-text {
-      font-size: 1.3rem;
-      color: #334155;
-      margin-bottom: 30px;
-      line-height: 1.6;
-      background: #f8fafc;
-      padding: 24px;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-    }
-
-    /* Cards Layout */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-top: 20px;
-    }
-
-    .content-card {
-      background: #f1f5f9;
-      padding: 24px;
-      border-radius: 16px;
-      border: 1px solid #e2e8f0;
-      text-align: center;
-    }
-
-    .content-card h3 {
-      font-family: 'Merriweather', serif;
-      color: #1e3a8a;
-      font-size: 1.4rem;
-      margin-bottom: 12px;
-      margin-top: 16px;
-    }
-
-    .content-card p {
-      color: #475569;
-      font-size: 1.05rem;
-      line-height: 1.5;
-    }
-
-    .icon-large {
-      font-size: 2.5rem;
-    }
-
-    /* Standard Lists */
-    .slide-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      padding-left: 0;
-    }
-
-    .slide-list li {
-      position: relative;
-      padding-left: 40px;
-      font-size: 1.2rem;
-      color: #334155;
-      line-height: 1.6;
-    }
-
-    .slide-list li::before {
-      content: '●';
-      position: absolute;
-      left: 0;
-      top: 2px;
-      color: #3b82f6;
-      font-size: 1.2rem;
-    }
-
-    .slide-list li strong {
-      color: #1e3a8a;
-      font-weight: 700;
-    }
-
-    .slide-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      margin-top: 20px;
-      font-size: 1.1rem;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #e2e8f0;
-    }
-
-    .slide-table th {
-      background: #f8fafc;
-      color: #1e40af;
-      padding: 16px 20px;
-      text-align: left;
-      border-bottom: 2px solid #e2e8f0;
-    }
-
-    .slide-table td {
-      padding: 16px 20px;
-      border-bottom: 1px solid #e2e8f0;
-      color: #475569;
-      background: white;
-    }
-
-    /* ── Bottom Controls ── */
-    .slide-controls {
-      height: 70px;
-      background: white;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 40px;
-      z-index: 1001;
-    }
-
-    .btn-nav {
-      background: #2563eb;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 24px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-
-    .btn-nav:hover:not(:disabled) {
-      background: #1d4ed8;
-      transform: translateY(-2px);
-    }
-
-    .btn-nav:disabled {
-      background: #cbd5e1;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-nav.secondary {
-      background: #f1f5f9;
-      color: #3b82f6;
-    }
-
-    .btn-nav.secondary:hover:not(:disabled) {
-      background: #e2e8f0;
-    }
-
-    .slide-progress-wrapper {
-      flex: 1;
-      margin: 0 60px;
-      text-align: center;
-    }
-
-    .slide-progress-text {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #64748b;
-      margin-bottom: 8px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .slide-progress-bar {
-      height: 6px;
-      background: #f1f5f9;
-      border-radius: 99px;
-      overflow: hidden;
-    }
-
-    .slide-progress-fill {
-      height: 100%;
-      background: #3b82f6;
-      width: 0%;
-      transition: width 0.4s ease;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 1024px) {
-      .slide { padding: 40px; }
-      .slide.cover-slide h1 { font-size: 3.5rem; }
-      .slide h2 { font-size: 2.2rem; }
-    }
-
-    @media (max-width: 768px) {
-      .slide-controls { padding: 0 20px; }
-      .btn-nav span { display: none; }
-      .slide { padding: 30px 20px; }
-      .slide.cover-slide.left-align { padding-left: 30px; }
-    }
+    /* CLOSING */
+    .career-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(195px,1fr)); gap:14px; margin-top:16px; }
+    .career-card { border-radius:12px; padding:16px; background:white; border:1px solid #e2e8f0; transition:all 0.25s; }
+    .career-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.08); border-color:#93c5fd; }
+    .bp-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+    .bp-card { border-radius:12px; padding:16px; background:white; border:1px solid #e2e8f0; display:flex; gap:12px; }
+    .sum-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; margin-top:16px; }
+    .sum-card { border-radius:12px; padding:16px; background:white; border:1px solid #e2e8f0; }
+    .quiz-item { background:white; border:1px solid #e2e8f0; border-radius:12px; padding:14px 18px; display:flex; align-items:flex-start; gap:14px; margin-bottom:12px; }
+    .ref-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px; margin-top:16px; }
+    .ref-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; }
   </style>
 </head>
-
 <body>
-
   <div class="slide-viewer">
-
     <div class="slide-navbar">
-      <a href="../../index.html">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round">
-          <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
-        Kembali ke Beranda
-      </a>
-      <div style="display: flex; align-items: center; gap: 20px;">
-        <div style="font-size: 0.8rem; color: #64748b; font-weight: 600;">VINIX7 Web Developer</div>
-        <button id="btn-fullscreen"
-          style="background: none; border: none; cursor: pointer; color: #64748b; display: flex; align-items: center; justify-content: center; padding: 4px; border-radius: 4px; transition: background 0.2s, color 0.2s;"
-          title="Toggle Fullscreen (Tekan F)"
-          onmouseover="this.style.background='#f1f5f9'; this.style.color='#2563eb'"
-          onmouseout="this.style.background='none'; this.style.color='#64748b'">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-          </svg>
+      <a href="../../index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Kembali ke Beranda</a>
+      <div style="display:flex;align-items:center;gap:20px;">
+        <div style="font-size:.8rem;color:#64748b;font-weight:600;">VINIX7 Web Developer</div>
+        <button id="btn-fullscreen" style="background:none;border:none;cursor:pointer;color:#64748b;padding:4px;border-radius:4px;" title="Toggle Fullscreen (F)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
         </button>
       </div>
     </div>
@@ -438,712 +294,850 @@
 
       <!-- SLIDE 1: COVER -->
       <div class="slide cover-slide left-align" id="slide-1">
-        <div class="icon-wrapper" style="text-align: left; margin-bottom: 20px;">
-          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        <div style="text-align:left;margin-bottom:20px;">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         </div>
         <h1>Pengenalan<br>Web, UI/UX &<br>Wireframe</h1>
         <div class="accent-line"></div>
       </div>
-      
+
+      <!-- SLIDE 2: DAFTAR ISI -->
       <div class="slide" id="slide-2">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem;">📋</span>
-          <h2>Daftar Isi</h2>
-        </div>
+        <div class="slide-header"><span style="font-size:2.5rem;">📋</span><h2>Daftar Isi</h2></div>
         <div class="cards-grid">
-          <div class="content-card" style="display: flex; align-items: center; text-align: left; gap: 20px;">
-             <div style="background: #2563eb; color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem;">01</div>
-             <p style="margin: 0; font-weight: 600;">Pengenalan World Wide Web</p>
-          </div>
-          <div class="content-card" style="display: flex; align-items: center; text-align: left; gap: 20px;">
-             <div style="background: #8b5cf6; color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem;">02</div>
-             <p style="margin: 0; font-weight: 600;">Bagaimana Internet Bekerja</p>
-          </div>
-          <div class="content-card" style="display: flex; align-items: center; text-align: left; gap: 20px;">
-             <div style="background: #06b6d4; color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem;">03</div>
-             <p style="margin: 0; font-weight: 600;">Teknologi Web (HTML, CSS, JS)</p>
-          </div>
-          <div class="content-card" style="display: flex; align-items: center; text-align: left; gap: 20px;">
-             <div style="background: #10b981; color: white; padding: 15px 20px; border-radius: 8px; font-weight: bold; font-size: 1.2rem;">04</div>
-             <p style="margin: 0; font-weight: 600;">Pengenalan UI/UX Design</p>
-          </div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#2563eb;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">01</div><p style="margin:0;font-weight:600;">Pengenalan World Wide Web</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#0891b2;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">02</div><p style="margin:0;font-weight:600;">Teknologi Dasar Web (HTML, CSS, JS)</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#8b5cf6;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">03</div><p style="margin:0;font-weight:600;">Pengenalan UI/UX Design</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#10b981;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">04</div><p style="margin:0;font-weight:600;">Wireframe & Prototyping</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#f59e0b;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">05</div><p style="margin:0;font-weight:600;">Komponen Website (FE, BE, DB)</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#f43f5e;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">06</div><p style="margin:0;font-weight:600;">Arsitektur Web (Monolith vs Micro)</p></div>
         </div>
       </div>
 
+      <!-- BAGIAN 1 -->
       <div class="slide section-slide" id="slide-3">
-        <div class="icon-wrapper">
-          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-        </div>
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
         <h2>BAGIAN 1</h2>
         <p>Pengenalan World Wide Web</p>
       </div>
 
       <div class="slide" id="slide-4">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #0ea5e9;">🌐</span>
-          <h2>Apa itu World Wide Web?</h2>
-        </div>
-        <p class="lead-text">World Wide Web (WWW) adalah sistem informasi di internet yang memungkinkan dokumen dan sumber daya terhubung satu sama lain melalui hyperlink dan dapat diakses melalui browser.</p>
-        
-        <div class="cards-grid">
-          <div class="content-card">
-            <div class="icon-large">📅</div>
-            <h3>Ditemukan</h3>
-            <p>Tim Berners-Lee, 1989 di CERN, Swiss</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">🔗</div>
-            <h3>Hyperlink</h3>
-            <p>Menghubungkan dokumen melalui URL</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">🌍</div>
-            <h3>Global</h3>
-            <p>Lebih dari 1.9 miliar website aktif</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">📱</div>
-            <h3>Multi-Device</h3>
-            <p>PC, Tablet, HP, SmartTV, dll</p>
-          </div>
+        <div class="slide-header"><span style="font-size:2.5rem;color:#0ea5e9;">🌐</span><h2>Apa itu World Wide Web?</h2></div>
+        <p class="lead-text">World Wide Web (WWW) adalah sistem informasi di internet yang memungkinkan dokumen dan sumber daya terhubung satu sama lain melalui <strong>hyperlink</strong> dan dapat diakses melalui browser.</p>
+        <div class="net-wrap">
+          <svg width="100%" height="100%" style="position:absolute;z-index:1;">
+            <line x1="50%" y1="50%" x2="25%" y2="25%" stroke="#bfdbfe" stroke-width="4"/>
+            <line x1="50%" y1="50%" x2="75%" y2="25%" stroke="#bfdbfe" stroke-width="4"/>
+            <line x1="50%" y1="50%" x2="25%" y2="75%" stroke="#bfdbfe" stroke-width="4"/>
+            <line x1="50%" y1="50%" x2="75%" y2="75%" stroke="#bfdbfe" stroke-width="4"/>
+          </svg>
+          <div class="net-node" style="top:25%; left:25%; transform:translate(-50%,-50%);"><span style="font-size:1.8rem">📄</span>HTML</div>
+          <div class="net-node" style="top:25%; left:75%; transform:translate(-50%,-50%);"><span style="font-size:1.8rem">🖼️</span>Media</div>
+          <div class="net-node" style="top:75%; left:25%; transform:translate(-50%,-50%);"><span style="font-size:1.8rem">🔗</span>Links</div>
+          <div class="net-node" style="top:75%; left:75%; transform:translate(-50%,-50%);"><span style="font-size:1.8rem">📱</span>Devices</div>
+          <div class="net-center"><span style="font-size:2.5rem">🌐</span><span style="font-size:1.2rem;letter-spacing:0.1em;">WWW</span></div>
         </div>
       </div>
 
       <div class="slide" id="slide-5">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #64748b;">🔄</span>
-          <h2>Internet vs World Wide Web</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">🔄</span><h2>Internet vs World Wide Web</h2></div>
+        <div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:14px 20px;border-radius:8px;font-size:1.1rem;font-weight:700;color:#334155;margin-bottom:20px;">💡 Internet = <strong>Jalan Raya</strong> &nbsp;|&nbsp; World Wide Web = <strong>Kendaraan</strong> yang berjalan di atasnya</div>
+        <div class="slide-two-col-equal">
+          <div class="vs-box">
+             <h3 style="color:#0f172a; margin:0 0 10px 0;">🌐 INTERNET</h3>
+             <p style="font-size:0.9rem;color:#475569;margin:0;">Infrastruktur global jaringan komputer.</p>
+             <div class="vs-graphic" style="background:#e2e8f0; border:none;">
+                <svg width="80%" height="80%" viewBox="0 0 100 100">
+                  <path d="M20,50 Q50,20 80,50 T20,80" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="5,5"/>
+                  <circle cx="20" cy="50" r="8" fill="#1e293b"/><circle cx="50" cy="20" r="8" fill="#1e293b"/>
+                  <circle cx="80" cy="50" r="8" fill="#1e293b"/><circle cx="50" cy="80" r="8" fill="#1e293b"/>
+                  <circle cx="50" cy="50" r="12" fill="#3b82f6"/>
+                </svg>
+             </div>
+             <ul style="font-size:0.9rem;color:#334155;padding-left:20px;margin:0;">
+               <li>Jaringan fisik: kabel, router, server</li>
+               <li>Protokol TCP/IP</li>
+               <li>Mencakup: Email, FTP, VoIP, Web</li>
+             </ul>
+          </div>
+          <div class="vs-box">
+             <h3 style="color:#6d28d9; margin:0 0 10px 0;">🕸️ WORLD WIDE WEB</h3>
+             <p style="font-size:0.9rem;color:#475569;margin:0;">Layanan yang berjalan di atas internet.</p>
+             <div class="vs-graphic" style="background:#faf5ff; border-color:#d8b4fe;">
+                <div style="width:120px; height:80px; background:white; border:2px solid #8b5cf6; border-radius:6px; overflow:hidden;">
+                  <div style="height:12px; background:#e9d5ff; display:flex; gap:4px; padding:0 4px; align-items:center;"><div style="width:6px; height:6px; background:#d8b4fe; border-radius:50%;"></div></div>
+                  <div style="padding:10px; text-align:center;"><div style="width:60%; height:6px; background:#a855f7; margin:0 auto 10px auto; border-radius:4px;"></div><div style="width:80%; height:4px; background:#e9d5ff; margin:0 auto; border-radius:4px;"></div></div>
+                </div>
+             </div>
+             <ul style="font-size:0.9rem;color:#334155;padding-left:20px;margin:0;">
+               <li>Dokumen HTML / Website</li>
+               <li>Protokol HTTP/HTTPS</li>
+               <li>Menggunakan Browser sebagai klien</li>
+             </ul>
+          </div>
         </div>
-        <table class="slide-table" style="margin-top: 30px;">
-          <tr>
-            <th style="font-size: 1.4rem; text-align: center;">🌐 INTERNET</th>
-            <th style="font-size: 1.4rem; text-align: center; color: #8b5cf6;">🕸️ WORLD WIDE WEB</th>
-          </tr>
-          <tr>
-            <td>Infrastruktur global jaringan komputer yang saling terhubung</td>
-            <td>Layanan yang berjalan di atas internet menggunakan HTTP/HTTPS</td>
-          </tr>
-          <tr>
-            <td>Jaringan fisik (kabel, router)</td>
-            <td>Dokumen HTML/Website</td>
-          </tr>
-          <tr>
-            <td>Protokol TCP/IP</td>
-            <td>Protokol HTTP/HTTPS</td>
-          </tr>
-          <tr>
-            <td>Email, FTP, VoIP</td>
-            <td>Browser sebagai klien</td>
-          </tr>
-          <tr>
-            <td>Infrastruktur lebih luas</td>
-            <td>Bagian dari internet</td>
-          </tr>
-        </table>
       </div>
 
+      <!-- BAGIAN 2 -->
       <div class="slide section-slide" id="slide-6">
-        <div class="icon-wrapper">💻</div>
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">💻</div>
         <h2>BAGIAN 2</h2>
         <p>Teknologi Dasar Web: HTML, CSS & JavaScript</p>
       </div>
 
       <div class="slide" id="slide-7">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem;">🏷️</span>
-          <h2 style="color: #f59e0b;">HTML — HyperText Markup Language</h2>
-        </div>
-        <p class="lead-text">HTML adalah bahasa markup standar untuk membuat struktur halaman web. Setiap elemen didefinisikan menggunakan tag.</p>
-        
-        <div style="display: flex; gap: 30px; margin-top: 20px;">
-          <div style="flex: 1; background: #1e293b; color: #e2e8f0; padding: 24px; border-radius: 12px; font-family: monospace; font-size: 1.1rem; line-height: 1.6;">
-            &lt;!DOCTYPE html&gt;<br>
-            &lt;html lang='id'&gt;<br>
-            &nbsp;&nbsp;&lt;head&gt;<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Halaman Pertama&lt;/title&gt;<br>
-            &nbsp;&nbsp;&lt;/head&gt;<br>
-            &nbsp;&nbsp;&lt;body&gt;<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&lt;h1&gt;Halo Dunia!&lt;/h1&gt;<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Ini paragraf pertama.&lt;/p&gt;<br>
-            &nbsp;&nbsp;&lt;/body&gt;<br>
-            &lt;/html&gt;
-          </div>
-          <div style="flex: 1; display: flex; flex-direction: column; gap: 15px;">
-            <div style="background: #fef3c7; padding: 16px; border-radius: 8px;"><strong>&lt;html&gt;</strong>: Root element</div>
-            <div style="background: #fef3c7; padding: 16px; border-radius: 8px;"><strong>&lt;head&gt;</strong>: Metadata halaman</div>
-            <div style="background: #fef3c7; padding: 16px; border-radius: 8px;"><strong>&lt;body&gt;</strong>: Konten yang tampil</div>
-            <div style="background: #fef3c7; padding: 16px; border-radius: 8px;"><strong>&lt;h1&gt;-&lt;h6&gt;</strong>: Heading / Judul</div>
-          </div>
+        <div class="slide-header"><span style="font-size:2.5rem;">🛠️</span><h2>Tiga Pilar Teknologi Web</h2></div>
+        <p class="lead-text">Setiap website modern dibangun menggunakan tiga bahasa utama yang bekerja sama seperti bagian-bagian dari sebuah rumah.</p>
+        <div class="pilar-diag">
+          <div class="pd-box"><div class="pd-icon">🧱</div><strong>HTML</strong><span>Struktur & Konten (Dinding, lantai)</span></div>
+          <div class="pd-plus">+</div>
+          <div class="pd-box"><div class="pd-icon">🎨</div><strong>CSS</strong><span>Tampilan & Gaya (Cat, jendela)</span></div>
+          <div class="pd-plus">+</div>
+          <div class="pd-box"><div class="pd-icon">⚡</div><strong>JS</strong><span>Interaksi & Logika (Listrik, air)</span></div>
+          <div class="pd-eq">=</div>
+          <div class="pd-box pd-final"><div class="pd-icon">🏠</div><strong>Website</strong><span>Berfungsi Utuh dan Dinamis</span></div>
         </div>
       </div>
-      
-      <div class="slide section-slide" id="slide-8">
-        <div class="icon-wrapper">🎨</div>
+
+      <div class="slide" id="slide-8">
+        <div class="slide-header"><span style="font-size:2.5rem;">🏷️</span><h2 style="color:#b45309;">HTML — Struktur (Skeleton)</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box">
+            <span class="tag">&lt;h1&gt;</span>Website Saya<span class="tag">&lt;/h1&gt;</span><br>
+            <span class="tag">&lt;p&gt;</span>Ini adalah paragraf.<span class="tag">&lt;/p&gt;</span><br>
+            <span class="tag">&lt;button&gt;</span>Klik Saya<span class="tag">&lt;/button&gt;</span>
+          </div>
+          <div class="bm-wrap">
+            <div class="bm-head"><div class="bm-dot r"></div><div class="bm-dot y"></div><div class="bm-dot g"></div></div>
+            <div class="bm-body skel">
+              <div class="sk-img">Gambar / Logo</div>
+              <div class="sk-h"></div>
+              <div class="sk-p"></div>
+              <div class="sk-p" style="width:80%;"></div>
+              <div class="sk-btn"></div>
+            </div>
+          </div>
+        </div>
+        <div class="tech-tags"><span class="tech-tag" style="border-color:#f59e0b;color:#b45309;">Tag</span><span class="tech-tag" style="border-color:#f59e0b;color:#b45309;">Elemen</span><span class="tech-tag" style="border-color:#f59e0b;color:#b45309;">Struktur Data</span></div>
+      </div>
+
+      <div class="slide" id="slide-9">
+        <div class="slide-header"><span style="font-size:2.5rem;">🎨</span><h2 style="color:#075985;">CSS — Tampilan (Skin)</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box">
+            <span class="sel">h1</span> { <span class="kw">color</span>: <span class="str">#1e3a8a</span>; }<br>
+            <span class="sel">button</span> {<br>
+            &nbsp;&nbsp;<span class="kw">background</span>: <span class="str">#2563eb</span>;<br>
+            &nbsp;&nbsp;<span class="kw">border-radius</span>: <span class="str">8px</span>;<br>
+            }
+          </div>
+          <div class="bm-wrap">
+            <div class="bm-head"><div class="bm-dot r"></div><div class="bm-dot y"></div><div class="bm-dot g"></div></div>
+            <div class="bm-body styled">
+              <div class="st-img"></div>
+              <h1 class="st-h">Website Saya</h1>
+              <p class="st-p">Ini adalah paragraf yang sudah memiliki gaya dan warna.</p>
+              <button class="st-btn">Klik Saya</button>
+            </div>
+          </div>
+        </div>
+        <div class="tech-tags"><span class="tech-tag" style="border-color:#0ea5e9;color:#075985;">Warna</span><span class="tech-tag" style="border-color:#0ea5e9;color:#075985;">Layout</span><span class="tech-tag" style="border-color:#0ea5e9;color:#075985;">Animasi</span></div>
+      </div>
+
+      <div class="slide" id="slide-10">
+        <div class="slide-header"><span style="font-size:2.5rem;">⚡</span><h2 style="color:#713f12;">JavaScript — Interaksi (Muscle)</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box">
+            <span class="kw">const</span> btn = document.querySelector(<span class="str">'button'</span>);<br>
+            btn.addEventListener(<span class="str">'click'</span>, () => {<br>
+            &nbsp;&nbsp;alert(<span class="str">'Berhasil diklik!'</span>);<br>
+            });
+          </div>
+          <div class="bm-wrap">
+            <div class="bm-head"><div class="bm-dot r"></div><div class="bm-dot y"></div><div class="bm-dot g"></div></div>
+            <div class="bm-body styled interact">
+              <div class="st-img"></div>
+              <h1 class="st-h">Website Interaktif</h1>
+              <p class="st-p">Tombol di bawah ini merespons aksi klik pengguna berkat JavaScript.</p>
+              <button class="st-btn">Klik Saya!</button>
+            </div>
+          </div>
+        </div>
+        <div class="tech-tags"><span class="tech-tag" style="border-color:#eab308;color:#713f12;">DOM Manipulation</span><span class="tech-tag" style="border-color:#eab308;color:#713f12;">Event Listener</span><span class="tech-tag" style="border-color:#eab308;color:#713f12;">API Fetch</span></div>
+      </div>
+
+      <!-- BAGIAN 3 -->
+      <div class="slide section-slide" id="slide-11">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">🎨</div>
         <h2>BAGIAN 3</h2>
         <p>Pengenalan UI/UX Design</p>
       </div>
 
-      <div class="slide" id="slide-9">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem;">🖥️</span>
-          <h2>Apa itu UI (User Interface)?</h2>
+      <div class="slide" id="slide-12">
+        <div class="slide-header"><span style="font-size:2.5rem;">🖥️</span><h2>Apa itu UI (User Interface)?</h2></div>
+        <p class="lead-text">UI adalah <strong>semua elemen visual</strong> yang terlihat dan digunakan pengguna untuk berinteraksi dengan produk digital.</p>
+        <div class="ui-showcase">
+          <div class="ui-panel"><div style="font-weight:700;color:#64748b;font-size:0.8rem;margin-bottom:8px;">Button & CTA</div><button class="real-btn">Mulai Sekarang</button></div>
+          <div class="ui-panel"><div style="font-weight:700;color:#64748b;font-size:0.8rem;margin-bottom:8px;">Form Input</div><input type="text" placeholder="Masukkan email..." class="real-input" /></div>
+          <div class="ui-panel"><div style="font-weight:700;color:#64748b;font-size:0.8rem;margin-bottom:8px;">Interactive Toggle</div><div class="real-toggle"></div></div>
+          <div class="ui-panel" style="width:250px;"><div style="font-weight:700;color:#64748b;font-size:0.8rem;margin-bottom:8px;">Card Layout</div><div class="real-card" style="width:100%;"><div class="real-av"></div><div><div class="real-txt" style="margin-bottom:6px;background:#3b82f6;"></div><div class="real-txt" style="width:50px;"></div></div></div></div>
         </div>
-        <p class="lead-text">User Interface (UI) adalah semua elemen visual yang terlihat dan digunakan oleh pengguna untuk berinteraksi dengan produk digital.</p>
-        
-        <div class="cards-grid">
-          <div class="content-card">
-            <div class="icon-large">🔘</div>
-            <h3>Tombol (Button)</h3>
-            <p>CTA, Submit, Cancel</p>
+      </div>
+
+      <div class="slide" id="slide-13">
+        <div class="slide-header"><span style="font-size:2.5rem;color:#8b5cf6;">👤</span><h2 style="color:#6d28d9;">Apa itu UX (User Experience)?</h2></div>
+        <p class="lead-text">UX adalah <strong>keseluruhan pengalaman</strong> yang dirasakan pengguna saat berinteraksi dengan produk — kemudahan, kenyamanan, dan efisiensi.</p>
+        <div class="honeycomb">
+          <div class="hex"><div class="hex-icon">💡</div><div class="hex-title">Useful</div><div style="font-size:0.7rem;color:#475569;">Berguna</div></div>
+          <div class="hex"><div class="hex-icon">🎯</div><div class="hex-title">Usable</div><div style="font-size:0.7rem;color:#475569;">Mudah Dipakai</div></div>
+          <div class="hex"><div class="hex-icon">😊</div><div class="hex-title">Desirable</div><div style="font-size:0.7rem;color:#475569;">Menyenangkan</div></div>
+          <div class="hex"><div class="hex-icon">🔍</div><div class="hex-title">Findable</div><div style="font-size:0.7rem;color:#475569;">Mudah Dicari</div></div>
+          <div class="hex"><div class="hex-icon">♿</div><div class="hex-title">Accessible</div><div style="font-size:0.7rem;color:#475569;">Inklusif</div></div>
+          <div class="hex"><div class="hex-icon">🔒</div><div class="hex-title">Credible</div><div style="font-size:0.7rem;color:#475569;">Terpercaya</div></div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-14">
+        <div class="slide-header"><span style="font-size:2.5rem;">⚖️</span><h2>Perbedaan UI dan UX</h2></div>
+        <div class="ice-wrap">
+          <div class="ice-sky">
+             <div style="font-weight:800; color:#0369a1; margin-bottom:16px; letter-spacing:0.1em;">CARA PRODUK TERLIHAT</div>
+             <div class="ice-tip">UI Design</div>
+             <div class="ice-tags"><span class="ice-tag" style="background:#0284c7;">Warna</span><span class="ice-tag" style="background:#0284c7;">Tipografi</span><span class="ice-tag" style="background:#0284c7;">Layout</span><span class="ice-tag" style="background:#0284c7;">Animasi</span></div>
           </div>
-          <div class="content-card">
-            <div class="icon-large">📝</div>
-            <h3>Form Input</h3>
-            <p>Text field, dropdown, checkbox</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">🎨</div>
-            <h3>Warna (Color)</h3>
-            <p>Palet warna brand</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">🔤</div>
-            <h3>Tipografi</h3>
-            <p>Font, ukuran, style</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">📐</div>
-            <h3>Layout & Grid</h3>
-            <p>Susunan elemen di layar</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">🖼️</div>
-            <h3>Ikon & Gambar</h3>
-            <p>Visual elemen pendukung</p>
+          <div class="ice-water"></div>
+          <div class="ice-sea">
+             <div class="ice-base">
+                <span style="font-size:1rem; font-weight:700; opacity:0.8; letter-spacing:0.1em; margin-bottom:10px;">CARA PRODUK BEKERJA</span>
+                UX Design
+             </div>
+             <div class="ice-tags" style="max-width:400px; margin-top:24px;">
+               <span class="ice-tag">User Research</span><span class="ice-tag">Psikologi Kognitif</span><span class="ice-tag">Information Architecture</span><span class="ice-tag">User Flow</span><span class="ice-tag">Wireframing</span><span class="ice-tag">Usability Testing</span>
+             </div>
           </div>
         </div>
       </div>
 
-      <div class="slide" id="slide-10">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">👤</span>
-          <h2 style="color: #6d28d9;">Apa itu UX (User Experience)?</h2>
-        </div>
-        <p class="lead-text">User Experience (UX) adalah keseluruhan pengalaman yang dirasakan pengguna saat berinteraksi dengan produk — mencakup kemudahan, kenyamanan, kepuasan, dan efisiensi.</p>
-        
-        <div class="cards-grid">
-          <div class="content-card">
-            <div class="icon-large">💡</div>
-            <h3>Useful</h3>
-            <p>(Berguna)</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">🎯</div>
-            <h3>Usable</h3>
-            <p>(Mudah digunakan)</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">😊</div>
-            <h3>Desirable</h3>
-            <p>(Menyenangkan)</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">🔍</div>
-            <h3>Findable</h3>
-            <p>(Mudah ditemukan)</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">♿</div>
-            <h3>Accessible</h3>
-            <p>(Dapat diakses)</p>
-          </div>
-          <div class="content-card">
-            <div class="icon-large">🔒</div>
-            <h3>Credible</h3>
-            <p>(Terpercaya)</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="slide" id="slide-11">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem;">⚖️</span>
-          <h2>Perbedaan UI dan UX</h2>
-        </div>
-        <div style="background: #f8fafc; border-left: 4px solid #f59e0b; padding: 20px; border-radius: 8px; margin-bottom: 30px; font-size: 1.2rem; font-weight: bold; color: #334155;">
-          💡 UI = CARA PRODUK TERLIHAT &nbsp; | &nbsp; UX = CARA PRODUK TERASA DAN BEKERJA
-        </div>
-        <table class="slide-table">
-          <tr>
-            <th style="font-size: 1.4rem;">🖥️ UI Design</th>
-            <th style="font-size: 1.4rem; color: #6d28d9;">👤 UX Design</th>
-          </tr>
-          <tr>
-            <td>Fokus pada tampilan visual</td>
-            <td>Fokus pada pengalaman user</td>
-          </tr>
-          <tr>
-            <td>Warna, tipografi, ikon</td>
-            <td>Alur & navigasi produk</td>
-          </tr>
-          <tr>
-            <td>Layout & komposisi</td>
-            <td>Penelitian pengguna</td>
-          </tr>
-          <tr>
-            <td>Konsistensi visual & Estetika</td>
-            <td>Pemecahan masalah & Kepuasan</td>
-          </tr>
-          <tr>
-            <td><strong>Output:</strong> Mockup / Prototype Visual Final</td>
-            <td><strong>Output:</strong> Wireframe / User Flow / Journey Map</td>
-          </tr>
-        </table>
-      </div>
-      
-      <div class="slide section-slide" id="slide-12">
-        <div class="icon-wrapper">📐</div>
+      <!-- BAGIAN 4 -->
+      <div class="slide section-slide" id="slide-15">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">📐</div>
         <h2>BAGIAN 4</h2>
         <p>Wireframe & Prototyping</p>
       </div>
 
-      <div class="slide" id="slide-13">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">📐</span>
-          <h2 style="color: #6d28d9;">Apa itu Wireframe?</h2>
-        </div>
-        <p class="lead-text">Wireframe adalah sketsa/rancangan kasar struktur halaman web atau aplikasi yang menunjukkan tata letak elemen tanpa detail visual seperti warna, font, atau gambar nyata.</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Hanya bentuk & layout, bukan visual final</li>
-          <li>Kotak mewakili gambar, teks sebagai placeholder</li>
-          <li>Menentukan hierarki konten halaman</li>
-          <li>Cepat dibuat, mudah direvisi</li>
-          <li>Alat komunikasi tim (desainer, developer, klien)</li>
-        </ul>
-      </div>
-
-      
-      <div class="slide" id="slide-14">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">🖥️</span>
-          <h2 style="color: #1e40af;">📊  Jenis-Jenis Wireframe</h2>
-        </div>
-        <p class="lead-text">Low-Fidelity</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>(Lo-Fi)</li>
-          <li>Sketsa tangan atau digital sederhana</li>
-          <li>Tanpa detail visual</li>
-          <li>Sangat cepat dibuat</li>
-          <li>Untuk ide awal & brainstorm</li>
-          <li>Untuk: Tahap awal / ideasi</li>
-          <li>Mid-Fidelity</li>
-          <li>(Mid-Fi)</li>
-          <li>Digital, lebih terstruktur</li>
-          <li>Grid & spacing mulai jelas</li>
-          <li>Placeholder teks & gambar</li>
-          <li>Navigasi & flow mulai detail</li>
-          <li>Untuk: Presentasi & feedback</li>
-          <li>High-Fidelity</li>
-          <li>(Hi-Fi)</li>
-          <li>Mendekati desain final</li>
-          <li>Warna, font, ikon nyata</li>
-          <li>Interaktif (clickable)</li>
-          <li>Dasar handoff ke developer</li>
-          <li>Untuk: Prototype & testing</li>
-        </ul>
-      </div>
-        
-
-      <div class="slide" id="slide-15">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">☰</span>
-          <h2 style="color: #1e40af;">🧩  Elemen-Elemen dalam Wireframe</h2>
-        </div>
-        <p class="lead-text">[ ]</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Navigation Bar</li>
-          <li>Menu utama, logo, dan CTA header</li>
-          <li>[ ▬▬▬ ]</li>
-          <li>Hero Section</li>
-          <li>Banner utama dengan headline & tombol</li>
-          <li>Image Placeholder</li>
-          <li>Kotak dengan 'X' diagonal</li>
-          <li>═══</li>
-          <li>Text Block</li>
-          <li>Garis horizontal sebagai placeholder teks</li>
-          <li>[ Button ]</li>
-          <li>Call-to-Action</li>
-          <li>Tombol aksi utama pengguna</li>
-          <li>Hamburger Menu</li>
-          <li>Menu mobile/collapse</li>
-          <li>[ ▼ ]</li>
-          <li>Dropdown</li>
-          <li>Pilihan yang dapat diperluas</li>
-          <li>[ Form ]</li>
-          <li>Input Field</li>
-          <li>Kotak isian untuk user input</li>
-          <li>═══════</li>
-          <li>Footer</li>
-          <li>Area bawah dengan info & link</li>
-        </ul>
-      </div>
-        
-
       <div class="slide" id="slide-16">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">📱</span>
-          <h2 style="color: #1e40af;">🔗  Prototyping</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;color:#8b5cf6;">📐</span><h2 style="color:#6d28d9;">Apa itu Wireframe?</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <p style="font-size:1.1rem;color:#334155;line-height:1.6;">Wireframe adalah <strong>sketsa rancangan kasar</strong> halaman web yang menunjukkan tata letak struktur tanpa detail visual final.</p>
+            <div class="feature-badges">
+              <div class="f-badge"><span>⬛</span> Tanpa Warna & Gambar Nyata</div>
+              <div class="f-badge"><span>📐</span> Fokus pada Layout & Struktur</div>
+              <div class="f-badge"><span>⚡</span> Sangat Cepat Dibuat & Direvisi</div>
+              <div class="f-badge"><span>🤝</span> Alat Komunikasi Tim & Klien</div>
+            </div>
+          </div>
+          <div>
+            <div class="wf-visual" style="box-shadow:0 10px 30px rgba(0,0,0,0.1);">
+              <div class="wf-v-nav">
+                <div style="display:flex;gap:4px;align-items:center;"><div class="wf-box" style="width:50px;height:12px;"></div></div>
+                <div style="display:flex;gap:6px;align-items:center;"><div class="wf-box" style="width:36px;height:9px;"></div><div class="wf-box" style="width:36px;height:9px;"></div><div class="wf-box" style="width:48px;height:18px;border-radius:3px;background:#94a3b8;"></div></div>
+              </div>
+              <div class="wf-v-hero">
+                <div style="flex:1;"><div class="wf-box" style="height:10px;width:85%;margin-bottom:6px;"></div><div class="wf-box" style="height:7px;width:65%;margin-bottom:10px;"></div><div class="wf-box" style="height:20px;width:90px;border-radius:3px;background:#94a3b8;"></div></div>
+                <div class="wf-placeholder" style="width:90px;height:70px;font-size:0;"></div>
+              </div>
+              <div class="wf-v-text">
+                <div class="wf-box" style="height:7px;width:100%;"></div><div class="wf-box" style="height:7px;width:88%;"></div><div class="wf-box" style="height:7px;width:72%;"></div>
+              </div>
+              <div class="wf-v-cards">
+                <div class="wf-box" style="height:40px;"></div><div class="wf-box" style="height:40px;"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <p class="lead-text">Prototype adalah simulasi interaktif produk yang memungkinkan pengguna 'merasakan' cara kerja produk sebelum dikembangkan. Prototype dibuat dari wireframe yang dihubungkan satu sama lain.</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Paper Prototype</li>
-          <li>Sketsa kertas dihubungkan</li>
-          <li>dengan tangan. Cepat & murah.</li>
-          <li>Digital Lo-Fi</li>
-          <li>Wireframe digital</li>
-          <li>dengan link antar halaman.</li>
-          <li>Interactive Hi-Fi</li>
-          <li>Desain final interaktif</li>
-          <li>mendekati produk nyata.</li>
-          <li>✅  Manfaat Prototyping:</li>
-          <li>• Validasi ide sebelum coding</li>
-          <li>• Hemat waktu & biaya development</li>
-          <li>• Mudah mendapat feedback user</li>
-          <li>• Iterasi cepat tanpa kode</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-17">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">✏️</span>
-          <h2 style="color: #1e40af;">🛠️  Tools Wireframe & Prototyping</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">📊</span><h2>Jenis-Jenis Wireframe</h2></div>
+        <div class="wf-three-col">
+          <div class="wf-card" style="border-color:#94a3b8;background:#f8fafc;">
+            <div class="wf-badge" style="background:#64748b;color:white;">LO-FI</div>
+            <div class="wf-mock" style="background:white;border:1.5px solid #cbd5e1;">
+              <div class="wf-bar" style="height:9px;color:#e2e8f0;width:100%;margin-bottom:6px;"></div>
+              <div class="wf-bar" style="height:32px;color:#e2e8f0;width:100%;margin-bottom:6px;"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:5px;"><div class="wf-bar" style="height:22px;color:#e2e8f0;"></div><div class="wf-bar" style="height:22px;color:#e2e8f0;"></div></div>
+              <div class="wf-bar" style="height:6px;color:#e2e8f0;width:75%;margin-bottom:3px;"></div><div class="wf-bar" style="height:6px;color:#e2e8f0;width:55%;"></div>
+            </div>
+            <p class="wf-card-title">Low-Fidelity</p>
+            <p class="wf-card-desc">Sketsa kasar. Fokus ideasi cepat.</p>
+          </div>
+          <div class="wf-card" style="border-color:#3b82f6;background:#eff6ff;">
+            <div class="wf-badge" style="background:#3b82f6;color:white;">MID-FI</div>
+            <div class="wf-mock" style="background:white;border:1.5px solid #93c5fd;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;"><div style="height:10px;width:36px;background:#bfdbfe;border-radius:2px;"></div><div style="display:flex;gap:3px;"><div style="height:8px;width:24px;background:#dbeafe;border-radius:2px;"></div><div style="height:12px;width:32px;background:#3b82f6;border-radius:3px;"></div></div></div>
+              <div style="background:#dbeafe;border-radius:4px;padding:8px;margin-bottom:5px;display:flex;gap:6px;align-items:center;"><div style="flex:1;"><div style="height:5px;background:#bfdbfe;border-radius:2px;margin-bottom:3px;width:80%;"></div><div style="height:4px;background:#bfdbfe;border-radius:2px;width:60%;"></div></div><div style="width:28px;height:24px;background:#93c5fd;border-radius:3px;"></div></div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;"><div style="height:18px;background:#eff6ff;border-radius:3px;border:1px solid #bfdbfe;"></div><div style="height:18px;background:#eff6ff;border-radius:3px;border:1px solid #bfdbfe;"></div><div style="height:18px;background:#eff6ff;border-radius:3px;border:1px solid #bfdbfe;"></div></div>
+            </div>
+            <p class="wf-card-title">Mid-Fidelity</p>
+            <p class="wf-card-desc">Digital, rapi. Fokus presentasi struktur.</p>
+          </div>
+          <div class="wf-card" style="border-color:#8b5cf6;background:#faf5ff;">
+            <div class="wf-badge" style="background:#8b5cf6;color:white;">HI-FI</div>
+            <div class="wf-mock" style="background:white;border:1.5px solid #c4b5fd;overflow:hidden;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:0.55rem;font-weight:800;color:#7c3aed;">LOGO</span><div style="display:flex;gap:4px;align-items:center;"><span style="font-size:0.48rem;color:#475569;">Home</span><span style="background:#7c3aed;color:white;font-size:0.48rem;padding:1px 5px;border-radius:2px;font-weight:700;">CTA</span></div></div>
+              <div style="background:linear-gradient(135deg,#7c3aed,#a855f7);border-radius:4px;padding:7px;margin-bottom:4px;"><div style="font-size:0.55rem;color:white;font-weight:700;margin-bottom:2px;">Headline</div><div style="height:3px;background:rgba(255,255,255,0.5);width:80%;margin-bottom:4px;"></div><div style="background:white;border-radius:2px;padding:2px 7px;display:inline-block;font-size:0.5rem;color:#7c3aed;font-weight:700;">Mulai</div></div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;"><div style="background:#f5f3ff;border-radius:3px;padding:3px;text-align:center;"><div style="font-size:0.65rem;">⭐</div></div><div style="background:#f5f3ff;border-radius:3px;padding:3px;text-align:center;"><div style="font-size:0.65rem;">💡</div></div><div style="background:#f5f3ff;border-radius:3px;padding:3px;text-align:center;"><div style="font-size:0.65rem;">🚀</div></div></div>
+            </div>
+            <p class="wf-card-title">High-Fidelity</p>
+            <p class="wf-card-desc">Visual final. Fokus User Testing.</p>
+          </div>
         </div>
-        <p class="lead-text">Figma</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Free & Pro</li>
-          <li>Kolaborasi real-time, paling populer saat ini</li>
-          <li>Adobe XD</li>
-          <li>Berbayar</li>
-          <li>Terintegrasi dengan ekosistem Adobe</li>
-          <li>Sketch</li>
-          <li>Mac Only</li>
-          <li>Standar industri untuk desainer Mac</li>
-          <li>Balsamiq</li>
-          <li>Lo-Fi Khusus</li>
-          <li>Khusus wireframe cepat gaya sketsa</li>
-          <li>InVision</li>
-          <li>Prototype</li>
-          <li>Platform prototyping & kolaborasi tim</li>
-          <li>Marvel App</li>
-          <li>Mudah</li>
-          <li>Cocok untuk pemula, gratis tersedia</li>
-          <li>Miro</li>
-          <li>Whiteboard</li>
-          <li>Mind mapping & low-fi wireframe</li>
-          <li>Pencil + Kertas</li>
-          <li>Manual</li>
-          <li>Paling cepat untuk ide awal</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-18">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">🚀</span>
-          <h2 style="color: #1e40af;">🔄  Alur Proses Desain UI/UX</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">🧩</span><h2>Elemen-Elemen Wireframe</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="wf-callout"><div class="wf-dot" style="background:#2563eb;"></div><div><div class="wf-callout-label">Navigation Bar</div><div class="wf-callout-desc">Menu utama, logo, CTA header</div></div></div>
+              <div class="wf-callout"><div class="wf-dot" style="background:#ef4444;"></div><div><div class="wf-callout-label">Image Placeholder</div><div class="wf-callout-desc">Kotak dengan garis silang diagonal</div></div></div>
+              <div class="wf-callout"><div class="wf-dot" style="background:#475569;"></div><div><div class="wf-callout-label">Text Block</div><div class="wf-callout-desc">Garis horizontal merepresentasikan teks</div></div></div>
+              <div class="wf-callout"><div class="wf-dot" style="background:#10b981;"></div><div><div class="wf-callout-label">CTA Button</div><div class="wf-callout-desc">Kotak tegas berisi label aksi utama</div></div></div>
+              <div class="wf-callout"><div class="wf-dot" style="background:#94a3b8;"></div><div><div class="wf-callout-label">Footer</div><div class="wf-callout-desc">Area bawah dengan info & link tambahan</div></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="wf-visual" style="box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+              <div class="wf-v-nav" style="border-bottom:2px solid #2563eb30;"><div style="width:50px;height:11px;background:#2563eb;border-radius:2px;opacity:0.6;"></div><div style="display:flex;gap:5px;"><div style="width:32px;height:9px;background:#2563eb;border-radius:2px;opacity:0.3;"></div><div style="width:44px;height:18px;background:#10b981;border-radius:3px;opacity:0.7;"></div></div></div>
+              <div class="wf-v-hero" style="background:#f5f3ff;"><div style="flex:1;"><div style="height:11px;background:#8b5cf6;border-radius:2px;width:85%;margin-bottom:6px;opacity:0.6;"></div><div style="height:22px;width:90px;background:#10b981;border-radius:4px;opacity:0.8;"></div></div><div style="width:90px;height:72px;background:#ef4444;border-radius:6px;opacity:0.3;position:relative;overflow:hidden;"><div style="position:absolute;top:50%;left:-10%;width:120%;height:1.5px;background:#ef4444;transform:rotate(12deg);"></div><div style="position:absolute;top:50%;left:-10%;width:120%;height:1.5px;background:#ef4444;transform:rotate(-12deg);"></div></div></div>
+              <div class="wf-v-text"><div style="height:7px;background:#475569;border-radius:2px;opacity:0.3;"></div><div style="height:7px;background:#475569;border-radius:2px;width:85%;opacity:0.2;"></div></div>
+              <div class="wf-v-footer" style="background:#94a3b820;"><div style="height:7px;background:#94a3b8;border-radius:2px;width:55%;opacity:0.4;"></div></div>
+            </div>
+          </div>
         </div>
-        <p class="lead-text">1. Research</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>User interview, survei, kompetitor analysis</li>
-          <li>2. Define</li>
-          <li>Problem statement, user persona, user journey</li>
-          <li>3. Information Architecture</li>
-          <li>Sitemap, user flow, navigasi</li>
-          <li>4. Wireframe</li>
-          <li>Lo-fi sketsa struktur tiap halaman</li>
-          <li>5. Visual Design</li>
-          <li>UI Design dengan warna, tipografi, aset</li>
-          <li>6. Prototype</li>
-          <li>Interaktif, siap untuk testing</li>
-          <li>7. User Testing</li>
-          <li>Usability testing, feedback, iterasi</li>
-          <li>8. Handoff</li>
-          <li>Desain final ke tim developer</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-19">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
-          <h2 style="color: #1e40af;">🗺️  Sitemap - Peta Struktur Website</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;color:#8b5cf6;">🔗</span><h2 style="color:#6d28d9;">Prototyping</h2></div>
+        <p class="lead-text">Prototype adalah <strong>simulasi interaktif</strong> produk yang memungkinkan pengguna 'merasakan' cara kerja produk sebelum dikembangkan dengan kode.</p>
+        <div class="proto-types">
+          <div class="proto-card" style="border-color:#94a3b8;"><div class="proto-icon">📄</div><div style="font-weight:800;color:#475569;">Wireframe</div><div style="font-size:0.8rem;margin-top:6px;color:#64748b;">Kerangka Dasar</div></div>
+          <div class="proto-arr">➜</div>
+          <div class="proto-card" style="border-color:#3b82f6;background:#eff6ff;"><div class="proto-icon">🔗</div><div style="font-weight:800;color:#1d4ed8;">Prototyping</div><div style="font-size:0.8rem;margin-top:6px;color:#64748b;">Menghubungkan Halaman</div></div>
+          <div class="proto-arr">➜</div>
+          <div class="proto-card" style="border-color:#8b5cf6;background:#faf5ff;"><div class="proto-icon">✨</div><div style="font-weight:800;color:#6d28d9;">Hi-Fi Design</div><div style="font-size:0.8rem;margin-top:6px;color:#64748b;">Visual Final Interaktif</div></div>
         </div>
-        <p class="lead-text">Sitemap adalah diagram hierarki yang menunjukkan semua halaman dalam website dan bagaimana mereka saling terhubung satu sama lain.</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>🏠 HOME</li>
-          <li>📖 Tentang</li>
-          <li>🛍️ Produk</li>
-          <li>📬 Kontak</li>
-          <li>📰 Blog</li>
-          <li>Kategori A</li>
-          <li>Kategori B</li>
-          <li>Detail Produk</li>
-          <li>💡  Sitemap dibuat sebelum wireframe agar tim memiliki gambaran lengkap struktur website yang akan dibangun.</li>
-        </ul>
+        <div style="text-align:center;margin-top:20px;font-size:1.1rem;font-weight:700;color:#10b981;">✅ Hemat Waktu & Biaya Development Karena Validasi Di Awal!</div>
       </div>
-        
 
       <div class="slide" id="slide-20">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">→</span>
-          <h2 style="color: #1e40af;">🔀  User Flow - Alur Pengguna</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">✏️</span><h2>Tools Wireframe & Prototyping</h2></div>
+        <div class="tools-grid">
+          <div class="tool-card"><div style="font-size:2rem;margin-bottom:10px;">🎨</div><div style="font-weight:800;font-size:1.1rem;color:#1e3a8a;">Figma</div><div class="tech-tag" style="background:#dcfce7;color:#065f46;border:none;margin:8px 0;">Paling Populer</div><div style="font-size:0.85rem;color:#64748b;">Kolaborasi real-time. Free & Pro.</div></div>
+          <div class="tool-card"><div style="font-size:2rem;margin-bottom:10px;">🖌️</div><div style="font-weight:800;font-size:1.1rem;color:#1e3a8a;">Adobe XD</div><div class="tech-tag" style="background:#fce7f3;color:#9d174d;border:none;margin:8px 0;">Profesional</div><div style="font-size:0.85rem;color:#64748b;">Ekosistem Adobe. Cepat & Ringan.</div></div>
+          <div class="tool-card"><div style="font-size:2rem;margin-bottom:10px;">💎</div><div style="font-weight:800;font-size:1.1rem;color:#1e3a8a;">Sketch</div><div class="tech-tag" style="background:#fef3c7;color:#92400e;border:none;margin:8px 0;">Mac Only</div><div style="font-size:0.85rem;color:#64748b;">Standar industri desainer Mac OS.</div></div>
+          <div class="tool-card"><div style="font-size:2rem;margin-bottom:10px;">📋</div><div style="font-weight:800;font-size:1.1rem;color:#1e3a8a;">Balsamiq</div><div class="tech-tag" style="background:#ede9fe;color:#5b21b6;border:none;margin:8px 0;">Khusus Lo-Fi</div><div style="font-size:0.85rem;color:#64748b;">Gaya sketsa tangan yang sangat cepat.</div></div>
         </div>
-        <p class="lead-text">User Flow adalah diagram yang menggambarkan langkah-langkah yang dilalui pengguna untuk menyelesaikan tugas tertentu dalam aplikasi/website.</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Contoh User Flow: Proses Login</li>
-          <li>Mulai</li>
-          <li>Buka</li>
-          <li>Halaman Login</li>
-          <li>Isi Email</li>
-          <li>& Password</li>
-          <li>Valid?</li>
-          <li>Masuk ke</li>
-          <li>Dashboard</li>
-          <li>Selesai</li>
-          <li>❌ Tampilkan</li>
-          <li>Pesan Error</li>
-          <li>Tidak</li>
-          <li>Simbol:  ○ = Mulai/Selesai   □ = Proses   ◇ = Keputusan   → = Alur</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-21">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
-          <h2 style="color: #1e40af;">📱  Responsive Design</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">🔄</span><h2>Alur Proses Desain UI/UX</h2></div>
+        <p class="lead-text">Proses desain bersifat <strong>iteratif</strong>. Setiap tahap bisa diulang berdasarkan feedback yang diterima.</p>
+        <div class="process-flow-grid">
+          <div class="pf-step"><div class="pf-left"><div class="pf-num">1</div><div class="pf-line"></div></div><div class="pf-content"><div style="font-weight:800;color:#1e3a8a;">🔍 Research</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">User interview, kompetitor analysis</div></div></div>
+          <div class="pf-step"><div class="pf-left"><div class="pf-num">5</div><div class="pf-line"></div></div><div class="pf-content"><div style="font-weight:800;color:#1e3a8a;">🎨 Visual Design</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Warna, tipografi, aset final UI</div></div></div>
+          <div class="pf-step"><div class="pf-left"><div class="pf-num">2</div><div class="pf-line"></div></div><div class="pf-content"><div style="font-weight:800;color:#1e3a8a;">📌 Define</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Problem statement, user persona</div></div></div>
+          <div class="pf-step"><div class="pf-left"><div class="pf-num">6</div><div class="pf-line"></div></div><div class="pf-content"><div style="font-weight:800;color:#1e3a8a;">🔗 Prototype</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Menghubungkan layar menjadi interaktif</div></div></div>
+          <div class="pf-step"><div class="pf-left"><div class="pf-num">3</div><div class="pf-line"></div></div><div class="pf-content"><div style="font-weight:800;color:#1e3a8a;">🗺️ Info Architecture</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Sitemap & User Flow</div></div></div>
+          <div class="pf-step"><div class="pf-left"><div class="pf-num">7</div><div class="pf-line"></div></div><div class="pf-content"><div style="font-weight:800;color:#1e3a8a;">🧪 User Testing</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Validasi ke user nyata & Iterasi</div></div></div>
+          <div class="pf-step"><div class="pf-left"><div class="pf-num">4</div><div class="pf-line" style="background:transparent;"></div></div><div class="pf-content"><div style="font-weight:800;color:#1e3a8a;">📐 Wireframe</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Sketsa struktur halaman</div></div></div>
+          <div class="pf-step"><div class="pf-left"><div class="pf-num" style="background:#10b981;">8</div></div><div class="pf-content"><div style="font-weight:800;color:#065f46;">🚀 Handoff</div><div style="font-size:0.85rem;color:#64748b;margin-top:4px;">Serahkan aset ke Developer</div></div></div>
         </div>
-        <p class="lead-text">Responsive Design adalah pendekatan desain web yang memastikan tampilan dan fungsionalitas beradaptasi secara optimal di berbagai ukuran layar dan perangkat.</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Desktop</li>
-          <li>1280px+</li>
-          <li>Tablet</li>
-          <li>768px</li>
-          <li>Mobile</li>
-          <li>375px</li>
-          <li>Breakpoints CSS</li>
-          <li>< 576px</li>
-          <li>XS Mobile</li>
-          <li>576–768px</li>
-          <li>SM Mobile</li>
-          <li>768–992px</li>
-          <li>MD Tablet</li>
-          <li>992–1200px</li>
-          <li>LG Desktop</li>
-          <li>> 1200px</li>
-          <li>XL Wide</li>
-          <li>📌  Konsep Mobile First: Desain untuk mobile terlebih dahulu, kemudian scale up ke tablet dan desktop.</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-22">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">🔧</span>
-          <h2 style="color: #1e40af;">♿  Aksesibilitas (Accessibility) dalam Web Design</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">💡</span><h2>🗺️ Sitemap — Peta Struktur Website</h2></div>
+        <p class="lead-text">Sitemap adalah <strong>diagram hierarki</strong> yang menunjukkan semua halaman dan bagaimana mereka saling terhubung. Dibuat <strong>sebelum wireframe</strong>.</p>
+        <div class="sitemap-wrap">
+          <div class="st-home">🏠 &nbsp; HOME</div>
+          <div class="st-vline"></div>
+          <div style="position:relative;width:720px;">
+            <div style="position:absolute;top:0;left:10%;right:10%;height:2px;background:#94a3b8;"></div>
+            <div style="display:flex;justify-content:space-between;padding:0 10%;">
+              <div class="st-item-wrap"><div class="st-drop"></div><div class="st-box">📖 Tentang</div></div>
+              <div class="st-item-wrap">
+                <div class="st-drop"></div><div class="st-box highlight">🛍️ Produk</div><div class="st-vline"></div>
+                <div style="position:relative;width:240px;">
+                  <div style="position:absolute;top:0;left:10%;right:10%;height:2px;background:#cbd5e1;"></div>
+                  <div style="display:flex;justify-content:space-between;padding:0 10%;">
+                    <div class="st-sub-item"><div class="st-sub-drop"></div><div class="st-sub-box">Kategori A</div></div>
+                    <div class="st-sub-item"><div class="st-sub-drop"></div><div class="st-sub-box">Kategori B</div></div>
+                    <div class="st-sub-item"><div class="st-sub-drop"></div><div class="st-sub-box">Detail Produk</div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="st-item-wrap"><div class="st-drop"></div><div class="st-box">📰 Blog</div></div>
+              <div class="st-item-wrap"><div class="st-drop"></div><div class="st-box">📬 Kontak</div></div>
+            </div>
+          </div>
         </div>
-        <p class="lead-text">Web Accessibility (a11y) memastikan website dapat digunakan oleh semua orang, termasuk penyandang disabilitas visual, motorik, kognitif, maupun pendengaran.</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Perceivable</li>
-          <li>Konten dapat dilihat/didengar semua user — alt text untuk gambar, caption video</li>
-          <li>Operable</li>
-          <li>Semua fungsi bisa diakses dengan keyboard, bukan hanya mouse</li>
-          <li>Understandable</li>
-          <li>Konten & UI mudah dipahami — bahasa jelas, instruksi konsisten</li>
-          <li>Robust</li>
-          <li>Kompatibel dengan berbagai browser & assistive technology (screen reader)</li>
-          <li>Standar global: WCAG 2.1 (Web Content Accessibility Guidelines) — Level A, AA, AAA</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-23">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
-          <h2 style="color: #1e40af;">🛠️  Tools Populer untuk Web & UI/UX Design</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">→</span><h2>🔀 User Flow — Alur Pengguna</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <p style="font-size:1.1rem;color:#334155;line-height:1.6;margin-bottom:16px;">User Flow adalah diagram yang menggambarkan <strong>langkah-langkah pasti</strong> yang dilalui pengguna untuk menyelesaikan sebuah tugas (misal: Checkout, Login).</p>
+            <div class="fc-sym-box">
+              <div style="font-weight:800;color:#64748b;margin-bottom:10px;">SIMBOL STANDAR</div>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;"><div class="fc-oval" style="padding:4px 12px;font-size:0.7rem;">Mulai/Akhir</div><span>Titik awal & akhir</span></div>
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;"><div class="fc-rect" style="min-width:0;padding:4px 12px;font-size:0.7rem;">Langkah</div><span>Aksi atau layar aplikasi</span></div>
+              <div style="display:flex;align-items:center;gap:12px;"><div class="fc-diamond" style="position:relative;top:0;left:0;width:24px;height:24px;margin-right:10px;"></div><span>Keputusan percabangan</span></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:800;color:#1e3a8a;text-align:center;margin-bottom:16px;">Contoh: Proses Login</div>
+            <div class="fc-center">
+              <div class="fc-oval">Mulai</div><div class="fc-arrow"></div>
+              <div class="fc-rect">Buka Halaman Login</div><div class="fc-arrow"></div>
+              <div class="fc-rect">Isi Email & Password</div><div class="fc-arrow"></div>
+              <div class="fc-diamond-wrap"><div class="fc-diamond"></div><div class="fc-diamond-label">Valid?</div></div>
+              <div style="display:flex;width:340px;align-items:flex-start;position:relative;">
+                <div style="position:absolute;top:0;left:25%;right:25%;height:2px;background:#94a3b8;"></div>
+                <div class="fc-branch"><div style="font-weight:800;color:#10b981;margin-bottom:4px;">Ya ✓</div><div class="fc-arrow"></div><div class="fc-rect-yes">Masuk Dashboard</div><div class="fc-arrow"></div><div class="fc-oval">Selesai</div></div>
+                <div class="fc-branch"><div style="font-weight:800;color:#ef4444;margin-bottom:4px;">Tidak ✗</div><div class="fc-arrow"></div><div class="fc-rect-no">Tampilkan Error</div><div class="fc-arrow"></div><div class="fc-rect" style="font-size:0.7rem;">Kembali</div></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <p class="lead-text">Design & Prototyping</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Figma</li>
-          <li>Adobe XD</li>
-          <li>Sketch</li>
-          <li>InVision</li>
-          <li>Frontend Development</li>
-          <li>VS Code</li>
-          <li>Chrome DevTools</li>
-          <li>GitHub</li>
-          <li>CodePen</li>
-          <li>Collaboration</li>
-          <li>Miro</li>
-          <li>Notion</li>
-          <li>Trello</li>
-          <li>Slack</li>
-          <li>Testing & Analytics</li>
-          <li>Google Analytics</li>
-          <li>Hotjar</li>
-          <li>Maze</li>
-          <li>UserTesting</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-24">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
-          <h2 style="color: #1e40af;">✅  Best Practices UI/UX Design</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">📱</span><h2>Responsive Design</h2></div>
+        <p class="lead-text">Responsive Design memastikan tampilan <strong>beradaptasi secara optimal</strong> di berbagai ukuran layar. Prinsip: <strong>Mobile First</strong>.</p>
+        <div class="devices-row">
+          <div class="device-wrap device-desktop">
+            <div class="device-frame"><div class="dc"><div class="dc-nav"></div><div class="dc-hero"><div class="dc-ht"><div class="dc-hb" style="width:75%;"></div><div class="dc-hb" style="width:55%;"></div></div><div class="dc-hi"></div></div><div class="dc-cards" style="flex:1;"><div class="dc-c"></div><div class="dc-c"></div><div class="dc-c"></div></div></div></div>
+            <div style="text-align:center;"><div style="font-weight:800;color:#1e3a8a;">🖥️ Desktop (1280px+)</div><div style="font-size:0.8rem;color:#64748b;">3 kolom layout</div></div>
+          </div>
+          <div class="device-wrap device-tablet">
+            <div class="device-frame"><div class="dc"><div class="dc-nav"></div><div class="dc-hero"><div class="dc-ht"><div class="dc-hb" style="width:80%;"></div><div class="dc-hb" style="width:60%;"></div></div><div class="dc-hi"></div></div><div class="dc-cards" style="flex:1;"><div class="dc-c"></div><div class="dc-c"></div></div></div></div>
+            <div style="text-align:center;"><div style="font-weight:800;color:#1e3a8a;">📱 Tablet (768px+)</div><div style="font-size:0.8rem;color:#64748b;">2 kolom layout</div></div>
+          </div>
+          <div class="device-wrap device-mobile">
+            <div class="device-frame"><div class="dc"><div class="dc-nav"></div><div class="dc-hero"><div class="dc-ht"><div class="dc-hb" style="width:90%;"></div><div class="dc-hb" style="width:70%;"></div></div><div class="dc-hi"></div></div><div class="dc-cards" style="flex:1;"><div class="dc-c"></div><div class="dc-c"></div></div></div></div>
+            <div style="text-align:center;"><div style="font-weight:800;color:#1e3a8a;">📳 Mobile (&lt;768px)</div><div style="font-size:0.8rem;color:#64748b;">1 kolom stack</div></div>
+          </div>
         </div>
-        <p class="lead-text">Selalu mulai dengan riset — siapa user, apa kebutuhan mereka, dan apa pain point-nya.</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Kenali Pengguna Anda</li>
-          <li>Keep It Simple (KISS)</li>
-          <li>Hindari elemen yang tidak perlu. Setiap elemen harus memiliki tujuan yang jelas.</li>
-          <li>Konsistensi adalah Kunci</li>
-          <li>Gunakan pola yang sama untuk komponen serupa agar user tidak perlu belajar ulang.</li>
-          <li>Feedback yang Jelas</li>
-          <li>Selalu beri tahu user apa yang sedang terjadi — loading, error, sukses.</li>
-          <li>Mobile First</li>
-          <li>Desain untuk layar terkecil terlebih dahulu, kemudian scale ke layar lebih besar.</li>
-          <li>Test & Iterate</li>
-          <li>Desain bagus lahir dari banyak iterasi. Uji dengan user nyata, perbaiki, ulangi.</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-25">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
-          <h2 style="color: #1e40af;">💼  Peluang Karir di Bidang Web & UI/UX</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">♿</span><h2>Aksesibilitas (Web Accessibility)</h2></div>
+        <p class="lead-text">Web Accessibility (a11y) memastikan website dapat digunakan oleh <strong>semua orang</strong>, termasuk penyandang disabilitas (WCAG Standard).</p>
+        <div style="display:flex; gap:24px; margin-top:20px;">
+          <div style="flex:1; background:#f8fafc; padding:24px; border-radius:16px; border:2px solid #ef4444; text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:10px;">❌</div>
+            <div style="font-weight:900; font-size:1.2rem; color:#dc2626; margin-bottom:16px;">Bad Contrast</div>
+            <div style="background:#d1d5db; color:#9ca3af; padding:16px; border-radius:8px; font-weight:800; font-size:1.1rem;">Tombol Submit</div>
+            <p style="font-size:0.9rem; color:#64748b; margin-top:16px;">Teks tidak terbaca. Gagal standar WCAG untuk pengguna low-vision.</p>
+          </div>
+          <div style="flex:1; background:#f8fafc; padding:24px; border-radius:16px; border:2px solid #10b981; text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:10px;">✅</div>
+            <div style="font-weight:900; font-size:1.2rem; color:#059669; margin-bottom:16px;">Good Contrast</div>
+            <div style="background:#2563eb; color:white; padding:16px; border-radius:8px; font-weight:800; font-size:1.1rem;">Tombol Submit</div>
+            <p style="font-size:0.9rem; color:#64748b; margin-top:16px;">Kontras rasio sangat jelas. Memenuhi standar aksesibilitas web.</p>
+          </div>
         </div>
-        <p class="lead-text">🎨  UI Designer</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>💡 Figma, Adobe XD, Desain Grafis, Tipografi</li>
-          <li>💰 Rp 5–15 juta/bln</li>
-          <li>👤  UX Designer</li>
-          <li>💡 User Research, Wireframing, Prototyping</li>
-          <li>💰 Rp 6–18 juta/bln</li>
-          <li>💻  Frontend Developer</li>
-          <li>💡 HTML, CSS, JavaScript, React/Vue</li>
-          <li>💰 Rp 6–20 juta/bln</li>
-          <li>🔗  Fullstack Developer</li>
-          <li>💡 Frontend + Backend + Database</li>
-          <li>💰 Rp 10–30 juta/bln</li>
-          <li>🔬  UX Researcher</li>
-          <li>💡 Riset Kualitatif, Statistik, Analitik</li>
-          <li>💰 Rp 7–20 juta/bln</li>
-          <li>🚀  Product Designer</li>
-          <li>💡 UI + UX + Strategy + Data</li>
-          <li>💰 Rp 12–35 juta/bln</li>
-        </ul>
       </div>
-        
 
-      <div class="slide" id="slide-26">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
-          <h2 style="color: #1e40af;">📌  Ringkasan Materi</h2>
-        </div>
-        <p class="lead-text">Sistem dokumen terhubung via HTTP. Internet ≠ Web. Komponen: Frontend, Backend, Database, Domain, Hosting.</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>🌐  World Wide Web</li>
-          <li>💻  Teknologi Web</li>
-          <li>HTML = Struktur, CSS = Tampilan, JavaScript = Interaksi. Ketiganya wajib untuk web modern.</li>
-          <li>🖥️  UI Design</li>
-          <li>Visual & estetika produk — warna, tipografi, layout, ikon, tombol. Prinsip: konsistensi, hierarki, kontras.</li>
-          <li>👤  UX Design</li>
-          <li>Pengalaman pengguna — riset, persona, flow, kemudahan pakai. Beda UI: CARA TERLIHAT vs CARA TERASA.</li>
-          <li>📐  Wireframe</li>
-          <li>Sketsa struktur halaman tanpa visual final. Lo-Fi → Mid-Fi → Hi-Fi. Tools: Figma, Balsamiq, Sketch.</li>
-          <li>🔗  Prototype</li>
-          <li>Simulasi interaktif produk. Alat validasi sebelum development. User Testing untuk iterasi produk.</li>
-        </ul>
+      <!-- BAGIAN 5 (NEW) -->
+      <div class="slide section-slide" id="slide-26">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">⚙️</div>
+        <h2>BAGIAN 5</h2>
+        <p>Komponen Website: Frontend, Backend & Basis Data</p>
       </div>
-        
 
       <div class="slide" id="slide-27">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
-          <h2 style="color: #1e40af;">❓  Kuis & Latihan</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">🏗️</span><h2>Anatomi Website Modern</h2></div>
+        <p class="lead-text">Website modern terdiri dari 3 pilar utama yang bekerja sama memproses input pengguna menjadi data yang disimpan secara permanen.</p>
+        <div class="anatomi-container">
+          <div class="ana-node">
+             <div class="ana-box ana-fe">🖥️</div>
+             <h3 style="color:#1e3a8a;margin-bottom:4px;">Frontend</h3>
+             <p style="font-size:0.85rem;color:#64748b;margin:0;">Client-side<br>HTML, CSS, JS</p>
+          </div>
+          <div class="ana-line">
+             <div class="ana-label">Request (HTTP) ➜</div>
+             <div class="ana-label" style="top:25px;border-color:transparent;color:#94a3b8;font-weight:600;">⬅ Response</div>
+          </div>
+          <div class="ana-node">
+             <div class="ana-box ana-be">⚙️</div>
+             <h3 style="color:#065f46;margin-bottom:4px;">Backend</h3>
+             <p style="font-size:0.85rem;color:#64748b;margin:0;">Server-side<br>API, Logic, Auth</p>
+          </div>
+          <div class="ana-line">
+             <div class="ana-label">Query (SQL) ➜</div>
+             <div class="ana-label" style="top:25px;border-color:transparent;color:#94a3b8;font-weight:600;">⬅ Result</div>
+          </div>
+          <div class="ana-node">
+             <div class="ana-box ana-db">🗄️</div>
+             <h3 style="color:#b45309;margin-bottom:4px;">Database</h3>
+             <p style="font-size:0.85rem;color:#64748b;margin:0;">Storage<br>MySQL, MongoDB</p>
+          </div>
         </div>
-        <p class="lead-text">3. Apa yang dimaksud dengan User Persona dan mengapa penting?</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>Diskusi</li>
-          <li>1. Apa perbedaan utama antara Internet dan World Wide Web?</li>
-          <li>Tertulis</li>
-          <li>2. Sebutkan 3 fungsi berbeda HTML, CSS, dan JavaScript!</li>
-          <li>Diskusi</li>
-          <li>Tertulis</li>
-          <li>4. Jelaskan perbedaan UI dan UX dengan analogi sehari-hari!</li>
-          <li>Praktik</li>
-          <li>5. Buatlah wireframe sederhana homepage toko online di kertas!</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-28">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">💡</span>
-          <h2 style="color: #1e40af;">📚  Referensi & Sumber Belajar</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">🖥️</span><h2 style="color:#1d4ed8;">Frontend (Client-Side)</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <p style="font-size:1.1rem;color:#334155;line-height:1.6;">Frontend adalah bagian dari website yang <strong>berjalan di Browser</strong> pengguna. Bertugas menerima interaksi visual langsung (klik, scroll, input data).</p>
+            <div class="tech-tags" style="margin-top:24px;">
+              <span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">HTML</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">CSS</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">JavaScript</span>
+              <span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">React</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">Vue</span>
+            </div>
+          </div>
+          <div class="bm-wrap" style="box-shadow:0 15px 35px rgba(37,99,235,0.15); border-color:#93c5fd;">
+            <div class="bm-head" style="background:#bfdbfe; border-color:#93c5fd;"><div class="bm-dot" style="background:white;"></div><div class="bm-dot" style="background:white;"></div><div class="bm-dot" style="background:white;"></div></div>
+            <div class="bm-body" style="background:white; align-items:center; justify-content:center;">
+              <div style="font-size:4rem; margin-bottom:10px;">👋</div>
+              <h1 style="color:#1e3a8a; margin:0;">Halo, User!</h1>
+              <input type="text" placeholder="Ketik sesuatu..." style="padding:10px 16px; border:2px solid #cbd5e1; border-radius:8px; margin:16px 0; width:80%; font-size:1rem;">
+              <button style="background:#2563eb; color:white; padding:10px 24px; border-radius:8px; border:none; font-weight:700; font-size:1rem;">Submit Data</button>
+            </div>
+          </div>
         </div>
-        <p class="lead-text">📖 Dokumentasi Resmi</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>developer.mozilla.org (MDN Web Docs)</li>
-          <li>web.dev (Google)</li>
-          <li>figma.com/resources</li>
-          <li>🎓 Platform Belajar</li>
-          <li>freecodecamp.org</li>
-          <li>theodinproject.com</li>
-          <li>uxplanet.org</li>
-          <li>interaction-design.org</li>
-          <li>📱 Inspirasi Desain</li>
-          <li>dribbble.com</li>
-          <li>behance.net</li>
-          <li>mobbin.com</li>
-          <li>awwwards.com</li>
-          <li>📺 YouTube</li>
-          <li>Traversy Media</li>
-          <li>Kevin Powell (CSS)</li>
-          <li>DesignCourse</li>
-          <li>Google UX Design</li>
-        </ul>
       </div>
-        
 
       <div class="slide" id="slide-29">
-        <div class="slide-header">
-          <span style="font-size: 2.5rem; color: #8b5cf6;">🚀</span>
-          <h2 style="color: #1e40af;">Selamat Belajar!</h2>
+        <div class="slide-header"><span style="font-size:2.5rem;">⚙️</span><h2 style="color:#065f46;">Backend (Server-Side)</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <p style="font-size:1.1rem;color:#334155;line-height:1.6;">Backend adalah otak di <strong>balik layar</strong> yang berjalan pada Server. Bertugas melakukan autentikasi, memproses logika bisnis, dan API.</p>
+            <div class="tech-tags" style="margin-top:24px;">
+              <span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">Node.js</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">Python</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">PHP</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">Java</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">Go</span>
+            </div>
+          </div>
+          <div style="background:#0f172a; padding:30px; border-radius:16px; position:relative; overflow:hidden; border:2px solid #334155; box-shadow:0 15px 35px rgba(16,185,129,0.2);">
+             <div style="color:#10b981; font-family:'Courier New',monospace; font-size:1.05rem; margin-bottom:24px; line-height:1.6;">
+               &gt; npm start<br>
+               <span style="color:#cbd5e1;">[INFO]</span> Starting server on port 8080...<br>
+               <span style="color:#3b82f6;">[AUTH]</span> Checking JWT token... VALID<br>
+               <span style="color:#f59e0b;">[WARN]</span> DB connection established.<br>
+               <span style="color:#cbd5e1;">[API]</span> POST /users/submit 200 OK
+             </div>
+             <div style="display:flex; flex-direction:column; gap:12px;">
+               <div style="background:#1e293b; height:24px; border-radius:6px; display:flex; align-items:center; padding:0 12px; gap:8px;"><div class="bm-dot r"></div><div class="bm-dot y"></div><div style="height:4px; width:40%; background:#475569; border-radius:2px;"></div></div>
+               <div style="background:#1e293b; height:24px; border-radius:6px; display:flex; align-items:center; padding:0 12px; gap:8px;"><div class="bm-dot r"></div><div class="bm-dot y"></div><div style="height:4px; width:60%; background:#475569; border-radius:2px;"></div></div>
+             </div>
+          </div>
         </div>
-        <p class="lead-text">Web & UI/UX Design</p>
-        <ul class="slide-list" style="margin-top: 30px;">
-          <li>"Design is not just what it looks like and feels like.</li>
-          <li>Design is how it works." — Steve Jobs</li>
-          <li>Ada pertanyaan? 🙋</li>
-        </ul>
       </div>
-        
+
+      <div class="slide" id="slide-30">
+        <div class="slide-header"><span style="font-size:2.5rem;">🗄️</span><h2 style="color:#b45309;">Basis Data (Database)</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <p style="font-size:1.1rem;color:#334155;line-height:1.6;">Database adalah <strong>gudang penyimpanan digital</strong> tempat semua informasi (user, produk, pesanan) disimpan dengan aman agar bisa diambil kapan saja.</p>
+            <div class="tech-tags" style="margin-top:24px;">
+              <span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">MySQL</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">PostgreSQL</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">MongoDB</span><span class="tech-tag" style="font-size:1.1rem;padding:8px 16px;">Redis</span>
+            </div>
+          </div>
+          <div style="background:#fffbeb; padding:30px; border-radius:16px; border:2px solid #f59e0b; display:flex; flex-direction:column; align-items:center; box-shadow:0 15px 35px rgba(245,158,11,0.15);">
+             <!-- Database cylinder -->
+             <div style="width:140px; height:45px; background:#f59e0b; border-radius:50%; margin-bottom:-22px; position:relative; z-index:3; border:2px solid #b45309;"></div>
+             <div style="width:140px; height:80px; background:#fbbf24; border-left:2px solid #b45309; border-right:2px solid #b45309; position:relative; z-index:2; display:flex; align-items:center; justify-content:center; font-weight:900; color:#b45309; font-size:1.2rem;">USERS_DB</div>
+             <div style="width:140px; height:45px; background:#fbbf24; border-radius:50%; margin-top:-22px; position:relative; z-index:1; border:2px solid #b45309; border-top:none;"></div>
+             <!-- Table mock -->
+             <div style="background:white; border-radius:8px; width:100%; padding:14px; margin-top:30px; border:1px solid #e2e8f0; box-shadow:0 10px 20px rgba(0,0,0,0.05);">
+               <table style="width:100%; font-size:0.9rem; text-align:left; border-collapse:collapse; color:#334155;">
+                 <tr style="border-bottom:2px solid #e2e8f0;"><th style="padding:6px;color:#1e3a8a;">ID</th><th>Email</th><th>Role</th></tr>
+                 <tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:6px;font-weight:700;">101</td><td>budi@mail.com</td><td>Admin</td></tr>
+                 <tr><td style="padding:6px;font-weight:700;">102</td><td>siti@mail.com</td><td>User</td></tr>
+               </table>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-31">
+        <div class="slide-header"><span style="font-size:2.5rem;">👨‍🍳</span><h2>Analogi Restoran</h2></div>
+        <p class="lead-text">Memahami cara kerja Frontend, Backend, dan Database layaknya sebuah restoran.</p>
+        <div class="resto-container">
+          <div class="resto-card fe">
+             <div class="resto-icon">🍽️</div>
+             <div class="resto-title">Ruang Makan & Menu</div>
+             <div class="resto-desc">Tempat pelanggan melihat gambar makanan, memilih, dan berinteraksi dengan pelayan. Estetis dan nyaman.</div>
+             <div class="resto-badge fe">FRONTEND</div>
+          </div>
+          <div class="resto-card be">
+             <div class="resto-icon">👨‍🍳</div>
+             <div class="resto-title">Dapur & Koki</div>
+             <div class="resto-desc">Menerima pesanan, memproses bahan makanan, dan memasak sesuai resep (logika bisnis & keamanan).</div>
+             <div class="resto-badge be">BACKEND</div>
+          </div>
+          <div class="resto-card db">
+             <div class="resto-icon">📦</div>
+             <div class="resto-title">Gudang Bahan Baku</div>
+             <div class="resto-desc">Tempat menyimpan semua bahan mentah, resep rahasia, dan catatan transaksi yang terorganisir rapi.</div>
+             <div class="resto-badge db">DATABASE</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BAGIAN 6 -->
+      <div class="slide section-slide" id="slide-32">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">🌐</div>
+        <h2>BAGIAN 6</h2>
+        <p>Arsitektur Web: Monolith vs Microservices</p>
+      </div>
+
+      <div class="slide" id="slide-33">
+        <div class="slide-header"><span style="font-size:2.5rem;">🏗️</span><h2>Arsitektur Aplikasi</h2></div>
+        <p class="lead-text">Arsitektur aplikasi adalah <strong>cara sebuah sistem software dirancang</strong> — berdampak besar pada skalabilitas, kemudahan maintenance, dan performa jangka panjang.</p>
+        <div class="cards-grid">
+          <div class="content-card" style="border:2px solid #3b82f6;background:linear-gradient(135deg,#eff6ff,#dbeafe);"><div class="icon-large">🧱</div><h3 style="color:#1d4ed8;">Monolithic</h3><p>Satu aplikasi besar. Semua modul menyatu dalam satu unit deployment tunggal.</p></div>
+          <div class="content-card" style="border:2px solid #8b5cf6;background:linear-gradient(135deg,#faf5ff,#ede9fe);"><div class="icon-large">🔬</div><h3 style="color:#6d28d9;">Microservices</h3><p>Banyak layanan kecil yang independen, masing-masing dengan tanggung jawabnya sendiri.</p></div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-34">
+        <div class="slide-header"><span style="font-size:2.5rem;">🧱</span><h2 style="color:#1d4ed8;">Monolithic Architecture</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <p style="font-size:1.1rem;color:#334155;line-height:1.6;margin-bottom:20px;">Semua komponen aplikasi tergabung dalam <strong>satu codebase</strong> dan di-deploy bersama.</p>
+            <ul class="slide-list" style="font-size:1rem;gap:14px;">
+              <li>Satu repository Git & <strong>Satu database</strong></li>
+              <li>Di-deploy sebagai <strong>satu kesatuan</strong></li>
+              <li>Komunikasi modul sangat cepat (in-memory)</li>
+              <li>Sangat ideal untuk <strong>startup / fase awal</strong></li>
+            </ul>
+          </div>
+          <div class="mono-diagram">
+            <div class="req-flow-bar"><div class="req-badge">🌐 HTTP Request</div><div class="req-flow-line"></div><div style="font-size:1rem;color:#8b5cf6;">➜</div></div>
+            <div class="mono-outer">
+              <div class="mono-outer-label">Monolith Application</div>
+              <div class="mono-modules-grid">
+                <div class="mono-mod" style="background:#3b82f6;"><span style="font-size:1.4rem;">🖥️</span>Frontend</div>
+                <div class="mono-mod" style="background:#8b5cf6;"><span style="font-size:1.4rem;">⚙️</span>Business Logic</div>
+                <div class="mono-mod" style="background:#10b981;"><span style="font-size:1.4rem;">🔐</span>Auth</div>
+                <div class="mono-mod" style="background:#f59e0b;"><span style="font-size:1.4rem;">💳</span>Payment</div>
+                <div class="mono-db">🗄️ SINGLE DATABASE</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-35">
+        <div class="slide-header"><span style="font-size:2.5rem;">🧱</span><h2 style="color:#1d4ed8;">Pros & Cons: Monolith</h2></div>
+        <div class="pc-row">
+          <div class="pc-pros">
+            <div style="font-weight:800;font-size:1.1rem;color:#16a34a;margin-bottom:14px;">✅ Kelebihan</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#16a34a;font-weight:800;">✓</span> Sederhana untuk di-develop & test</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#16a34a;font-weight:800;">✓</span> Deployment mudah (1 server)</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#16a34a;font-weight:800;">✓</span> Komunikasi antar fungsi sangat cepat</div>
+            <div style="display:flex;gap:10px;font-size:0.95rem;color:#334155;"><span style="color:#16a34a;font-weight:800;">✓</span> Biaya server di awal lebih murah</div>
+          </div>
+          <div class="pc-cons">
+            <div style="font-weight:800;font-size:1.1rem;color:#dc2626;margin-bottom:14px;">❌ Kekurangan</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#dc2626;font-weight:800;">✗</span> Semakin besar = kode makin rumit/lambat</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#dc2626;font-weight:800;">✗</span> Bug fatal di 1 modul bisa mematikan seluruh aplikasi</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#dc2626;font-weight:800;">✗</span> Sulit scaling untuk bagian tertentu saja</div>
+            <div style="display:flex;gap:10px;font-size:0.95rem;color:#334155;"><span style="color:#dc2626;font-weight:800;">✗</span> Teknologi stack terkunci, sulit update teknologi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-36">
+        <div class="slide-header"><span style="font-size:2.5rem;">🔬</span><h2 style="color:#6d28d9;">Microservices Architecture</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <p style="font-size:1.1rem;color:#334155;line-height:1.6;margin-bottom:20px;">Aplikasi dipecah menjadi <strong>layanan-layanan kecil</strong> yang berkomunikasi via API atau Message Queue.</p>
+            <ul class="slide-list" style="font-size:1rem;gap:14px;">
+              <li>Setiap service punya <strong>database sendiri</strong></li>
+              <li>Deploy secara <strong>independen</strong></li>
+              <li>Bisa beda bahasa pemrograman (Polyglot)</li>
+              <li>Infrastruktur jauh lebih kompleks</li>
+            </ul>
+          </div>
+          <div class="ms-diagram">
+            <div class="ms-client">🌐 Client / Browser</div>
+            <div class="ms-vline"></div>
+            <div class="ms-gateway">⚡ API GATEWAY</div>
+            <div class="ms-branch"><div class="ms-branch-h"></div><div class="ms-branch-drop" style="left:16.5%;"></div><div class="ms-branch-drop" style="left:50%;"></div><div class="ms-branch-drop" style="right:16.5%;"></div></div>
+            <div class="ms-services">
+              <div class="ms-svc" style="background:#2563eb;"><span class="ms-svc-icon">🔐</span><div class="ms-svc-name">AUTH</div><div class="ms-svc-db">🗄 DB</div></div>
+              <div class="ms-svc" style="background:#059669;"><span class="ms-svc-icon">📦</span><div class="ms-svc-name">PROD</div><div class="ms-svc-db">🗄 DB</div></div>
+              <div class="ms-svc" style="background:#d97706;"><span class="ms-svc-icon">💳</span><div class="ms-svc-name">PAY</div><div class="ms-svc-db">🗄 DB</div></div>
+            </div>
+            <div class="ms-branch"><div class="ms-branch-h"></div><div class="ms-branch-drop" style="left:16.5%;"></div><div class="ms-branch-drop" style="left:50%;"></div><div class="ms-branch-drop" style="right:16.5%;"></div></div>
+            <div class="ms-services">
+              <div class="ms-svc" style="background:#7c3aed;animation-delay:.25s;"><span class="ms-svc-icon">👤</span><div class="ms-svc-name">USER</div></div>
+              <div class="ms-svc" style="background:#0891b2;animation-delay:.75s;"><span class="ms-svc-icon">📋</span><div class="ms-svc-name">ORDER</div></div>
+              <div class="ms-svc" style="background:#be185d;animation-delay:1.25s;"><span class="ms-svc-icon">🔔</span><div class="ms-svc-name">NOTIF</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-37">
+        <div class="slide-header"><span style="font-size:2.5rem;">🔬</span><h2 style="color:#6d28d9;">Pros & Cons: Microservices</h2></div>
+        <div class="pc-row">
+          <div class="pc-pros">
+            <div style="font-weight:800;font-size:1.1rem;color:#16a34a;margin-bottom:14px;">✅ Kelebihan</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#16a34a;font-weight:800;">✓</span> Bisa men-scale hanya bagian yang ramai</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#16a34a;font-weight:800;">✓</span> Kegagalan satu service tidak mematikan semua</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#16a34a;font-weight:800;">✓</span> Tim besar bisa bekerja secara terpisah & paralel</div>
+            <div style="display:flex;gap:10px;font-size:0.95rem;color:#334155;"><span style="color:#16a34a;font-weight:800;">✓</span> Bebas memilih bahasa/tech terbaik untuk tiap service</div>
+          </div>
+          <div class="pc-cons">
+            <div style="font-weight:800;font-size:1.1rem;color:#dc2626;margin-bottom:14px;">❌ Kekurangan</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#dc2626;font-weight:800;">✗</span> Kompleksitas infrastruktur sangat tinggi</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#dc2626;font-weight:800;">✗</span> Debugging error jauh lebih sulit (tracing)</div>
+            <div style="display:flex;gap:10px;margin-bottom:12px;font-size:0.95rem;color:#334155;"><span style="color:#dc2626;font-weight:800;">✗</span> Masalah konsistensi data antar database</div>
+            <div style="display:flex;gap:10px;font-size:0.95rem;color:#334155;"><span style="color:#dc2626;font-weight:800;">✗</span> Biaya operasional server/cloud melonjak tinggi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-38">
+        <div class="slide-header"><span style="font-size:2.5rem;">⚖️</span><h2>Perbandingan Lengkap</h2></div>
+        <table class="cmp-table" style="font-size:1rem;margin-top:20px;">
+          <thead><tr><th style="background:#f1f5f9;color:#64748b;width:25%;">📊 Aspek</th><th style="background:#eff6ff;color:#1d4ed8;">🧱 Monolith</th><th style="background:#faf5ff;color:#6d28d9;">🔬 Microservices</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:700;color:#1e3a8a;">Codebase</td><td>Satu repository tunggal</td><td>Banyak repository terpisah</td></tr>
+            <tr><td style="font-weight:700;color:#1e3a8a;">Database</td><td>Satu database terpusat</td><td>Database per service</td></tr>
+            <tr><td style="font-weight:700;color:#1e3a8a;">Deployment</td><td>Deploy satu unit bersama</td><td>Deploy per service mandiri</td></tr>
+            <tr><td style="font-weight:700;color:#1e3a8a;">Skalabilitas</td><td>Harus scale seluruh aplikasi</td><td>Scale per service spesifik</td></tr>
+            <tr><td style="font-weight:700;color:#1e3a8a;">Komunikasi</td><td>In-process (sangat cepat)</td><td>Via API/Network (ada latency)</td></tr>
+            <tr><td style="font-weight:700;color:#1e3a8a;">Kompleksitas Awal</td><td>Rendah</td><td>Tinggi</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="slide" id="slide-39">
+        <div class="slide-header"><span style="font-size:2.5rem;">🤔</span><h2>Kapan Menggunakannya?</h2></div>
+        <p class="lead-text">💡 <strong>Saran:</strong> Mulai dengan Monolith yang rapi (<em>Modular Monolith</em>). Jangan terburu-buru migrasi ke Microservices jika sistem belum kompleks!</p>
+        <div class="dec-row">
+          <div class="dec-card dec-mono">
+            <h3 style="font-size:1.2rem;margin-bottom:16px;">🧱 Pilih Monolith jika...</h3>
+            <ul>
+              <li>Startup fase awal (MVP)</li>
+              <li>Tim kecil (&lt; 10 dev)</li>
+              <li>Domain bisnis masih sederhana</li>
+              <li>Ingin pivot fitur dengan sangat cepat</li>
+            </ul>
+          </div>
+          <div class="dec-card dec-micro">
+            <h3 style="font-size:1.2rem;color:#5b21b6;margin-bottom:16px;">🔬 Pilih Microservices jika...</h3>
+            <ul>
+              <li>Aplikasi sudah berskala enterprise besar</li>
+              <li>Tim engineering besar (30+ dev)</li>
+              <li>Beberapa bagian butuh skalabilitas masif</li>
+              <li>Ada dana & engineer DevOps yang mumpuni</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-40">
+        <div class="slide-header"><span style="font-size:2.5rem;">🌍</span><h2>Contoh Nyata di Dunia</h2></div>
+        <p class="lead-text">Skalabilitas bukan hanya soal microservices, tapi arsitektur yang dirancang dengan baik sesuai kebutuhan. Bahkan Stack Overflow bertahan di Monolith!</p>
+        <div class="co-grid">
+          <div class="co-card"><div style="font-weight:800;font-size:1.2rem;color:#e50914;margin-bottom:10px;">Netflix</div><div style="display:flex;gap:5px;align-items:center;font-size:0.75rem;"><span style="background:#f1f5f9;padding:2px 8px;border-radius:99px;">Monolith</span>➜<span style="background:#ede9fe;color:#5b21b6;font-weight:800;padding:2px 8px;border-radius:99px;">Microservices</span></div></div>
+          <div class="co-card"><div style="font-weight:800;font-size:1.2rem;color:#f97316;margin-bottom:10px;">Amazon</div><div style="display:flex;gap:5px;align-items:center;font-size:0.75rem;"><span style="background:#f1f5f9;padding:2px 8px;border-radius:99px;">Monolith</span>➜<span style="background:#ede9fe;color:#5b21b6;font-weight:800;padding:2px 8px;border-radius:99px;">Microservices</span></div></div>
+          <div class="co-card"><div style="font-weight:800;font-size:1.2rem;color:#16a34a;margin-bottom:10px;">Shopify</div><div style="font-size:0.75rem;"><span style="background:#dbeafe;color:#1d4ed8;font-weight:800;padding:4px 10px;border-radius:99px;">Modular Monolith</span></div><div style="font-size:0.8rem;color:#64748b;margin-top:10px;">Masih melayani jutaan toko</div></div>
+          <div class="co-card"><div style="font-weight:800;font-size:1.2rem;color:#f59e0b;margin-bottom:10px;">Stack Overflow</div><div style="font-size:0.75rem;"><span style="background:#dbeafe;color:#1d4ed8;font-weight:800;padding:4px 10px;border-radius:99px;">Monolith</span></div><div style="font-size:0.8rem;color:#64748b;margin-top:10px;">Super optimal & ngebut</div></div>
+        </div>
+      </div>
+
+      <!-- CLOSING SECTION -->
+      <div class="slide" id="slide-41">
+        <div class="slide-header"><span style="font-size:2.5rem;">🛠️</span><h2>Ekosistem Teknologi Web Modern</h2></div>
+        <div class="tech-grid">
+          <div class="tech-card"><div style="font-weight:800;color:#475569;margin-bottom:10px;">🔗 API & Comm</div><div class="tech-tags"><span class="tech-tag">REST API</span><span class="tech-tag">GraphQL</span><span class="tech-tag">gRPC</span></div></div>
+          <div class="tech-card"><div style="font-weight:800;color:#475569;margin-bottom:10px;">📦 Container & Infra</div><div class="tech-tags"><span class="tech-tag">Docker</span><span class="tech-tag">Kubernetes</span><span class="tech-tag">AWS</span></div></div>
+          <div class="tech-card"><div style="font-weight:800;color:#475569;margin-bottom:10px;">🎨 UI Frameworks</div><div class="tech-tags"><span class="tech-tag">React</span><span class="tech-tag">Vue</span><span class="tech-tag">TailwindCSS</span></div></div>
+          <div class="tech-card"><div style="font-weight:800;color:#475569;margin-bottom:10px;">📊 Database & Cache</div><div class="tech-tags"><span class="tech-tag">PostgreSQL</span><span class="tech-tag">Redis</span><span class="tech-tag">MongoDB</span></div></div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-42">
+        <div class="slide-header"><span style="font-size:2.5rem;">💼</span><h2>Peluang Karir Web & UI/UX</h2></div>
+        <div class="career-grid">
+          <div class="career-card"><div style="font-size:2rem;margin-bottom:10px;">🎨</div><div style="font-weight:800;color:#1e3a8a;font-size:1.1rem;margin-bottom:6px;">UI Designer</div><div style="font-size:0.85rem;color:#64748b;">Figma, Visual Design, Komposisi, Branding.</div></div>
+          <div class="career-card"><div style="font-size:2rem;margin-bottom:10px;">👤</div><div style="font-weight:800;color:#1e3a8a;font-size:1.1rem;margin-bottom:6px;">UX Designer</div><div style="font-size:0.85rem;color:#64748b;">User Research, Wireframing, Prototyping.</div></div>
+          <div class="career-card"><div style="font-size:2rem;margin-bottom:10px;">💻</div><div style="font-weight:800;color:#1e3a8a;font-size:1.1rem;margin-bottom:6px;">Frontend Dev</div><div style="font-size:0.85rem;color:#64748b;">HTML, CSS, JS, React, TailwindCSS.</div></div>
+          <div class="career-card"><div style="font-size:2rem;margin-bottom:10px;">⚙️</div><div style="font-weight:800;color:#1e3a8a;font-size:1.1rem;margin-bottom:6px;">Backend Dev</div><div style="font-size:0.85rem;color:#64748b;">Node/Python/Go, API, Server, Database.</div></div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-43">
+        <div class="slide-header"><span style="font-size:2.5rem;">✅</span><h2>Best Practices Web & Desain</h2></div>
+        <div class="bp-grid">
+          <div class="bp-card"><div style="font-size:1.5rem;">🔍</div><div><div style="font-weight:800;color:#1e3a8a;margin-bottom:4px;">Kenali Pengguna</div><div style="font-size:0.85rem;color:#475569;">Desain produk untuk user, bukan untuk ego desainer atau programmer.</div></div></div>
+          <div class="bp-card"><div style="font-size:1.5rem;">💡</div><div><div style="font-weight:800;color:#1e3a8a;margin-bottom:4px;">KISS (Keep It Simple)</div><div style="font-size:0.85rem;color:#475569;">Jangan persulit navigasi. Buang elemen yang membingungkan.</div></div></div>
+          <div class="bp-card"><div style="font-size:1.5rem;">🔄</div><div><div style="font-weight:800;color:#1e3a8a;margin-bottom:4px;">Konsistensi</div><div style="font-size:0.85rem;color:#475569;">Warna, bentuk tombol, dan tata bahasa harus seragam seluruh web.</div></div></div>
+          <div class="bp-card"><div style="font-size:1.5rem;">📱</div><div><div style="font-weight:800;color:#1e3a8a;margin-bottom:4px;">Mobile First</div><div style="font-size:0.85rem;color:#475569;">Lebih dari 60% traffic internet berasal dari smartphone.</div></div></div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-44">
+        <div class="slide-header"><span style="font-size:2.5rem;">📌</span><h2>Ringkasan Materi</h2></div>
+        <div class="sum-grid">
+          <div class="sum-card" style="border-left:4px solid #2563eb;"><div style="font-size:1.5rem;margin-bottom:10px;">🌐</div><div style="font-weight:800;color:#1e3a8a;">Web & Internet</div><div style="font-size:0.85rem;color:#64748b;margin-top:6px;">Web berjalan di atas infrastruktur Internet.</div></div>
+          <div class="sum-card" style="border-left:4px solid #0891b2;"><div style="font-size:1.5rem;margin-bottom:10px;">💻</div><div style="font-weight:800;color:#1e3a8a;">HTML / CSS / JS</div><div style="font-size:0.85rem;color:#64748b;margin-top:6px;">Tiga pilar: Struktur, Tampilan, Interaksi.</div></div>
+          <div class="sum-card" style="border-left:4px solid #8b5cf6;"><div style="font-size:1.5rem;margin-bottom:10px;">🎨</div><div style="font-weight:800;color:#1e3a8a;">UI / UX</div><div style="font-size:0.85rem;color:#64748b;margin-top:6px;">UI = Tampilan Visual. UX = Pengalaman.</div></div>
+          <div class="sum-card" style="border-left:4px solid #f59e0b;"><div style="font-size:1.5rem;margin-bottom:10px;">🏗️</div><div style="font-weight:800;color:#1e3a8a;">FE / BE / DB</div><div style="font-size:0.85rem;color:#64748b;margin-top:6px;">Analogi Restoran (Ruang makan, dapur, gudang).</div></div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-45">
+        <div class="slide-header"><span style="font-size:2.5rem;">❓</span><h2>Kuis &amp; Diskusi</h2></div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="quiz-item"><span style="background:#ede9fe;color:#5b21b6;padding:4px 12px;border-radius:99px;font-weight:800;font-size:0.75rem;">Diskusi</span><div style="font-size:0.95rem;color:#334155;">Jika sebuah tombol di website sulit diklik di HP, apakah ini masalah UI atau UX? Mengapa?</div></div>
+          <div class="quiz-item"><span style="background:#fff7ed;color:#c2410c;padding:4px 12px;border-radius:99px;font-weight:800;font-size:0.75rem;">Tertulis</span><div style="font-size:0.95rem;color:#334155;">Sebutkan analogi yang kamu ketahui untuk menjelaskan Frontend, Backend, dan Database ke orang awam.</div></div>
+          <div class="quiz-item"><span style="background:#f0fdf4;color:#065f46;padding:4px 12px;border-radius:99px;font-weight:800;font-size:0.75rem;">Praktik</span><div style="font-size:0.95rem;color:#334155;">Gunakan pulpen dan kertas, buatlah sketsa Lo-Fi wireframe untuk aplikasi pemesanan tiket bioskop.</div></div>
+        </div>
+      </div>
+
+      <div class="slide" id="slide-46">
+        <div class="slide-header"><span style="font-size:2.5rem;">📚</span><h2>Sumber Belajar Lanjutan</h2></div>
+        <div class="ref-grid">
+          <div class="ref-card">
+            <div style="font-weight:800;font-size:0.85rem;color:#64748b;margin-bottom:10px;">DOKUMENTASI RESMI</div>
+            <a href="https://developer.mozilla.org" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;margin-bottom:10px;">MDN Web Docs<div style="font-size:0.75rem;color:#94a3b8;font-weight:400;">Referensi HTML CSS JS terlengkap</div></a>
+            <a href="https://web.dev" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;">web.dev<div style="font-size:0.75rem;color:#94a3b8;font-weight:400;">Best practice dari Google</div></a>
+          </div>
+          <div class="ref-card">
+            <div style="font-weight:800;font-size:0.85rem;color:#64748b;margin-bottom:10px;">PLATFORM KURSUS</div>
+            <a href="https://freecodecamp.org" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;margin-bottom:10px;">freeCodeCamp<div style="font-size:0.75rem;color:#94a3b8;font-weight:400;">Belajar coding fullstack gratis</div></a>
+            <a href="https://figma.com/resources" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;">Figma Learn<div style="font-size:0.75rem;color:#94a3b8;font-weight:400;">Tutorial UI design interaktif</div></a>
+          </div>
+          <div class="ref-card">
+            <div style="font-weight:800;font-size:0.85rem;color:#64748b;margin-bottom:10px;">INSPIRASI DESAIN</div>
+            <a href="https://dribbble.com" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;margin-bottom:10px;">Dribbble & Behance<div style="font-size:0.75rem;color:#94a3b8;font-weight:400;">Portofolio desainer top dunia</div></a>
+            <a href="https://mobbin.com" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;">Mobbin<div style="font-size:0.75rem;color:#94a3b8;font-weight:400;">Koleksi pattern UI aplikasi mobile asli</div></a>
+          </div>
+        </div>
+      </div>
 
       <!-- ENDING SLIDE -->
-      <div class="slide cover-slide">
+      <div class="slide cover-slide" id="slide-47">
         <div class="icon-wrapper">🚀</div>
         <h1>Selamat Belajar!</h1>
         <div class="accent-line"></div>
-        <p>"Design is not just what it looks like and feels like. Design is how it works." — Steve Jobs</p>
-        <div style="margin-top: 50px;">
-          <a href="../../index.html"
-            style="color: white; text-decoration: none; font-weight: bold; padding: 14px 36px; background: #2563eb; border-radius: 99px; transition: background 0.3s; display: inline-block; font-size: 1.1rem;"
-            onmouseover="this.style.background='#1d4ed8';"
-            onmouseout="this.style.background='#2563eb';">
+        <p>"Design is not just what it looks like and feels like.<br>Design is how it works." — <strong>Steve Jobs</strong></p>
+        <div style="margin-top:50px;">
+          <a href="../../index.html" style="color:white;text-decoration:none;font-weight:bold;padding:14px 36px;background:#2563eb;border-radius:99px;transition:0.3s;display:inline-block;font-size:1.1rem;box-shadow:0 10px 20px rgba(37,99,235,0.3);">
             Kembali ke Halaman Utama
           </a>
         </div>
@@ -1151,30 +1145,17 @@
 
     </div>
 
-    <!-- ── Controls ── -->
+    <!-- CONTROLS -->
     <div class="slide-controls">
       <button class="btn-nav secondary" id="btn-prev" disabled>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round">
-          <path d="M15 18l-6-6 6-6" />
-        </svg>
-        <span>Sebelumnya</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg> <span>Sebelumnya</span>
       </button>
-
       <div class="slide-progress-wrapper">
-        <div class="slide-progress-text">Slide <span id="current-slide-num">1</span> dari <span
-            id="total-slide-num">X</span></div>
-        <div class="slide-progress-bar">
-          <div class="slide-progress-fill" id="progress-fill"></div>
-        </div>
+        <div class="slide-progress-text">Slide <span id="current-slide-num">1</span> dari <span id="total-slide-num">X</span></div>
+        <div class="slide-progress-bar"><div class="slide-progress-fill" id="progress-fill"></div></div>
       </div>
-
       <button class="btn-nav" id="btn-next">
-        <span>Selanjutnya</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round">
-          <path d="M9 18l6-6-6-6" />
-        </svg>
+        <span>Selanjutnya</span> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
       </button>
     </div>
   </div>
@@ -1184,72 +1165,36 @@
       const slides = document.querySelectorAll('.slide');
       const totalSlides = slides.length;
       let currentIdx = 0;
-
       const btnPrev = document.getElementById('btn-prev');
       const btnNext = document.getElementById('btn-next');
       const textCurrent = document.getElementById('current-slide-num');
       const textTotal = document.getElementById('total-slide-num');
       const progressFill = document.getElementById('progress-fill');
-
       textTotal.textContent = totalSlides;
-
       function updateSlide() {
         slides.forEach((slide, index) => {
-          if (index === currentIdx) {
-            slide.classList.add('active');
-          } else {
-            slide.classList.remove('active');
-          }
+          slide.classList.toggle('active', index === currentIdx);
         });
-
         textCurrent.textContent = currentIdx + 1;
-        const progressPercent = ((currentIdx + 1) / totalSlides) * 100;
-        progressFill.style.width = progressPercent + '%';
-
+        progressFill.style.width = ((currentIdx + 1) / totalSlides * 100) + '%';
         btnPrev.disabled = currentIdx === 0;
         btnNext.disabled = currentIdx === totalSlides - 1;
       }
-
-      function nextSlide() {
-        if (currentIdx < totalSlides - 1) {
-          currentIdx++;
-          updateSlide();
-        }
-      }
-
-      function prevSlide() {
-        if (currentIdx > 0) {
-          currentIdx--;
-          updateSlide();
-        }
-      }
-
+      function nextSlide() { if (currentIdx < totalSlides - 1) { currentIdx++; updateSlide(); } }
+      function prevSlide() { if (currentIdx > 0) { currentIdx--; updateSlide(); } }
       btnNext.addEventListener('click', nextSlide);
       btnPrev.addEventListener('click', prevSlide);
-
       const btnFullscreen = document.getElementById('btn-fullscreen');
-      const viewer = document.documentElement;
-
       btnFullscreen.addEventListener('click', () => {
         if (!document.fullscreenElement) {
-          viewer.requestFullscreen().catch(err => {
-            console.log("Error attempting to enable fullscreen:", err.message);
-          });
-        } else {
-          document.exitFullscreen();
-        }
+          document.documentElement.requestFullscreen().catch(err => console.log(err));
+        } else { document.exitFullscreen(); }
       });
-
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === ' ') {
-          nextSlide();
-        } else if (e.key === 'ArrowLeft') {
-          prevSlide();
-        } else if (e.key.toLowerCase() === 'f') {
-          btnFullscreen.click();
-        }
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+        else if (e.key.toLowerCase() === 'f') btnFullscreen.click();
       });
-
       updateSlide();
     });
   </script>
