@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  gateway:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - service-users
+      - service-products
+
+  service-users:
+    build: ./service-users
+    expose:
+      - "5000"
+
+  service-products:
+    build: ./service-products
+    expose:
+      - "5000"

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sampel Kode Interaktif — Frontend Engineer | VINIX7</title>
+  <link rel="stylesheet" href="../../../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { background: #F8F9FA; color: #0D1F5C; font-family: 'Inter', sans-serif; min-height: 100vh; margin: 0; padding-bottom: 60px; }
+    .nav-bar { background: #FFFFFF; border-bottom: 1px solid rgba(27, 63, 160, 0.12); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+    .nav-bar a { color: #1B3FA0; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+    .nav-bar a:hover { color: #2856CC; }
+    .brand-tag { font-weight: 800; font-size: 1.1rem; color: #1B3FA0; display: flex; align-items: center; gap: 8px; }
+    
+    .hero-section { text-align: center; padding: 48px 24px 32px; max-width: 800px; margin: 0 auto; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: #EBF0FF; border: 1px solid rgba(27, 63, 160, 0.2); color: #1B3FA0; font-weight: 800; font-size: 0.75rem; padding: 6px 16px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+    .hero-title { font-family: 'Merriweather', serif; font-size: 2.5rem; font-weight: 900; margin-bottom: 16px; color: #0D1F5C; line-height: 1.3; }
+    .hero-subtitle { font-size: 1.1rem; color: #596A95; line-height: 1.6; }
+
+    .sample-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1100px; margin: 32px auto 0; padding: 0 24px; }
+    .sample-card { background: #FFFFFF; border: 1px solid rgba(27, 63, 160, 0.12); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); text-decoration: none; color: inherit; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04); }
+    .sample-card:hover { transform: translateY(-6px); border-color: #1B3FA0; box-shadow: 0 12px 30px rgba(27, 63, 160, 0.12); background: #F0F4FF; }
+    .sample-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #1B3FA0, #2856CC); opacity: 0; transition: 0.3s; }
+    .sample-card:hover::before { opacity: 1; }
+    
+    .card-icon-wrap { width: 44px; height: 44px; border-radius: 10px; background: #EBF0FF; color: #1B3FA0; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; border: 1px solid rgba(27,63,160,0.15); }
+    .card-number { font-weight: 800; font-size: 0.75rem; color: #596A95; margin-bottom: 6px; letter-spacing: 0.05em; }
+    .card-title { font-family: 'Merriweather', serif; font-size: 1.2rem; font-weight: 700; color: #0D1F5C; margin-bottom: 12px; }
+    .card-desc { font-size: 0.9rem; color: #596A95; line-height: 1.5; margin-bottom: 20px; flex: 1; }
+    .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(27, 63, 160, 0.08); padding-top: 16px; }
+    .card-tag { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: #EBF0FF; color: #1B3FA0; border: 1px solid rgba(27, 63, 160, 0.2); }
+    .card-btn { color: #1B3FA0; font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-bar">
+    <a href="../index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Kembali ke Slide Materi
+    </a>
+    <span class="brand-tag">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+      VINIX7 Interactive Sandbox
+    </span>
+  </nav>
+
+  <section class="hero-section">
+    <span class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      Interactive Code Sandbox
+    </span>
+    <h1 class="hero-title">Sampel Kode JavaScript & Node.js</h1>
+    <p class="hero-subtitle">
+      Kumpulan contoh kode siap pakai. Lengkap dengan fitur <strong>1-Klik Copy</strong> dan tombol <strong>Run Output</strong> langsung di browser.
+    </p>
+  </section>
+
+  <main class="sample-grid">
+
+    <!-- Card 1 -->
+    <a href="01-variabel-tipe-data.html" class="sample-card">
+      <div>
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="card-number">SAMPEL 01</div>
+        <h2 class="card-title">Variabel & Tipe Data</h2>
+        <p class="card-desc">Belajar deklarasi let, const, var, 7 tipe data JS, operator aritmatika, perbandingan ===, dan template literal.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Dasar JS</span>
+        <span class="card-btn">
+          Buka Sampel
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Card 2 -->
+    <a href="02-kondisi-perulangan.html" class="sample-card">
+      <div>
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </div>
+        <div class="card-number">SAMPEL 02</div>
+        <h2 class="card-title">Kondisi & Perulangan</h2>
+        <p class="card-desc">Contoh alur logika dengan if/else, ternary operator, switch statement, for loop, for...of, while, dan break/continue.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Logika</span>
+        <span class="card-btn">
+          Buka Sampel
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Card 3 -->
+    <a href="03-function.html" class="sample-card">
+      <div>
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="card-number">SAMPEL 03</div>
+        <h2 class="card-title">Function & Arrow Function</h2>
+        <p class="card-desc">Deklarasi function, parameter, return value, arrow function (=>), callback function, dan studi kasus mini kalkulator.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Functions</span>
+        <span class="card-btn">
+          Buka Sampel
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Card 4 -->
+    <a href="04-array-object.html" class="sample-card">
+      <div>
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <div class="card-number">SAMPEL 04</div>
+        <h2 class="card-title">Array & Object Methods</h2>
+        <p class="card-desc">Teknik manipulasi array modern: .map(), .filter(), .reduce(), .find(), destructuring, dan spread operator (...).</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Data Structure</span>
+        <span class="card-btn">
+          Buka Sampel
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Card 5 -->
+    <a href="05-dom-events.html" class="sample-card">
+      <div>
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </div>
+        <div class="card-number">SAMPEL 05</div>
+        <h2 class="card-title">DOM Manipulation & Events</h2>
+        <p class="card-desc">Interaksi HTML & JS: querySelector, textContent, style, addEventListener, counter interaktif, dan greeting form.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">DOM & Events</span>
+        <span class="card-btn">
+          Buka Sampel
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Card 6 -->
+    <a href="06-async-fetch.html" class="sample-card">
+      <div>
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div class="card-number">SAMPEL 06</div>
+        <h2 class="card-title">Async JS & Fetch API</h2>
+        <p class="card-desc">Memahami penundaan waktu dengan setTimeout, Promise dasar, syntax async/await, dan mengambil data REST API.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Async & API</span>
+        <span class="card-btn">
+          Buka Sampel
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+    <!-- Card 7 -->
+    <a href="07-node-express.html" class="sample-card">
+      <div>
+        <div class="card-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        </div>
+        <div class="card-number">SAMPEL 07</div>
+        <h2 class="card-title">Node.js & Express API</h2>
+        <p class="card-desc">Contoh skrip backend: Node CLI, HTTP server bawaan, dan membuat REST API sederhana menggunakan Express.js.</p>
+      </div>
+      <div class="card-footer">
+        <span class="card-tag">Backend</span>
+        <span class="card-btn">
+          Buka Sampel
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </a>
+
+  </main>
+
+</body>
+</html>

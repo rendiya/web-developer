@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Contoh: Array & Object Methods | VINIX7</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#F8F9FA;color:#0D1F5C;min-height:100vh}
+    .topbar{background:#FFFFFF;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(27,63,160,0.12);box-shadow:0 2px 10px rgba(0,0,0,0.03)}
+    .topbar a{color:#1B3FA0;text-decoration:none;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:8px;transition:.2s}
+    .topbar a:hover{color:#2856CC}
+    .topbar-title{color:#1B3FA0;font-weight:800;font-size:.9rem;letter-spacing:.05em}
+    .container{max-width:900px;margin:0 auto;padding:32px 24px}
+    h1{font-size:2rem;font-weight:800;margin-bottom:8px;color:#0D1F5C}
+    .subtitle{color:#596A95;font-size:1rem;margin-bottom:32px}
+    .example-block{background:#FFFFFF;border:1px solid rgba(27,63,160,0.15);border-radius:12px;margin-bottom:24px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+    .example-header{background:#EBF0FF;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(27,63,160,0.1)}
+    .example-title{font-weight:700;font-size:.85rem;color:#1B3FA0;display:flex;align-items:center;gap:8px}
+    .example-badge{background:#FFFFFF;color:#1B3FA0;padding:3px 10px;border-radius:99px;font-size:.7rem;font-weight:800;letter-spacing:.05em;border:1px solid rgba(27,63,160,0.2)}
+    .btn-copy{background:#1B3FA0;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:.75rem;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
+    .btn-copy:hover{background:#2856CC;transform:translateY(-1px)}
+    .btn-copy.copied{background:#10b981}
+    .code-area{padding:20px;font-family:'JetBrains Mono',monospace;font-size:.85rem;line-height:1.8;white-space:pre-wrap;word-break:break-all;color:#0D1F5C;background:#F8F9FA;overflow-x:auto;user-select:all;border-bottom:1px solid rgba(27,63,160,0.1)}
+    .output-section{padding:16px 20px;background:#FFFFFF}
+    .output-label{font-size:.7rem;font-weight:800;color:#596A95;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+    .output-box{background:#0D1F5C;border:1px solid #1B3FA0;border-radius:8px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:#86efac;min-height:40px;white-space:pre-wrap}
+    .note{background:#EBF0FF;border:1px solid rgba(27,63,160,0.2);border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:.9rem;color:#1B3FA0;line-height:1.6}
+    .note strong{color:#0D1F5C}
+    .section-title{font-size:1.3rem;font-weight:800;color:#0D1F5C;margin:40px 0 16px;padding-bottom:8px;border-bottom:2px solid rgba(27,63,160,0.15)}
+    .btn-run{background:#10b981;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:.75rem;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
+    .btn-run:hover{background:#059669;transform:translateY(-1px)}
+    .nav-bottom{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid rgba(27,63,160,0.15)}
+    .nav-btn{background:#FFFFFF;color:#1B3FA0;border:1px solid rgba(27,63,160,0.2);border-radius:8px;padding:10px 20px;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;transition:.2s;display:flex;align-items:center;gap:8px}
+    .nav-btn:hover{background:#EBF0FF;color:#0D1F5C}
+    .nav-btn.primary{background:#1B3FA0;color:#fff;border-color:#1B3FA0}
+    .nav-btn.primary:hover{background:#2856CC}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="index.html">← Kembali ke Hub Sampel</a>
+    <div class="topbar-title">VINIX7 — JavaScript Contoh</div>
+  </div>
+
+  <div class="container">
+    <h1>📚 Array & Object Methods</h1>
+    <p class="subtitle">Teknik manipulasi data modern menggunakan map, filter, reduce, destructuring, dan spread operator.</p>
+
+    <div class="note">
+      <strong>💡 Tips:</strong> Method seperti <code>map</code> dan <code>filter</code> sangat sering digunakan saat membuat aplikasi web modern dengan React/Vue!
+    </div>
+
+    <!-- ═══ Contoh 1 ═══ -->
+    <h2 class="section-title">1. Array .map() & .filter()</h2>
+    <div class="example-block">
+      <div class="example-header">
+        <div class="example-title"><span class="example-badge">Contoh</span> Map & Filter Data</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-copy" onclick="copyCode(this)">📋 Salin Kode</button>
+          <button class="btn-run" onclick="runCode(this)">▶ Jalankan</button>
+        </div>
+      </div>
+      <div class="code-area">let angka = [1, 2, 3, 4, 5, 6];
+
+let dikaliDua = angka.map(n => n * 2);
+let angkaGenap = angka.filter(n => n % 2 === 0);
+
+console.log("Asli:", angka);
+console.log("Map (*2):", dikaliDua);
+console.log("Filter (Genap):", angkaGenap);</div>
+      <div class="output-section">
+        <div class="output-label">Output</div>
+        <div class="output-box"></div>
+      </div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="03-function.html" class="nav-btn">← Function & Arrow Function</a>
+      <a href="05-dom-events.html" class="nav-btn primary">DOM Manipulation & Events →</a>
+    </div>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const block = btn.closest('.example-block');
+      const code = block.querySelector('.code-area').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '✅ Tersalin!';
+        setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '📋 Salin Kode'; }, 2000);
+      });
+    }
+    function runCode(btn) {
+      const block = btn.closest('.example-block');
+      const code = block.querySelector('.code-area').textContent;
+      const outputBox = block.querySelector('.output-box');
+      const logs = [];
+      const origLog = console.log;
+      console.log = (...args) => {
+        logs.push(args.map(a => {
+          if (typeof a === 'object' && a !== null) return JSON.stringify(a, null, 2);
+          return String(a);
+        }).join(' '));
+      };
+      try { eval(code); } catch (e) { logs.push('❌ Error: ' + e.message); }
+      console.log = origLog;
+      outputBox.textContent = logs.join('\n');
+    }
+  </script>
+</body>
+</html>

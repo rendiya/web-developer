@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Contoh: Node.js & Express | VINIX7</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#F8F9FA;color:#0D1F5C;min-height:100vh}
+    .topbar{background:#FFFFFF;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(27,63,160,0.12);box-shadow:0 2px 10px rgba(0,0,0,0.03)}
+    .topbar a{color:#1B3FA0;text-decoration:none;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:8px;transition:.2s}
+    .topbar a:hover{color:#2856CC}
+    .topbar-title{color:#1B3FA0;font-weight:800;font-size:.9rem;letter-spacing:.05em}
+    .container{max-width:900px;margin:0 auto;padding:32px 24px}
+    h1{font-size:2rem;font-weight:800;margin-bottom:8px;color:#0D1F5C}
+    .subtitle{color:#596A95;font-size:1rem;margin-bottom:32px}
+    .example-block{background:#FFFFFF;border:1px solid rgba(27,63,160,0.15);border-radius:12px;margin-bottom:24px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+    .example-header{background:#EBF0FF;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(27,63,160,0.1)}
+    .example-title{font-weight:700;font-size:.85rem;color:#1B3FA0;display:flex;align-items:center;gap:8px}
+    .example-badge{background:#FFFFFF;color:#1B3FA0;padding:3px 10px;border-radius:99px;font-size:.7rem;font-weight:800;letter-spacing:.05em;border:1px solid rgba(27,63,160,0.2)}
+    .btn-copy{background:#1B3FA0;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:.75rem;cursor:pointer;transition:.2s;display:flex;align-items:center;gap:6px}
+    .btn-copy:hover{background:#2856CC;transform:translateY(-1px)}
+    .btn-copy.copied{background:#10b981}
+    .code-area{padding:20px;font-family:'JetBrains Mono',monospace;font-size:.85rem;line-height:1.8;white-space:pre-wrap;word-break:break-all;color:#0D1F5C;background:#F8F9FA;overflow-x:auto;user-select:all}
+    .note{background:#EBF0FF;border:1px solid rgba(27,63,160,0.2);border-radius:10px;padding:16px 20px;margin-bottom:24px;font-size:.9rem;color:#1B3FA0;line-height:1.6}
+    .note strong{color:#0D1F5C}
+    .section-title{font-size:1.3rem;font-weight:800;color:#0D1F5C;margin:40px 0 16px;padding-bottom:8px;border-bottom:2px solid rgba(27,63,160,0.15)}
+    .nav-bottom{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid rgba(27,63,160,0.15)}
+    .nav-btn{background:#FFFFFF;color:#1B3FA0;border:1px solid rgba(27,63,160,0.2);border-radius:8px;padding:10px 20px;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;transition:.2s;display:flex;align-items:center;gap:8px}
+    .nav-btn:hover{background:#EBF0FF;color:#0D1F5C}
+    .nav-btn.primary{background:#1B3FA0;color:#fff;border-color:#1B3FA0}
+    .nav-btn.primary:hover{background:#2856CC}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="index.html">← Kembali ke Hub Sampel</a>
+    <div class="topbar-title">VINIX7 — JavaScript Contoh</div>
+  </div>
+
+  <div class="container">
+    <h1>🟢 Pengenalan Node.js & Express</h1>
+    <p class="subtitle">Contoh skrip dasar untuk menjalankan JavaScript di server menggunakan Node.js dan Express.js framework.</p>
+
+    <div class="note">
+      <strong>💡 Catatan:</strong> Kode pada halaman ini dijalankan melalui terminal komputer (CLI) menggunakan perintah <code>node filename.js</code>.
+    </div>
+
+    <!-- ═══ Contoh 1 ═══ -->
+    <h2 class="section-title">1. Menjalankan Skrip Node.js Pertama</h2>
+    <div class="example-block">
+      <div class="example-header">
+        <div class="example-title"><span class="example-badge">File: index.js</span> Jalankan: node index.js</div>
+        <button class="btn-copy" onclick="copyCode(this)">📋 Salin Kode</button>
+      </div>
+      <div class="code-area">// File: index.js
+const fs = require('fs');
+
+console.log("Halo dari Node.js Runtime! 🚀");
+console.log("Versi Node.js:", process.version);
+console.log("Sistem Operasi:", process.platform);
+
+// Menulis file di komputer
+fs.writeFileSync('pesan.txt', 'Halo, file ini dibuat oleh Node.js!');
+console.log("File pesan.txt berhasil dibuat!");</div>
+    </div>
+
+    <!-- ═══ Contoh 2 ═══ -->
+    <h2 class="section-title">2. REST API Sederhana dengan Express.js</h2>
+    <div class="example-block">
+      <div class="example-header">
+        <div class="example-title"><span class="example-badge">File: app.js</span> Install dulu: npm install express</div>
+        <button class="btn-copy" onclick="copyCode(this)">📋 Salin Kode</button>
+      </div>
+      <div class="code-area">// File: app.js
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.use(express.json());
+
+let todos = [
+  { id: 1, tugas: "Belajar HTML & CSS", selesai: true },
+  { id: 2, tugas: "Belajar JavaScript", selesai: true },
+  { id: 3, tugas: "Belajar Express.js", selesai: false }
+];
+
+app.get('/api/todos', (req, res) => {
+  res.json({ success: true, data: todos });
+});
+
+app.listen(PORT, () => {
+  console.log(`Express API berjalan di http://localhost:${PORT}`);
+});</div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="06-async-fetch.html" class="nav-btn">← Async JS & Fetch API</a>
+      <a href="../index.html" class="nav-btn primary">Selesai / Kembali ke Slide 🚀</a>
+    </div>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const block = btn.closest('.example-block');
+      const code = block.querySelector('.code-area').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.classList.add('copied');
+        btn.innerHTML = '✅ Tersalin!';
+        setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '📋 Salin Kode'; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frontend Engineer: HTML, CSS, JS & Node.js | VINIX7</title>
+  <link rel="stylesheet" href="../../style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── GLOBAL ── */
+    body{margin:0;padding:0;overflow:hidden;background:#0f172a;font-family:'Inter',sans-serif}
+    .slide-viewer{display:flex;flex-direction:column;height:100vh;width:100vw;position:fixed;top:0;left:0;z-index:1000;background:#0f172a}
+    .slide-navbar{height:60px;display:flex;align-items:center;padding:0 32px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid #e2e8f0;justify-content:space-between;z-index:1001}
+    .slide-navbar a{text-decoration:none;font-size:.85rem;font-weight:700;color:#64748b;display:flex;align-items:center;gap:8px}
+    .slide-navbar a:hover{color:#2563eb}
+    .slide-container{flex:1;position:relative;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center}
+    .slide{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:#fff;padding:48px 72px;opacity:0;visibility:hidden;transform:translateX(50px);transition:all .5s cubic-bezier(.25,1,.5,1);display:flex;flex-direction:column;justify-content:flex-start;overflow-y:auto;box-sizing:border-box}
+    .slide.active{opacity:1;visibility:visible;transform:translateX(0);z-index:10}
+    .slide::-webkit-scrollbar{width:6px}
+    .slide::-webkit-scrollbar-track{background:transparent}
+    .slide::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:99px}
+
+    /* ── COVER & SECTION SLIDES ── */
+    .slide.cover-slide,.slide.section-slide{background:#0f172a;color:#fff;justify-content:center;align-items:center;text-align:center;overflow:hidden}
+    .slide.cover-slide::before,.slide.section-slide::before{content:'';position:absolute;top:-150px;left:-100px;width:400px;height:400px;background:#1e3a8a;border-radius:50%;opacity:.8;z-index:0}
+    .slide.cover-slide::after,.slide.section-slide::after{content:'';position:absolute;bottom:-200px;right:-150px;width:600px;height:600px;background:#4c1d95;border-radius:50%;opacity:.6;z-index:0}
+    .section-slide .bg-blob{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(56,189,248,.15) 0%,rgba(15,23,42,0) 70%);z-index:0;pointer-events:none}
+    .slide.cover-slide>*,.slide.section-slide>*{z-index:1;position:relative}
+    .slide.cover-slide h1,.slide.section-slide h2{font-family:'Merriweather',serif;font-size:4rem;font-weight:900;margin-bottom:24px;color:#fff;line-height:1.2}
+    .slide.cover-slide .accent-line{width:150px;height:6px;background:#06b6d4;margin:0 auto 30px}
+    .slide.cover-slide.left-align{text-align:left;align-items:flex-start;padding-left:120px}
+    .slide.cover-slide.left-align .accent-line{margin-left:0}
+    .slide.cover-slide p,.slide.section-slide p{font-size:1.4rem;color:#cbd5e1;max-width:800px;font-weight:400}
+    .slide.section-slide .icon-wrapper{font-size:3.5rem;margin-bottom:20px;color:#38bdf8}
+
+    /* ── SLIDE HEADER ── */
+    .slide-header{display:inline-flex;align-items:center;gap:16px;margin-bottom:32px;border-bottom:4px solid #3b82f6;padding-bottom:14px}
+    .slide h2{font-family:'Merriweather',serif;font-size:2.4rem;font-weight:700;color:#1e40af;margin:0}
+    .slide .lead-text{font-size:1.15rem;color:#334155;margin-bottom:24px;line-height:1.7;background:#f8fafc;padding:20px 24px;border-radius:12px;border:1px solid #e2e8f0}
+
+    /* ── LAYOUT & UTILS ── */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:16px}
+    .content-card{background:#f1f5f9;padding:22px;border-radius:16px;border:1px solid #e2e8f0;text-align:center;transition:.2s}
+    .content-card:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,.05);border-color:#93c5fd}
+    .content-card h3{font-family:'Merriweather',serif;color:#1e3a8a;font-size:1.2rem;margin-bottom:10px;margin-top:14px}
+    .content-card p{color:#475569;font-size:1rem;line-height:1.5}
+    .icon-large{font-size:2.2rem}
+    .slide-list{list-style:none;display:flex;flex-direction:column;gap:18px;padding-left:0}
+    .slide-list li{position:relative;padding-left:36px;font-size:1.1rem;color:#334155;line-height:1.6}
+    .slide-list li::before{content:'●';position:absolute;left:0;top:2px;color:#3b82f6;font-size:1.1rem}
+    .slide-list li strong{color:#1e3a8a;font-weight:700}
+    .slide-table{width:100%;border-collapse:separate;border-spacing:0;margin-top:16px;font-size:1.05rem;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0}
+    .slide-table th{background:#f8fafc;color:#1e40af;padding:14px 18px;text-align:left;border-bottom:2px solid #e2e8f0}
+    .slide-table td{padding:14px 18px;border-bottom:1px solid #e2e8f0;color:#475569;background:#fff}
+    .slide-table tr:hover td{background:#f8fafc}
+    .slide-two-col{display:grid;grid-template-columns:1fr 1.1fr;gap:36px;align-items:center;flex:1}
+    .slide-two-col-equal{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+
+    /* ── CODE BLOCKS ── */
+    .code-box{background:#1e293b;color:#e2e8f0;padding:20px 24px;border-radius:12px;font-family:'JetBrains Mono','Courier New',monospace;font-size:.85rem;line-height:1.8;overflow-x:auto;flex:1}
+    .code-box .kw{color:#93c5fd} .code-box .str{color:#86efac} .code-box .tag{color:#f9a8d4} .code-box .attr{color:#fde68a} .code-box .com{color:#475569} .code-box .fn{color:#c4b5fd} .code-box .num{color:#fbbf24} .code-box .op{color:#94a3b8}
+
+    /* ── BROWSER MOCKUP ── */
+    .bm-wrap{border:2px solid #cbd5e1;border-radius:12px;overflow:hidden;background:#fff;flex:1;display:flex;flex-direction:column;box-shadow:0 10px 25px rgba(0,0,0,.05)}
+    .bm-head{background:#e2e8f0;padding:10px 14px;display:flex;gap:6px;border-bottom:1px solid #cbd5e1}
+    .bm-dot{width:12px;height:12px;border-radius:50%}
+    .bm-dot.r{background:#ef4444}.bm-dot.y{background:#f59e0b}.bm-dot.g{background:#10b981}
+    .bm-body{padding:20px;flex:1;background:#f8fafc;display:flex;flex-direction:column;gap:12px}
+
+    /* ── PILAR DIAGRAM ── */
+    .pilar-diag{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:20px;background:#f8fafc;padding:30px;border-radius:20px;border:2px solid #e2e8f0}
+    .pd-box{width:160px;height:160px;background:#fff;border-radius:16px;border:2px solid #cbd5e1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;box-shadow:0 4px 12px rgba(0,0,0,.05);transition:.3s}
+    .pd-box:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(0,0,0,.1)}
+    .pd-icon{font-size:2.5rem;margin-bottom:8px}
+    .pd-box strong{font-size:1.1rem;color:#1e3a8a;margin-bottom:4px}
+    .pd-box span{font-size:.8rem;color:#64748b;line-height:1.4}
+    .pd-plus{font-size:2rem;font-weight:800;color:#94a3b8}
+
+    /* ── BOX MODEL DIAGRAM ── */
+    .boxmodel-wrap{display:flex;justify-content:center;margin:20px 0}
+    .bm-diagram{position:relative;width:380px;height:280px}
+    .bm-layer{position:absolute;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;transition:.3s}
+    .bm-margin{top:0;left:0;right:0;bottom:0;background:#fef3c7;border:3px solid #f59e0b}
+    .bm-border{top:30px;left:30px;right:30px;bottom:30px;background:#fecaca;border:3px solid #ef4444}
+    .bm-padding{top:60px;left:60px;right:60px;bottom:60px;background:#bbf7d0;border:3px solid #22c55e}
+    .bm-content{top:90px;left:90px;right:90px;bottom:90px;background:#bfdbfe;border:3px solid #3b82f6;color:#1e3a8a}
+    .bm-label{position:absolute;font-size:.7rem;font-weight:800;padding:2px 8px;border-radius:99px;color:#fff}
+
+    /* ── FLEXBOX VISUAL ── */
+    .flex-demo{background:#f1f5f9;border:2px dashed #94a3b8;border-radius:12px;padding:16px;display:flex;gap:12px;justify-content:center;align-items:center;min-height:100px;flex-wrap:wrap;margin:16px 0}
+    .flex-item{background:#3b82f6;color:#fff;padding:14px 20px;border-radius:8px;font-weight:700;font-size:.9rem;box-shadow:0 4px 10px rgba(59,130,246,.3);transition:.2s}
+    .flex-item:hover{transform:scale(1.05)}
+
+    /* ── GRID VISUAL ── */
+    .grid-demo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;background:#f1f5f9;border:2px dashed #94a3b8;border-radius:12px;padding:16px}
+    .grid-item{background:#8b5cf6;color:#fff;padding:20px;border-radius:8px;font-weight:700;text-align:center;font-size:.9rem;box-shadow:0 4px 10px rgba(139,92,246,.3);transition:.2s}
+    .grid-item:hover{transform:scale(1.03)}
+    .grid-item.wide{grid-column:span 2;background:#6d28d9}
+    .grid-item.tall{grid-row:span 2;background:#7c3aed}
+
+    /* ── TIMELINE ── */
+    .timeline{display:flex;flex-direction:column;gap:0;margin:16px 0}
+    .tl-item{display:flex;gap:16px;align-items:flex-start}
+    .tl-line{display:flex;flex-direction:column;align-items:center;width:40px;flex-shrink:0}
+    .tl-dot{width:16px;height:16px;border-radius:50%;background:#3b82f6;border:3px solid #bfdbfe;flex-shrink:0;z-index:2}
+    .tl-bar{width:2px;flex:1;min-height:30px;background:#dbeafe}
+    .tl-body{padding:4px 0 20px;flex:1}
+    .tl-year{font-weight:800;color:#1e40af;font-size:1rem;margin-bottom:2px}
+    .tl-desc{font-size:.9rem;color:#475569}
+
+    /* ── NODE.JS ARCHITECTURE ── */
+    .node-arch{background:#f0fdf4;border:2px solid #86efac;border-radius:20px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:16px}
+    .node-box{padding:14px 28px;border-radius:10px;font-weight:700;font-size:.9rem;text-align:center;transition:.2s}
+    .node-box:hover{transform:scale(1.03)}
+    .node-arrow{font-size:1.5rem;color:#22c55e}
+    .node-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+    /* ── FULLSTACK FLOW ── */
+    .flow-stack{display:flex;flex-direction:column;align-items:center;gap:0;margin:16px 0}
+    .flow-box{padding:14px 32px;border-radius:10px;font-weight:700;font-size:.9rem;min-width:250px;text-align:center;position:relative}
+    .flow-arrow{width:2px;height:24px;background:#94a3b8;position:relative}
+    .flow-arrow::after{content:'▼';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);color:#94a3b8;font-size:.8rem}
+
+    /* ── CONTROLS ── */
+    .slide-controls{height:70px;background:#fff;border-top:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 40px;z-index:1001}
+    .btn-nav{background:#2563eb;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-weight:700;font-size:.9rem;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .2s}
+    .btn-nav:hover:not(:disabled){background:#1d4ed8;transform:translateY(-2px)}
+    .btn-nav:disabled{background:#cbd5e1;cursor:not-allowed;transform:none}
+    .btn-nav.secondary{background:#f1f5f9;color:#3b82f6}
+    .btn-nav.secondary:hover:not(:disabled){background:#e2e8f0}
+    .slide-progress-wrapper{flex:1;margin:0 60px;text-align:center}
+    .slide-progress-text{font-size:.8rem;font-weight:700;color:#64748b;margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase}
+    .slide-progress-bar{height:6px;background:#f1f5f9;border-radius:99px;overflow:hidden}
+    .slide-progress-fill{height:100%;background:#3b82f6;width:0%;transition:width .4s ease}
+
+    /* ── MISC ── */
+    .callout{padding:16px 22px;border-radius:10px;font-size:1rem;font-weight:600;margin-bottom:20px}
+    .callout-info{background:#eff6ff;border-left:4px solid #3b82f6;color:#1e40af}
+    .callout-tip{background:#fef3c7;border-left:4px solid #f59e0b;color:#92400e}
+    .callout-success{background:#f0fdf4;border-left:4px solid #22c55e;color:#166534}
+    .badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:.72rem;font-weight:800;letter-spacing:.05em}
+    .quiz-item{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:14px 18px;display:flex;align-items:flex-start;gap:14px;margin-bottom:12px}
+    .ref-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:16px}
+    .ref-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px}
+    .career-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:14px;margin-top:16px}
+    .career-card{border-radius:12px;padding:16px;background:#fff;border:1px solid #e2e8f0;transition:all .25s}
+    .career-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.08);border-color:#93c5fd}
+    .roadmap-flow{display:flex;flex-direction:column;align-items:center;gap:0;margin:16px 0}
+    .rm-box{padding:12px 28px;border-radius:10px;font-weight:700;font-size:.88rem;min-width:220px;text-align:center;border:2px solid;transition:.2s}
+    .rm-box:hover{transform:scale(1.03)}
+    .rm-arrow{width:2px;height:16px;background:#94a3b8}
+    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+    .compare-card{border-radius:14px;padding:20px;border:2px solid}
+    .eco-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px}
+    .eco-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:16px;transition:.2s}
+    .eco-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.07);border-color:#93c5fd}
+    .semver-visual{display:flex;align-items:center;gap:4px;justify-content:center;margin:20px 0}
+    .sv-block{padding:16px 24px;border-radius:10px;text-align:center;font-weight:700;min-width:80px}
+    .sv-dot{font-size:2rem;font-weight:900;color:#64748b}
+  </style>
+</head>
+<body>
+  <div class="slide-viewer">
+    <div class="slide-navbar">
+      <a href="../../index.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Kembali ke Beranda</a>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <a href="sampel/index.html" style="background:#2563eb;color:#fff;padding:6px 14px;border-radius:6px;font-size:.78rem;font-weight:700;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          Sampel Kode Interaktif
+        </a>
+        <div style="font-size:.8rem;color:#64748b;font-weight:600;">VINIX7 Web Developer</div>
+        <button id="btn-fullscreen" style="background:none;border:none;cursor:pointer;color:#64748b;padding:4px;border-radius:4px;" title="Toggle Fullscreen (F)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="slide-container" id="slide-container">
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- SLIDE 1: COVER -->
+      <!-- ══════════════════════════════════════════════ -->
+      <div class="slide cover-slide left-align" id="slide-1">
+        <div style="text-align:left;margin-bottom:20px;">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h1>Frontend<br>Engineer</h1>
+        <div class="accent-line"></div>
+        <p>Dasar HTML, CSS, JavaScript & Pengenalan Node.js</p>
+      </div>
+
+      <!-- SLIDE 2: DAFTAR ISI -->
+      <div class="slide" id="slide-2">
+        <div class="slide-header">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          <h2>Daftar Isi</h2>
+        </div>
+        <div class="cards-grid">
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#2563eb;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">01</div><p style="margin:0;font-weight:600;">Dasar HTML</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#8b5cf6;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">02</div><p style="margin:0;font-weight:600;">Dasar CSS</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#f59e0b;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">03</div><p style="margin:0;font-weight:600;">Dasar JavaScript</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#10b981;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">04</div><p style="margin:0;font-weight:600;">Pengenalan Node.js</p></div>
+          <div class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;"><div style="background:#f43f5e;color:white;padding:14px 18px;border-radius:8px;font-weight:bold;font-size:1.1rem;flex-shrink:0;">05</div><p style="margin:0;font-weight:600;">Tools, Workflow & Karier</p></div>
+          <a href="sampel/index.html" class="content-card" style="display:flex;align-items:center;text-align:left;gap:20px;background:#eff6ff;border:2px solid #38bdf8;text-decoration:none;"><div style="background:#0284c7;color:white;padding:12px 14px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><div><p style="margin:0;font-weight:700;color:#0369a1;">Sampel Kode Interaktif</p><span style="font-size:.78rem;color:#0284c7;font-weight:600;">W3Schools Style →</span></div></a>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- BAGIAN 1: DASAR HTML -->
+      <!-- ══════════════════════════════════════════════ -->
+      <div class="slide section-slide" id="slide-3">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h2>BAGIAN 1</h2>
+        <p>Dasar HTML</p>
+      </div>
+
+      <!-- SLIDE 4: Apa itu HTML -->
+      <div class="slide" id="slide-4">
+        <div class="slide-header"><span style="font-size:2.5rem;color:#e34c26;">🏷️</span><h2>Apa itu HTML?</h2></div>
+        <p class="lead-text">HTML (HyperText Markup Language) adalah bahasa markup standar untuk membuat <strong>struktur</strong> halaman web. HTML memberitahu browser bagaimana menampilkan konten — teks, gambar, link, form, dan lainnya.</p>
+        <div class="slide-two-col-equal">
+          <div>
+            <table class="slide-table">
+              <tr><th>Fakta</th><th>Keterangan</th></tr>
+              <tr><td>📅 Dibuat oleh</td><td>Tim Berners-Lee, <strong>1991</strong></td></tr>
+              <tr><td>📄 Versi Terbaru</td><td><strong>HTML5</strong> (sejak 2014)</td></tr>
+              <tr><td>🌐 Standarisasi</td><td>W3C & WHATWG</td></tr>
+              <tr><td>🔧 Fungsi</td><td>Struktur & konten halaman web</td></tr>
+            </table>
+          </div>
+          <div>
+            <div class="timeline">
+              <div class="tl-item"><div class="tl-line"><div class="tl-dot" style="background:#94a3b8;"></div><div class="tl-bar"></div></div><div class="tl-body"><div class="tl-year">1991 — HTML 1.0</div><div class="tl-desc">Hanya teks & link</div></div></div>
+              <div class="tl-item"><div class="tl-line"><div class="tl-dot" style="background:#64748b;"></div><div class="tl-bar"></div></div><div class="tl-body"><div class="tl-year">1995 — HTML 2.0</div><div class="tl-desc">Form & tabel</div></div></div>
+              <div class="tl-item"><div class="tl-line"><div class="tl-dot" style="background:#3b82f6;"></div><div class="tl-bar"></div></div><div class="tl-body"><div class="tl-year">1997 — HTML 4.0</div><div class="tl-desc">Styling & scripting</div></div></div>
+              <div class="tl-item"><div class="tl-line"><div class="tl-dot" style="background:#e34c26;border-color:#f97316;"></div></div><div class="tl-body"><div class="tl-year">2014 — HTML5 🚀</div><div class="tl-desc">Multimedia, semantic, API</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: Struktur Dasar -->
+      <div class="slide" id="slide-5">
+        <div class="slide-header"><span style="font-size:2.5rem;">📝</span><h2>Struktur Dasar Dokumen HTML</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box">
+<span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="str">"id"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">charset</span>=<span class="str">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="str">"viewport"</span>
+          <span class="attr">content</span>=<span class="str">"width=device-width,
+          initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Judul Halaman<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;h1&gt;</span>Halo Dunia!<span class="tag">&lt;/h1&gt;</span>
+    <span class="tag">&lt;p&gt;</span>Paragraf pertamaku.<span class="tag">&lt;/p&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span>
+          </div>
+          <div>
+            <ul class="slide-list">
+              <li><strong>&lt;!DOCTYPE html&gt;</strong> — Deklarasi HTML5</li>
+              <li><strong>&lt;html lang="id"&gt;</strong> — Root element + bahasa</li>
+              <li><strong>&lt;head&gt;</strong> — Metadata (tidak tampil di browser)</li>
+              <li><strong>&lt;meta charset&gt;</strong> — Encoding karakter UTF-8</li>
+              <li><strong>&lt;meta viewport&gt;</strong> — Responsif untuk mobile</li>
+              <li><strong>&lt;title&gt;</strong> — Judul tab browser</li>
+              <li><strong>&lt;body&gt;</strong> — Konten yang ditampilkan</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: Tag Penting -->
+      <div class="slide" id="slide-6">
+        <div class="slide-header"><span style="font-size:2.5rem;">🧱</span><h2>Elemen & Tag Penting HTML</h2></div>
+        <table class="slide-table">
+          <tr><th>Tag</th><th>Fungsi</th><th>Contoh</th></tr>
+          <tr><td><code>&lt;h1&gt;</code> – <code>&lt;h6&gt;</code></td><td>Heading / Judul (hierarki)</td><td><code>&lt;h1&gt;Judul&lt;/h1&gt;</code></td></tr>
+          <tr><td><code>&lt;p&gt;</code></td><td>Paragraf teks</td><td><code>&lt;p&gt;Teks...&lt;/p&gt;</code></td></tr>
+          <tr><td><code>&lt;a&gt;</code></td><td>Hyperlink</td><td><code>&lt;a href="url"&gt;Klik&lt;/a&gt;</code></td></tr>
+          <tr><td><code>&lt;img&gt;</code></td><td>Gambar</td><td><code>&lt;img src="foto.jpg" alt="..."&gt;</code></td></tr>
+          <tr><td><code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code></td><td>List (unordered / ordered)</td><td><code>&lt;ul&gt;&lt;li&gt;Item&lt;/li&gt;&lt;/ul&gt;</code></td></tr>
+          <tr><td><code>&lt;table&gt;</code></td><td>Tabel data</td><td><code>&lt;table&gt;&lt;tr&gt;&lt;td&gt;Data&lt;/td&gt;...&lt;/table&gt;</code></td></tr>
+          <tr><td><code>&lt;div&gt;</code></td><td>Container / pembungkus</td><td><code>&lt;div class="wrapper"&gt;...&lt;/div&gt;</code></td></tr>
+          <tr><td><code>&lt;strong&gt;</code></td><td>Teks tebal (penting)</td><td><code>&lt;strong&gt;Penting!&lt;/strong&gt;</code></td></tr>
+        </table>
+      </div>
+
+      <!-- SLIDE 7: Semantic HTML -->
+      <div class="slide" id="slide-7">
+        <div class="slide-header"><span style="font-size:2.5rem;">🔖</span><h2>Semantic HTML</h2></div>
+        <p class="lead-text">Semantic HTML menggunakan tag yang <strong>bermakna</strong> untuk mendeskripsikan struktur halaman — bukan hanya <code>&lt;div&gt;</code> untuk semuanya.</p>
+        <div class="slide-two-col">
+          <div class="code-box">
+<span class="tag">&lt;header&gt;</span>
+  <span class="tag">&lt;nav&gt;</span>Menu navigasi<span class="tag">&lt;/nav&gt;</span>
+<span class="tag">&lt;/header&gt;</span>
+
+<span class="tag">&lt;main&gt;</span>
+  <span class="tag">&lt;article&gt;</span>
+    <span class="tag">&lt;section&gt;</span>Bagian 1<span class="tag">&lt;/section&gt;</span>
+    <span class="tag">&lt;section&gt;</span>Bagian 2<span class="tag">&lt;/section&gt;</span>
+  <span class="tag">&lt;/article&gt;</span>
+  <span class="tag">&lt;aside&gt;</span>Sidebar<span class="tag">&lt;/aside&gt;</span>
+<span class="tag">&lt;/main&gt;</span>
+
+<span class="tag">&lt;footer&gt;</span>© 2026<span class="tag">&lt;/footer&gt;</span>
+          </div>
+          <div>
+            <div class="cards-grid" style="grid-template-columns:1fr 1fr;">
+              <div class="content-card" style="text-align:left;padding:16px;"><span style="font-size:1.5rem;">🔍</span><h3 style="font-size:1rem;">SEO Lebih Baik</h3><p style="font-size:.85rem;">Search engine memahami struktur konten</p></div>
+              <div class="content-card" style="text-align:left;padding:16px;"><span style="font-size:1.5rem;">♿</span><h3 style="font-size:1rem;">Accessibility</h3><p style="font-size:.85rem;">Screen reader navigasi lebih baik</p></div>
+              <div class="content-card" style="text-align:left;padding:16px;"><span style="font-size:1.5rem;">🛠️</span><h3 style="font-size:1rem;">Maintainability</h3><p style="font-size:.85rem;">Kode mudah dibaca & dipahami</p></div>
+              <div class="content-card" style="text-align:left;padding:16px;"><span style="font-size:1.5rem;">✅</span><h3 style="font-size:1rem;">Standar Industri</h3><p style="font-size:.85rem;">Best practice modern development</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 8: Form & Input -->
+      <div class="slide" id="slide-8">
+        <div class="slide-header"><span style="font-size:2.5rem;">📋</span><h2>Form & Input HTML</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box" style="font-size:.8rem;">
+<span class="tag">&lt;form</span> <span class="attr">action</span>=<span class="str">"/submit"</span> <span class="attr">method</span>=<span class="str">"POST"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="str">"nama"</span><span class="tag">&gt;</span>Nama:<span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"text"</span> <span class="attr">id</span>=<span class="str">"nama"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+
+  <span class="tag">&lt;label</span> <span class="attr">for</span>=<span class="str">"email"</span><span class="tag">&gt;</span>Email:<span class="tag">&lt;/label&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">type</span>=<span class="str">"email"</span> <span class="attr">id</span>=<span class="str">"email"</span> <span class="attr">required</span><span class="tag">&gt;</span>
+
+  <span class="tag">&lt;select</span> <span class="attr">name</span>=<span class="str">"role"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;option&gt;</span>Mahasiswa<span class="tag">&lt;/option&gt;</span>
+    <span class="tag">&lt;option&gt;</span>Dosen<span class="tag">&lt;/option&gt;</span>
+  <span class="tag">&lt;/select&gt;</span>
+
+  <span class="tag">&lt;button</span> <span class="attr">type</span>=<span class="str">"submit"</span><span class="tag">&gt;</span>Daftar<span class="tag">&lt;/button&gt;</span>
+<span class="tag">&lt;/form&gt;</span>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Jenis Input HTML5</h3>
+            <table class="slide-table" style="font-size:.9rem;">
+              <tr><th>Type</th><th>Fungsi</th></tr>
+              <tr><td><code>text</code></td><td>Teks biasa</td></tr>
+              <tr><td><code>email</code></td><td>Email (validasi otomatis)</td></tr>
+              <tr><td><code>password</code></td><td>Password (tersembunyi)</td></tr>
+              <tr><td><code>number</code></td><td>Angka</td></tr>
+              <tr><td><code>date</code></td><td>Tanggal</td></tr>
+              <tr><td><code>file</code></td><td>Upload file</td></tr>
+              <tr><td><code>range</code></td><td>Slider</td></tr>
+              <tr><td><code>color</code></td><td>Color picker</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9: Media & Best Practices -->
+      <div class="slide" id="slide-9">
+        <div class="slide-header"><span style="font-size:2.5rem;">✅</span><h2>HTML Best Practices</h2></div>
+        <div class="cards-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+          <div class="content-card" style="text-align:left;padding:18px;"><span style="font-size:1.5rem;">📐</span><h3 style="font-size:.95rem;">Indentasi Konsisten</h3><p style="font-size:.85rem;">Gunakan 2 atau 4 spasi</p></div>
+          <div class="content-card" style="text-align:left;padding:18px;"><span style="font-size:1.5rem;">🏷️</span><h3 style="font-size:.95rem;">Gunakan Semantic</h3><p style="font-size:.85rem;">Hindari div berlebihan</p></div>
+          <div class="content-card" style="text-align:left;padding:18px;"><span style="font-size:1.5rem;">🖼️</span><h3 style="font-size:.95rem;">Alt pada Gambar</h3><p style="font-size:.85rem;">Wajib untuk accessibility</p></div>
+          <div class="content-card" style="text-align:left;padding:18px;"><span style="font-size:1.5rem;">✅</span><h3 style="font-size:.95rem;">Validasi W3C</h3><p style="font-size:.85rem;">Periksa di validator.w3.org</p></div>
+          <div class="content-card" style="text-align:left;padding:18px;"><span style="font-size:1.5rem;">📁</span><h3 style="font-size:.95rem;">Struktur Folder Rapi</h3><p style="font-size:.85rem;">css/, js/, images/, index.html</p></div>
+          <div class="content-card" style="text-align:left;padding:18px;"><span style="font-size:1.5rem;">📱</span><h3 style="font-size:.95rem;">Mobile-First</h3><p style="font-size:.85rem;">Selalu sertakan meta viewport</p></div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- BAGIAN 2: DASAR CSS -->
+      <!-- ══════════════════════════════════════════════ -->
+      <div class="slide section-slide" id="slide-10">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">🎨</div>
+        <h2>BAGIAN 2</h2>
+        <p>Dasar CSS</p>
+      </div>
+
+      <!-- SLIDE 11: CSS Fundamentals -->
+      <div class="slide" id="slide-11">
+        <div class="slide-header"><span style="font-size:2.5rem;color:#8b5cf6;">🎨</span><h2>CSS Fundamentals</h2></div>
+        <p class="lead-text">CSS (Cascading Style Sheets) mengatur <strong>tampilan visual</strong> elemen HTML — warna, ukuran, posisi, animasi, dan layout.</p>
+        <div class="slide-two-col">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">3 Cara Menambahkan CSS</h3>
+            <div class="code-box" style="font-size:.8rem;">
+<span class="com">&lt;!-- 1. Inline CSS --&gt;</span>
+<span class="tag">&lt;p</span> <span class="attr">style</span>=<span class="str">"color: blue;"</span><span class="tag">&gt;</span>Teks<span class="tag">&lt;/p&gt;</span>
+
+<span class="com">&lt;!-- 2. Internal CSS --&gt;</span>
+<span class="tag">&lt;style&gt;</span>
+  <span class="fn">p</span> { <span class="attr">color</span>: <span class="str">blue</span>; }
+<span class="tag">&lt;/style&gt;</span>
+
+<span class="com">&lt;!-- 3. External CSS ✅ --&gt;</span>
+<span class="tag">&lt;link</span> <span class="attr">rel</span>=<span class="str">"stylesheet"</span>
+      <span class="attr">href</span>=<span class="str">"style.css"</span><span class="tag">&gt;</span>
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Jenis Selector</h3>
+            <table class="slide-table" style="font-size:.9rem;">
+              <tr><th>Selector</th><th>Contoh</th><th>Target</th></tr>
+              <tr><td>Element</td><td><code>p { }</code></td><td>Semua <code>&lt;p&gt;</code></td></tr>
+              <tr><td>Class</td><td><code>.card { }</code></td><td>class="card"</td></tr>
+              <tr><td>ID</td><td><code>#header { }</code></td><td>id="header"</td></tr>
+              <tr><td>Universal</td><td><code>* { }</code></td><td>Semua elemen</td></tr>
+              <tr><td>Pseudo-class</td><td><code>a:hover { }</code></td><td>Saat hover</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 12: Box Model -->
+      <div class="slide" id="slide-12">
+        <div class="slide-header"><span style="font-size:2.5rem;">📦</span><h2>Box Model & Positioning</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <p style="font-size:1rem;color:#334155;margin-bottom:16px;">Setiap elemen HTML adalah sebuah <strong>kotak</strong> dengan 4 layer:</p>
+            <div class="boxmodel-wrap">
+              <div class="bm-diagram">
+                <div class="bm-layer bm-margin">
+                  <span class="bm-label" style="top:4px;left:4px;background:#f59e0b;">MARGIN</span>
+                  <div class="bm-layer bm-border">
+                    <span class="bm-label" style="top:4px;left:4px;background:#ef4444;">BORDER</span>
+                    <div class="bm-layer bm-padding">
+                      <span class="bm-label" style="top:4px;left:4px;background:#22c55e;">PADDING</span>
+                      <div class="bm-layer bm-content">CONTENT</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">CSS Position</h3>
+            <table class="slide-table" style="font-size:.9rem;">
+              <tr><th>Value</th><th>Perilaku</th></tr>
+              <tr><td><code>static</code></td><td>Default, flow normal</td></tr>
+              <tr><td><code>relative</code></td><td>Relatif dari posisi normal</td></tr>
+              <tr><td><code>absolute</code></td><td>Relatif dari parent positioned</td></tr>
+              <tr><td><code>fixed</code></td><td>Tetap di layar saat scroll</td></tr>
+              <tr><td><code>sticky</code></td><td>Kombinasi relative + fixed</td></tr>
+            </table>
+            <div class="code-box" style="margin-top:14px;font-size:.8rem;">
+<span class="fn">.box</span> {
+  <span class="attr">width</span>: <span class="num">200px</span>;
+  <span class="attr">padding</span>: <span class="num">20px</span>;
+  <span class="attr">border</span>: <span class="num">2px</span> <span class="kw">solid</span> <span class="str">#333</span>;
+  <span class="attr">margin</span>: <span class="num">16px</span>;
+  <span class="attr">box-sizing</span>: <span class="kw">border-box</span>;
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 13: Flexbox -->
+      <div class="slide" id="slide-13">
+        <div class="slide-header"><span style="font-size:2.5rem;">🔲</span><h2>Flexbox Layout</h2></div>
+        <p class="lead-text">Flexbox adalah sistem layout <strong>1 dimensi</strong> untuk mengatur elemen dalam satu baris atau kolom.</p>
+        <div class="slide-two-col">
+          <div>
+            <div class="code-box" style="font-size:.8rem;">
+<span class="fn">.container</span> {
+  <span class="attr">display</span>: <span class="kw">flex</span>;
+  <span class="attr">justify-content</span>: <span class="kw">center</span>;
+  <span class="attr">align-items</span>: <span class="kw">center</span>;
+  <span class="attr">gap</span>: <span class="num">16px</span>;
+  <span class="attr">flex-wrap</span>: <span class="kw">wrap</span>;
+}
+<span class="fn">.item</span> {
+  <span class="attr">flex</span>: <span class="num">1</span>;
+}
+            </div>
+            <table class="slide-table" style="margin-top:14px;font-size:.85rem;">
+              <tr><th>Property</th><th>Fungsi</th></tr>
+              <tr><td><code>justify-content</code></td><td>Alignment horizontal</td></tr>
+              <tr><td><code>align-items</code></td><td>Alignment vertical</td></tr>
+              <tr><td><code>flex-direction</code></td><td>Arah: row / column</td></tr>
+              <tr><td><code>gap</code></td><td>Jarak antar items</td></tr>
+            </table>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Visual Demo</h3>
+            <div style="font-size:.75rem;color:#64748b;margin-bottom:8px;font-weight:700;">justify-content: center</div>
+            <div class="flex-demo">
+              <div class="flex-item">1</div>
+              <div class="flex-item">2</div>
+              <div class="flex-item">3</div>
+            </div>
+            <div style="font-size:.75rem;color:#64748b;margin-bottom:8px;font-weight:700;">justify-content: space-between</div>
+            <div class="flex-demo" style="justify-content:space-between;">
+              <div class="flex-item">A</div>
+              <div class="flex-item">B</div>
+              <div class="flex-item">C</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 14: CSS Grid -->
+      <div class="slide" id="slide-14">
+        <div class="slide-header"><span style="font-size:2.5rem;">📐</span><h2>CSS Grid Layout</h2></div>
+        <p class="lead-text">Grid adalah sistem layout <strong>2 dimensi</strong> — mengatur baris DAN kolom sekaligus.</p>
+        <div class="slide-two-col">
+          <div>
+            <div class="code-box" style="font-size:.8rem;">
+<span class="fn">.grid</span> {
+  <span class="attr">display</span>: <span class="kw">grid</span>;
+  <span class="attr">grid-template-columns</span>:
+    <span class="fn">repeat</span>(<span class="num">3</span>, <span class="num">1fr</span>);
+  <span class="attr">gap</span>: <span class="num">20px</span>;
+}
+
+<span class="fn">.item-wide</span> {
+  <span class="attr">grid-column</span>: <span class="kw">span</span> <span class="num">2</span>;
+}
+            </div>
+            <div class="compare-grid" style="margin-top:14px;grid-template-columns:1fr 1fr;">
+              <div class="compare-card" style="background:#eff6ff;border-color:#93c5fd;padding:14px;">
+                <div style="font-weight:800;color:#1e40af;margin-bottom:6px;">Flexbox</div>
+                <p style="margin:0;font-size:.82rem;color:#475569;">Layout 1D, navigasi, toolbar, alignment sederhana</p>
+              </div>
+              <div class="compare-card" style="background:#faf5ff;border-color:#c4b5fd;padding:14px;">
+                <div style="font-weight:800;color:#6d28d9;margin-bottom:6px;">Grid</div>
+                <p style="margin:0;font-size:.82rem;color:#475569;">Layout 2D, halaman utama, card gallery</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Visual Demo</h3>
+            <div class="grid-demo">
+              <div class="grid-item">1</div>
+              <div class="grid-item">2</div>
+              <div class="grid-item">3</div>
+              <div class="grid-item wide">4 (span 2)</div>
+              <div class="grid-item">5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 15: Responsive -->
+      <div class="slide" id="slide-15">
+        <div class="slide-header"><span style="font-size:2.5rem;">📱</span><h2>Responsive Design & Media Queries</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <div class="code-box" style="font-size:.8rem;">
+<span class="com">/* Mobile First */</span>
+<span class="fn">.container</span> {
+  <span class="attr">padding</span>: <span class="num">16px</span>;
+}
+
+<span class="com">/* Tablet */</span>
+<span class="kw">@media</span> (<span class="attr">min-width</span>: <span class="num">768px</span>) {
+  <span class="fn">.container</span> {
+    <span class="attr">padding</span>: <span class="num">32px</span>;
+    <span class="attr">max-width</span>: <span class="num">720px</span>;
+  }
+}
+
+<span class="com">/* Desktop */</span>
+<span class="kw">@media</span> (<span class="attr">min-width</span>: <span class="num">1024px</span>) {
+  <span class="fn">.container</span> {
+    <span class="attr">padding</span>: <span class="num">48px</span>;
+    <span class="attr">max-width</span>: <span class="num">1200px</span>;
+  }
+}
+            </div>
+          </div>
+          <div>
+            <div class="callout callout-tip">💡 <strong>Mobile First</strong>: Desain untuk mobile dulu, lalu <em>scale up</em> ke tablet dan desktop.</div>
+            <table class="slide-table" style="font-size:.9rem;">
+              <tr><th>Unit</th><th>Keterangan</th></tr>
+              <tr><td><code>%</code></td><td>Relatif terhadap parent</td></tr>
+              <tr><td><code>vw / vh</code></td><td>Relatif terhadap viewport</td></tr>
+              <tr><td><code>rem</code></td><td>Relatif terhadap root font-size</td></tr>
+              <tr><td><code>em</code></td><td>Relatif terhadap parent font-size</td></tr>
+              <tr><td><code>clamp()</code></td><td>Min, preferred, max</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 16: CSS Modern -->
+      <div class="slide" id="slide-16">
+        <div class="slide-header"><span style="font-size:2.5rem;">✨</span><h2>CSS Variables & Animations</h2></div>
+        <div class="slide-two-col-equal">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Custom Properties</h3>
+            <div class="code-box" style="font-size:.8rem;">
+<span class="fn">:root</span> {
+  <span class="attr">--primary</span>: <span class="str">#2563eb</span>;
+  <span class="attr">--radius</span>: <span class="num">12px</span>;
+  <span class="attr">--shadow</span>: <span class="num">0 4px 12px</span>
+    <span class="fn">rgba</span>(<span class="num">0,0,0,0.1</span>);
+}
+
+<span class="fn">.button</span> {
+  <span class="attr">background</span>: <span class="fn">var</span>(<span class="attr">--primary</span>);
+  <span class="attr">border-radius</span>: <span class="fn">var</span>(<span class="attr">--radius</span>);
+  <span class="attr">box-shadow</span>: <span class="fn">var</span>(<span class="attr">--shadow</span>);
+}
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Transitions & Animations</h3>
+            <div class="code-box" style="font-size:.8rem;">
+<span class="com">/* Transition */</span>
+<span class="fn">.card</span> {
+  <span class="attr">transition</span>: <span class="kw">transform</span> <span class="num">.3s</span>;
+}
+<span class="fn">.card:hover</span> {
+  <span class="attr">transform</span>: <span class="fn">translateY</span>(<span class="num">-4px</span>);
+}
+
+<span class="com">/* Keyframe Animation */</span>
+<span class="kw">@keyframes</span> <span class="fn">fadeIn</span> {
+  <span class="kw">from</span> { <span class="attr">opacity</span>: <span class="num">0</span>; }
+  <span class="kw">to</span> { <span class="attr">opacity</span>: <span class="num">1</span>; }
+}
+<span class="fn">.element</span> {
+  <span class="attr">animation</span>: <span class="fn">fadeIn</span> <span class="num">.5s</span> <span class="kw">ease-out</span>;
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- BAGIAN 3: DASAR JAVASCRIPT -->
+      <!-- ══════════════════════════════════════════════ -->
+      <div class="slide section-slide" id="slide-17">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">⚡</div>
+        <h2>BAGIAN 3</h2>
+        <p>Dasar JavaScript</p>
+        <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;z-index:10;">
+          <a href="sampel/01-variabel-tipe-data.html" target="_blank" style="background:#2563eb;color:#fff;text-decoration:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:.9rem;box-shadow:0 4px 12px rgba(37,99,235,0.4);">💻 Buka Contoh Interaktif (W3Schools Style)</a>
+        </div>
+      </div>
+
+      <!-- SLIDE 18: Apa itu JS -->
+      <div class="slide" id="slide-18">
+        <div class="slide-header"><span style="font-size:2.5rem;color:#f7df1e;">⚡</span><h2>Apa itu JavaScript?</h2></div>
+        <p class="lead-text">JavaScript adalah bahasa pemrograman untuk menambah <strong>interaktivitas</strong> di browser. Kini digunakan di mana-mana — frontend, backend, mobile, desktop, bahkan IoT.</p>
+        <div class="slide-two-col-equal">
+          <div>
+            <table class="slide-table" style="font-size:.9rem;">
+              <tr><th>Fakta</th><th>Keterangan</th></tr>
+              <tr><td>👨‍💻 Dibuat oleh</td><td>Brendan Eich, <strong>1995</strong></td></tr>
+              <tr><td>📜 Nama asli</td><td>Mocha → LiveScript → JS</td></tr>
+              <tr><td>📐 Standar</td><td><strong>ECMAScript</strong> (ES6+)</td></tr>
+              <tr><td>🏆 Popularitas</td><td>Bahasa #1 (Stack Overflow)</td></tr>
+            </table>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">JavaScript di mana saja</h3>
+            <div class="cards-grid" style="grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="content-card" style="padding:12px;"><span style="font-size:1.3rem;">🌐</span><p style="font-size:.8rem;margin:6px 0 0;font-weight:600;">Frontend</p><p style="font-size:.7rem;color:#64748b;margin:0;">React, Vue, Angular</p></div>
+              <div class="content-card" style="padding:12px;"><span style="font-size:1.3rem;">🖥️</span><p style="font-size:.8rem;margin:6px 0 0;font-weight:600;">Backend</p><p style="font-size:.7rem;color:#64748b;margin:0;">Node.js, Deno, Bun</p></div>
+              <div class="content-card" style="padding:12px;"><span style="font-size:1.3rem;">📱</span><p style="font-size:.8rem;margin:6px 0 0;font-weight:600;">Mobile</p><p style="font-size:.7rem;color:#64748b;margin:0;">React Native</p></div>
+              <div class="content-card" style="padding:12px;"><span style="font-size:1.3rem;">🖥️</span><p style="font-size:.8rem;margin:6px 0 0;font-weight:600;">Desktop</p><p style="font-size:.7rem;color:#64748b;margin:0;">Electron (VS Code!)</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 19: Variabel & Tipe Data -->
+      <div class="slide" id="slide-19">
+        <div class="slide-header"><span style="font-size:2.5rem;">📦</span><h2>Variabel, Tipe Data & Operator</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box" style="font-size:.8rem;">
+<span class="com">// Deklarasi variabel</span>
+<span class="kw">let</span> nama = <span class="str">"Budi"</span>;       <span class="com">// Bisa diubah</span>
+<span class="kw">const</span> umur = <span class="num">21</span>;          <span class="com">// Konstanta</span>
+<span class="kw">var</span> kota = <span class="str">"Jakarta"</span>;    <span class="com">// Hindari!</span>
+
+<span class="com">// Tipe Data</span>
+<span class="kw">let</span> teks = <span class="str">"Hello"</span>;      <span class="com">// String</span>
+<span class="kw">let</span> angka = <span class="num">42</span>;          <span class="com">// Number</span>
+<span class="kw">let</span> benar = <span class="kw">true</span>;       <span class="com">// Boolean</span>
+<span class="kw">let</span> kosong = <span class="kw">null</span>;      <span class="com">// Null</span>
+<span class="kw">let</span> daftar = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>]; <span class="com">// Array</span>
+<span class="kw">let</span> orang = {            <span class="com">// Object</span>
+  nama: <span class="str">"Budi"</span>,
+  umur: <span class="num">21</span>
+};
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">let vs const vs var</h3>
+            <table class="slide-table" style="font-size:.9rem;">
+              <tr><th>Fitur</th><th><code>let</code></th><th><code>const</code></th><th><code>var</code></th></tr>
+              <tr><td>Reassign</td><td>✅</td><td>❌</td><td>✅</td></tr>
+              <tr><td>Block scope</td><td>✅</td><td>✅</td><td>❌</td></tr>
+              <tr><td>Hoisting</td><td>❌</td><td>❌</td><td>✅</td></tr>
+            </table>
+            <div class="callout callout-success" style="margin-top:14px;">✅ Gunakan <code>const</code> secara default, <code>let</code> jika perlu diubah, <strong>hindari</strong> <code>var</code>.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 20: Kondisi & Perulangan -->
+      <div class="slide" id="slide-20">
+        <div class="slide-header"><span style="font-size:2.5rem;">🔄</span><h2>Kondisi & Perulangan</h2></div>
+        <div class="slide-two-col-equal">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">Kondisi</h3>
+            <div class="code-box" style="font-size:.78rem;">
+<span class="kw">let</span> nilai = <span class="num">85</span>;
+
+<span class="kw">if</span> (nilai >= <span class="num">80</span>) {
+  console.<span class="fn">log</span>(<span class="str">"A"</span>);
+} <span class="kw">else if</span> (nilai >= <span class="num">60</span>) {
+  console.<span class="fn">log</span>(<span class="str">"B"</span>);
+} <span class="kw">else</span> {
+  console.<span class="fn">log</span>(<span class="str">"C"</span>);
+}
+
+<span class="com">// Ternary Operator</span>
+<span class="kw">let</span> status = nilai >= <span class="num">60</span>
+  ? <span class="str">"Lulus"</span> : <span class="str">"Tidak Lulus"</span>;
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">Perulangan</h3>
+            <div class="code-box" style="font-size:.78rem;">
+<span class="com">// For loop</span>
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i < <span class="num">5</span>; i++) {
+  console.<span class="fn">log</span>(i);
+}
+
+<span class="com">// For...of (Array)</span>
+<span class="kw">const</span> fruits = [<span class="str">"Apel"</span>, <span class="str">"Jeruk"</span>];
+<span class="kw">for</span> (<span class="kw">const</span> fruit <span class="kw">of</span> fruits) {
+  console.<span class="fn">log</span>(fruit);
+}
+
+<span class="com">// While</span>
+<span class="kw">let</span> count = <span class="num">0</span>;
+<span class="kw">while</span> (count < <span class="num">3</span>) {
+  console.<span class="fn">log</span>(count++);
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 21: Functions -->
+      <div class="slide" id="slide-21">
+        <div class="slide-header"><span style="font-size:2.5rem;">🔧</span><h2>Function & Arrow Function</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box" style="font-size:.78rem;">
+<span class="com">// Function Declaration</span>
+<span class="kw">function</span> <span class="fn">sapa</span>(nama) {
+  <span class="kw">return</span> <span class="str">`Halo, ${</span>nama<span class="str">}!`</span>;
+}
+
+<span class="com">// Function Expression</span>
+<span class="kw">const</span> <span class="fn">tambah</span> = <span class="kw">function</span>(a, b) {
+  <span class="kw">return</span> a + b;
+};
+
+<span class="com">// Arrow Function (ES6) ✅</span>
+<span class="kw">const</span> <span class="fn">kali</span> = (a, b) <span class="op">=></span> a * b;
+
+<span class="com">// Arrow dengan body</span>
+<span class="kw">const</span> <span class="fn">hitungDiskon</span> = (harga, diskon) <span class="op">=></span> {
+  <span class="kw">const</span> potongan = harga * (diskon / <span class="num">100</span>);
+  <span class="kw">return</span> harga - potongan;
+};
+
+<span class="com">// Callback</span>
+<span class="kw">function</span> <span class="fn">prosesData</span>(data, callback) {
+  callback(data.<span class="fn">toUpperCase</span>());
+}
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Perbandingan</h3>
+            <table class="slide-table" style="font-size:.85rem;">
+              <tr><th>Tipe</th><th>Syntax</th></tr>
+              <tr><td>Declaration</td><td><code>function nama() {}</code></td></tr>
+              <tr><td>Expression</td><td><code>const f = function() {}</code></td></tr>
+              <tr><td>Arrow ✅</td><td><code>const f = () => {}</code></td></tr>
+            </table>
+            <div class="callout callout-info" style="margin-top:14px;font-size:.9rem;">💡 Arrow function <strong>mewarisi</strong> <code>this</code> dari parent scope (lexical binding) — berbeda dengan function biasa.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 22: Array Methods -->
+      <div class="slide" id="slide-22">
+        <div class="slide-header"><span style="font-size:2.5rem;">📚</span><h2>Array & Object Methods</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box" style="font-size:.78rem;">
+<span class="kw">const</span> angka = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>];
+
+<span class="com">// map — Transformasi</span>
+<span class="kw">const</span> x2 = angka.<span class="fn">map</span>(n <span class="op">=></span> n * <span class="num">2</span>);
+<span class="com">// [2, 4, 6, 8, 10]</span>
+
+<span class="com">// filter — Saring</span>
+<span class="kw">const</span> genap = angka.<span class="fn">filter</span>(n <span class="op">=></span> n % <span class="num">2</span> === <span class="num">0</span>);
+<span class="com">// [2, 4]</span>
+
+<span class="com">// reduce — Akumulasi</span>
+<span class="kw">const</span> total = angka.<span class="fn">reduce</span>((acc, n) <span class="op">=></span> acc + n, <span class="num">0</span>);
+<span class="com">// 15</span>
+
+<span class="com">// find — Cari satu</span>
+<span class="kw">const</span> found = angka.<span class="fn">find</span>(n <span class="op">=></span> n > <span class="num">3</span>);
+<span class="com">// 4</span>
+
+<span class="com">// Destructuring</span>
+<span class="kw">const</span> [a, b, ...sisa] = angka;
+
+<span class="com">// Spread</span>
+<span class="kw">const</span> baru = [...angka, <span class="num">6</span>, <span class="num">7</span>];
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Cheat Sheet</h3>
+            <table class="slide-table" style="font-size:.85rem;">
+              <tr><th>Method</th><th>Return</th><th>Fungsi</th></tr>
+              <tr><td><code>.map()</code></td><td>Array baru</td><td>Transformasi tiap elemen</td></tr>
+              <tr><td><code>.filter()</code></td><td>Array baru</td><td>Saring elemen</td></tr>
+              <tr><td><code>.reduce()</code></td><td>Satu nilai</td><td>Akumulasi</td></tr>
+              <tr><td><code>.find()</code></td><td>1 elemen</td><td>Cari pertama cocok</td></tr>
+              <tr><td><code>.forEach()</code></td><td>undefined</td><td>Iterasi saja</td></tr>
+              <tr><td><code>.some()</code></td><td>Boolean</td><td>Ada yang cocok?</td></tr>
+              <tr><td><code>.every()</code></td><td>Boolean</td><td>Semua cocok?</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 23: DOM Manipulation -->
+      <div class="slide" id="slide-23">
+        <div class="slide-header"><span style="font-size:2.5rem;">🌐</span><h2>DOM Manipulation</h2></div>
+        <p class="lead-text">DOM (Document Object Model) adalah representasi halaman HTML sebagai <strong>objek JavaScript</strong> yang bisa dimanipulasi secara dinamis.</p>
+        <div class="code-box" style="font-size:.82rem;">
+<span class="com">// Memilih elemen</span>
+<span class="kw">const</span> judul = document.<span class="fn">querySelector</span>(<span class="str">'h1'</span>);
+<span class="kw">const</span> items = document.<span class="fn">querySelectorAll</span>(<span class="str">'.item'</span>);
+
+<span class="com">// Mengubah konten</span>
+judul.<span class="attr">textContent</span> = <span class="str">'Judul Baru'</span>;
+judul.<span class="attr">innerHTML</span> = <span class="str">'&lt;em&gt;Judul&lt;/em&gt; dengan HTML'</span>;
+
+<span class="com">// Mengubah style & class</span>
+judul.style.<span class="attr">color</span> = <span class="str">'#2563eb'</span>;
+judul.classList.<span class="fn">add</span>(<span class="str">'aktif'</span>);
+judul.classList.<span class="fn">toggle</span>(<span class="str">'aktif'</span>);
+
+<span class="com">// Membuat & menambahkan elemen baru</span>
+<span class="kw">const</span> card = document.<span class="fn">createElement</span>(<span class="str">'div'</span>);
+card.<span class="attr">className</span> = <span class="str">'card'</span>;
+card.<span class="attr">textContent</span> = <span class="str">'Card Baru'</span>;
+document.<span class="fn">querySelector</span>(<span class="str">'.container'</span>).<span class="fn">appendChild</span>(card);
+        </div>
+      </div>
+
+      <!-- SLIDE 24: Event Handling -->
+      <div class="slide" id="slide-24">
+        <div class="slide-header"><span style="font-size:2.5rem;">🎯</span><h2>Event Handling</h2></div>
+        <div class="slide-two-col">
+          <div class="code-box" style="font-size:.78rem;">
+<span class="com">// addEventListener</span>
+<span class="kw">const</span> btn = document.<span class="fn">querySelector</span>(<span class="str">'#btn'</span>);
+btn.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, () <span class="op">=></span> {
+  <span class="fn">alert</span>(<span class="str">'Diklik!'</span>);
+});
+
+<span class="com">// preventDefault — Form</span>
+<span class="kw">const</span> form = document.<span class="fn">querySelector</span>(<span class="str">'form'</span>);
+form.<span class="fn">addEventListener</span>(<span class="str">'submit'</span>, (e) <span class="op">=></span> {
+  e.<span class="fn">preventDefault</span>();
+  <span class="kw">const</span> data = <span class="kw">new</span> <span class="fn">FormData</span>(form);
+  console.<span class="fn">log</span>(data.<span class="fn">get</span>(<span class="str">'nama'</span>));
+});
+
+<span class="com">// Event Delegation</span>
+document.<span class="fn">querySelector</span>(<span class="str">'.list'</span>)
+  .<span class="fn">addEventListener</span>(<span class="str">'click'</span>, (e) <span class="op">=></span> {
+    <span class="kw">if</span> (e.target.<span class="fn">matches</span>(<span class="str">'.item'</span>)) {
+      console.<span class="fn">log</span>(e.target.<span class="attr">textContent</span>);
+    }
+  });
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Event Populer</h3>
+            <table class="slide-table" style="font-size:.85rem;">
+              <tr><th>Event</th><th>Kapan Terjadi</th></tr>
+              <tr><td><code>click</code></td><td>Elemen diklik</td></tr>
+              <tr><td><code>submit</code></td><td>Form dikirim</td></tr>
+              <tr><td><code>keydown</code></td><td>Tombol keyboard ditekan</td></tr>
+              <tr><td><code>input</code></td><td>Nilai input berubah</td></tr>
+              <tr><td><code>scroll</code></td><td>Halaman di-scroll</td></tr>
+              <tr><td><code>load</code></td><td>Halaman selesai dimuat</td></tr>
+              <tr><td><code>mouseover</code></td><td>Mouse masuk elemen</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 25: Async JS -->
+      <div class="slide" id="slide-25">
+        <div class="slide-header"><span style="font-size:2.5rem;">🔄</span><h2>Async JavaScript</h2></div>
+        <p class="lead-text">JavaScript adalah <strong>single-threaded</strong> tapi bisa menangani operasi asynchronous melalui Callback, Promise, dan <code>async/await</code>.</p>
+        <div class="slide-two-col-equal">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">Promise</h3>
+            <div class="code-box" style="font-size:.78rem;">
+<span class="kw">const</span> <span class="fn">ambilData</span> = () <span class="op">=></span> {
+  <span class="kw">return new</span> <span class="fn">Promise</span>((resolve, reject) <span class="op">=></span> {
+    <span class="fn">setTimeout</span>(() <span class="op">=></span> {
+      <span class="fn">resolve</span>({ nama: <span class="str">"Budi"</span> });
+    }, <span class="num">1000</span>);
+  });
+};
+
+<span class="fn">ambilData</span>()
+  .<span class="fn">then</span>(data <span class="op">=></span> console.<span class="fn">log</span>(data))
+  .<span class="fn">catch</span>(err <span class="op">=></span> console.<span class="fn">error</span>(err));
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">Async/Await ✅</h3>
+            <div class="code-box" style="font-size:.78rem;">
+<span class="kw">async function</span> <span class="fn">getData</span>() {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> response = <span class="kw">await</span> <span class="fn">fetch</span>(
+      <span class="str">'https://api.example.com/users'</span>
+    );
+    <span class="kw">const</span> data = <span class="kw">await</span> response.<span class="fn">json</span>();
+    console.<span class="fn">log</span>(data);
+  } <span class="kw">catch</span> (error) {
+    console.<span class="fn">error</span>(<span class="str">'Error:'</span>, error);
+  }
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 26: ES6+ -->
+      <div class="slide" id="slide-26">
+        <div class="slide-header"><span style="font-size:2.5rem;">🚀</span><h2>ES6+ Modern Features</h2></div>
+        <div class="slide-two-col-equal">
+          <div class="code-box" style="font-size:.78rem;">
+<span class="com">// Template Literals</span>
+<span class="kw">const</span> pesan = <span class="str">`Halo ${</span>nama<span class="str">}!`</span>;
+
+<span class="com">// Destructuring</span>
+<span class="kw">const</span> { x, y, ...rest } = obj;
+<span class="kw">const</span> [a, b] = array;
+
+<span class="com">// Modules</span>
+<span class="kw">export const</span> <span class="fn">format</span> = (n) <span class="op">=></span> <span class="str">`Rp ${</span>n<span class="str">}`</span>;
+<span class="kw">import</span> { format } <span class="kw">from</span> <span class="str">'./utils.js'</span>;
+
+<span class="com">// Optional Chaining</span>
+<span class="kw">const</span> kota = user?.alamat?.kota;
+
+<span class="com">// Nullish Coalescing</span>
+<span class="kw">const</span> nama = input ?? <span class="str">"Anonymous"</span>;
+
+<span class="com">// Promise.all (parallel)</span>
+<span class="kw">const</span> [users, posts] = <span class="kw">await</span>
+  <span class="fn">Promise.all</span>([
+    <span class="fn">fetch</span>(<span class="str">'/api/users'</span>),
+    <span class="fn">fetch</span>(<span class="str">'/api/posts'</span>)
+  ]);
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Fitur ES6+ Penting</h3>
+            <table class="slide-table" style="font-size:.85rem;">
+              <tr><th>Fitur</th><th>Penjelasan</th></tr>
+              <tr><td>Template Literals</td><td>String dengan <code>`${}`</code></td></tr>
+              <tr><td>Destructuring</td><td>Ekstrak nilai dari object/array</td></tr>
+              <tr><td>Modules</td><td><code>import/export</code></td></tr>
+              <tr><td>Optional Chaining</td><td><code>?.</code> — aman akses nested</td></tr>
+              <tr><td>Nullish Coalescing</td><td><code>??</code> — fallback null/undefined</td></tr>
+              <tr><td>Spread/Rest</td><td><code>...</code> — copy/collect</td></tr>
+              <tr><td>Promise.all</td><td>Parallel async operations</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- BAGIAN 4: PENGENALAN NODE.JS -->
+      <!-- ══════════════════════════════════════════════ -->
+      <div class="slide section-slide" id="slide-27">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">🟢</div>
+        <h2>BAGIAN 4</h2>
+        <p>Pengenalan Node.js</p>
+        <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;z-index:10;">
+          <a href="sampel/07-node-express.html" target="_blank" style="background:#166534;border:1px solid #22c55e;color:#fff;text-decoration:none;padding:10px 20px;border-radius:8px;font-weight:700;font-size:.9rem;box-shadow:0 4px 12px rgba(34,197,94,0.3);">🟢 Buka Contoh Node.js & Express</a>
+        </div>
+      </div>
+
+      <!-- SLIDE 28: Apa itu Node.js -->
+      <div class="slide" id="slide-28">
+        <div class="slide-header"><span style="font-size:2.5rem;color:#68a063;">🟢</span><h2>Apa itu Node.js?</h2></div>
+        <p class="lead-text">Node.js adalah <strong>runtime environment</strong> yang memungkinkan JavaScript berjalan <strong>di luar browser</strong> — di server, terminal, atau mesin apapun.</p>
+        <div class="slide-two-col-equal">
+          <div>
+            <table class="slide-table" style="font-size:.9rem;">
+              <tr><th>Fakta</th><th>Keterangan</th></tr>
+              <tr><td>👨‍💻 Dibuat oleh</td><td>Ryan Dahl, <strong>2009</strong></td></tr>
+              <tr><td>⚙️ Engine</td><td>Google V8 (Chrome)</td></tr>
+              <tr><td>🔄 Arsitektur</td><td>Event-driven, Non-blocking I/O</td></tr>
+              <tr><td>📦 Package</td><td>NPM (2+ juta packages)</td></tr>
+            </table>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Arsitektur Node.js</h3>
+            <div class="node-arch">
+              <div class="node-box" style="background:#1e293b;color:#fff;width:90%;">JavaScript Code (Kode Kamu)</div>
+              <div class="node-arrow">↓</div>
+              <div class="node-box" style="background:#68a063;color:#fff;width:90%;">Node.js Runtime</div>
+              <div class="node-arrow">↓</div>
+              <div class="node-row">
+                <div class="node-box" style="background:#f7df1e;color:#1e293b;">V8 Engine</div>
+                <div class="node-box" style="background:#3b82f6;color:#fff;">libuv (I/O)</div>
+              </div>
+              <div class="node-arrow">↓</div>
+              <div class="node-box" style="background:#475569;color:#fff;width:90%;">OS (File System, Network, etc.)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 29: NPM -->
+      <div class="slide" id="slide-29">
+        <div class="slide-header"><span style="font-size:2.5rem;">📦</span><h2>NPM & Package Management</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <div class="code-box" style="font-size:.78rem;">
+<span class="com"># Inisialisasi project baru</span>
+<span class="fn">npm init</span> <span class="str">-y</span>
+
+<span class="com"># Install package</span>
+<span class="fn">npm install</span> express
+<span class="fn">npm install</span> <span class="str">--save-dev</span> nodemon
+
+<span class="com"># Jalankan script</span>
+<span class="fn">npm run</span> dev
+<span class="fn">npm start</span>
+            </div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:16px 0 10px;">Semantic Versioning</h3>
+            <div class="semver-visual">
+              <div class="sv-block" style="background:#fee2e2;color:#991b1b;">4<br><span style="font-size:.65rem;">MAJOR</span></div>
+              <div class="sv-dot">.</div>
+              <div class="sv-block" style="background:#fef3c7;color:#92400e;">18<br><span style="font-size:.65rem;">MINOR</span></div>
+              <div class="sv-dot">.</div>
+              <div class="sv-block" style="background:#dcfce7;color:#166534;">2<br><span style="font-size:.65rem;">PATCH</span></div>
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">package.json</h3>
+            <div class="code-box" style="font-size:.78rem;">
+{
+  <span class="attr">"name"</span>: <span class="str">"my-app"</span>,
+  <span class="attr">"version"</span>: <span class="str">"1.0.0"</span>,
+  <span class="attr">"scripts"</span>: {
+    <span class="attr">"start"</span>: <span class="str">"node index.js"</span>,
+    <span class="attr">"dev"</span>: <span class="str">"nodemon index.js"</span>
+  },
+  <span class="attr">"dependencies"</span>: {
+    <span class="attr">"express"</span>: <span class="str">"^4.18.0"</span>
+  },
+  <span class="attr">"devDependencies"</span>: {
+    <span class="attr">"nodemon"</span>: <span class="str">"^3.0.0"</span>
+  }
+}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 30: Membuat Server -->
+      <div class="slide" id="slide-30">
+        <div class="slide-header"><span style="font-size:2.5rem;">🖥️</span><h2>Membuat Server Sederhana</h2></div>
+        <div class="slide-two-col-equal">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">HTTP Module (Bawaan)</h3>
+            <div class="code-box" style="font-size:.78rem;">
+<span class="kw">const</span> http = <span class="fn">require</span>(<span class="str">'http'</span>);
+
+<span class="kw">const</span> server = http.<span class="fn">createServer</span>(
+  (req, res) <span class="op">=></span> {
+    res.<span class="fn">writeHead</span>(<span class="num">200</span>, {
+      <span class="str">'Content-Type'</span>: <span class="str">'text/html'</span>
+    });
+    res.<span class="fn">end</span>(<span class="str">'&lt;h1&gt;Hello Node.js!&lt;/h1&gt;'</span>);
+  }
+);
+
+server.<span class="fn">listen</span>(<span class="num">3000</span>, () <span class="op">=></span> {
+  console.<span class="fn">log</span>(<span class="str">'Server @ :3000'</span>);
+});
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">Express.js ✅</h3>
+            <div class="code-box" style="font-size:.78rem;">
+<span class="kw">const</span> express = <span class="fn">require</span>(<span class="str">'express'</span>);
+<span class="kw">const</span> app = <span class="fn">express</span>();
+
+<span class="com">// Route GET</span>
+app.<span class="fn">get</span>(<span class="str">'/'</span>, (req, res) <span class="op">=></span> {
+  res.<span class="fn">json</span>({ pesan: <span class="str">'Halo dunia!'</span> });
+});
+
+<span class="com">// Route POST</span>
+app.<span class="fn">post</span>(<span class="str">'/users'</span>, (req, res) <span class="op">=></span> {
+  <span class="kw">const</span> { nama } = req.body;
+  res.<span class="fn">json</span>({ status: <span class="str">'Created'</span> });
+});
+
+<span class="com">// Route dengan parameter</span>
+app.<span class="fn">get</span>(<span class="str">'/users/:id'</span>, (req, res) <span class="op">=></span> {
+  res.<span class="fn">json</span>({ id: req.params.id });
+});
+
+app.<span class="fn">listen</span>(<span class="num">3000</span>);
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 31: Node Ecosystem -->
+      <div class="slide" id="slide-31">
+        <div class="slide-header"><span style="font-size:2.5rem;">🌍</span><h2>Node.js Ecosystem</h2></div>
+        <div class="eco-grid" style="grid-template-columns:repeat(3,1fr);">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;font-size:1rem;margin:0 0 10px;">🏗️ Framework</h3>
+            <div class="eco-card"><div style="font-weight:700;color:#1e3a8a;">Express.js</div><div style="font-size:.8rem;color:#475569;">Minimalis, paling populer</div></div>
+            <div class="eco-card" style="margin-top:8px;"><div style="font-weight:700;color:#1e3a8a;">Fastify</div><div style="font-size:.8rem;color:#475569;">Fokus performa tinggi</div></div>
+            <div class="eco-card" style="margin-top:8px;"><div style="font-weight:700;color:#1e3a8a;">NestJS</div><div style="font-size:.8rem;color:#475569;">Enterprise, TypeScript-first</div></div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;font-size:1rem;margin:0 0 10px;">🗄️ ORM / Database</h3>
+            <div class="eco-card"><div style="font-weight:700;color:#1e3a8a;">Prisma</div><div style="font-size:.8rem;color:#475569;">Modern ORM, type-safe</div></div>
+            <div class="eco-card" style="margin-top:8px;"><div style="font-weight:700;color:#1e3a8a;">Sequelize</div><div style="font-size:.8rem;color:#475569;">ORM tradisional</div></div>
+            <div class="eco-card" style="margin-top:8px;"><div style="font-weight:700;color:#1e3a8a;">Mongoose</div><div style="font-size:.8rem;color:#475569;">ODM untuk MongoDB</div></div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;font-size:1rem;margin:0 0 10px;">🔌 Utilities</h3>
+            <div class="eco-card"><div style="font-weight:700;color:#1e3a8a;">Socket.io</div><div style="font-size:.8rem;color:#475569;">WebSocket real-time</div></div>
+            <div class="eco-card" style="margin-top:8px;"><div style="font-weight:700;color:#1e3a8a;">Passport.js</div><div style="font-size:.8rem;color:#475569;">Authentication</div></div>
+            <div class="eco-card" style="margin-top:8px;"><div style="font-weight:700;color:#1e3a8a;">Multer</div><div style="font-size:.8rem;color:#475569;">File upload handler</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 32: Fullstack JS -->
+      <div class="slide" id="slide-32">
+        <div class="slide-header"><span style="font-size:2.5rem;">🔗</span><h2>Fullstack JavaScript</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Stack Populer</h3>
+            <table class="slide-table" style="font-size:.9rem;">
+              <tr><th>Stack</th><th>Komponen</th></tr>
+              <tr><td style="font-weight:700;">MERN</td><td>MongoDB + Express + React + Node</td></tr>
+              <tr><td style="font-weight:700;">MEVN</td><td>MongoDB + Express + Vue + Node</td></tr>
+              <tr><td style="font-weight:700;">T3</td><td>TypeScript + tRPC + Tailwind + Next</td></tr>
+              <tr><td style="font-weight:700;">Next.js</td><td>Full-stack React framework</td></tr>
+            </table>
+            <div class="callout callout-info" style="margin-top:14px;font-size:.9rem;">💡 Dengan JavaScript, kamu bisa membangun <strong>seluruh aplikasi</strong> dari depan sampai belakang!</div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Alur Data Client-Server</h3>
+            <div class="flow-stack">
+              <div class="flow-box" style="background:#eff6ff;border:2px solid #93c5fd;color:#1e40af;">🌐 Browser / Client</div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box" style="background:#f0fdf4;border:2px solid #86efac;color:#166534;">🖥️ Node.js Server (Express)</div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box" style="background:#fef3c7;border:2px solid #fcd34d;color:#92400e;">🗄️ Database (MongoDB/PostgreSQL)</div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box" style="background:#f0fdf4;border:2px solid #86efac;color:#166534;">🖥️ Node.js Server</div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box" style="background:#eff6ff;border:2px solid #93c5fd;color:#1e40af;">🌐 Browser renders UI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════ -->
+      <!-- BAGIAN 5: TOOLS, WORKFLOW & KARIER -->
+      <!-- ══════════════════════════════════════════════ -->
+      <div class="slide section-slide" id="slide-33">
+        <div class="bg-blob"></div>
+        <div class="icon-wrapper" style="font-size:4rem;">🛠️</div>
+        <h2>BAGIAN 5</h2>
+        <p>Tools, Workflow & Karier</p>
+      </div>
+
+      <!-- SLIDE 34: Developer Tools -->
+      <div class="slide" id="slide-34">
+        <div class="slide-header"><span style="font-size:2.5rem;">🛠️</span><h2>Developer Tools & Workflow</h2></div>
+        <div class="slide-two-col-equal">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">Editor & Tools</h3>
+            <div class="eco-grid" style="grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="eco-card" style="padding:12px;"><div style="font-weight:700;color:#1e3a8a;font-size:.9rem;">VS Code</div><div style="font-size:.75rem;color:#64748b;">Editor #1</div></div>
+              <div class="eco-card" style="padding:12px;"><div style="font-weight:700;color:#1e3a8a;font-size:.9rem;">DevTools</div><div style="font-size:.75rem;color:#64748b;">Debug & inspect</div></div>
+              <div class="eco-card" style="padding:12px;"><div style="font-weight:700;color:#1e3a8a;font-size:.9rem;">Git & GitHub</div><div style="font-size:.75rem;color:#64748b;">Version control</div></div>
+              <div class="eco-card" style="padding:12px;"><div style="font-weight:700;color:#1e3a8a;font-size:.9rem;">Terminal</div><div style="font-size:.75rem;color:#64748b;">CLI commands</div></div>
+              <div class="eco-card" style="padding:12px;"><div style="font-weight:700;color:#1e3a8a;font-size:.9rem;">Postman</div><div style="font-size:.75rem;color:#64748b;">API testing</div></div>
+              <div class="eco-card" style="padding:12px;"><div style="font-weight:700;color:#1e3a8a;font-size:.9rem;">Figma</div><div style="font-size:.75rem;color:#64748b;">Design inspect</div></div>
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 10px;">Build Tools</h3>
+            <table class="slide-table" style="font-size:.85rem;">
+              <tr><th>Tool</th><th>Fungsi</th></tr>
+              <tr><td><strong>Vite</strong></td><td>Dev server & bundler modern ⚡</td></tr>
+              <tr><td><strong>ESLint</strong></td><td>Linting — temukan error</td></tr>
+              <tr><td><strong>Prettier</strong></td><td>Auto-format kode</td></tr>
+              <tr><td><strong>TypeScript</strong></td><td>Type checking untuk JS</td></tr>
+            </table>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:16px 0 10px;">Git Dasar</h3>
+            <div class="code-box" style="font-size:.75rem;">
+<span class="fn">git init</span>              <span class="com"># Init repo</span>
+<span class="fn">git add</span> .             <span class="com"># Stage</span>
+<span class="fn">git commit</span> <span class="str">-m "feat"</span>  <span class="com"># Commit</span>
+<span class="fn">git push</span> origin main  <span class="com"># Push</span>
+<span class="fn">git branch</span> fitur-baru <span class="com"># Branch</span>
+<span class="fn">git merge</span> fitur-baru  <span class="com"># Merge</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 35: Roadmap & Karier -->
+      <div class="slide" id="slide-35">
+        <div class="slide-header"><span style="font-size:2.5rem;">🚀</span><h2>Roadmap & Karier Frontend Engineer</h2></div>
+        <div class="slide-two-col">
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Roadmap Frontend 2026</h3>
+            <div class="roadmap-flow">
+              <div class="rm-box" style="background:#eff6ff;border-color:#3b82f6;color:#1e40af;">HTML & CSS Dasar</div>
+              <div class="rm-arrow"></div>
+              <div class="rm-box" style="background:#fef3c7;border-color:#f59e0b;color:#92400e;">JavaScript (ES6+)</div>
+              <div class="rm-arrow"></div>
+              <div class="rm-box" style="background:#f0fdf4;border-color:#22c55e;color:#166534;">Git & NPM</div>
+              <div class="rm-arrow"></div>
+              <div class="rm-box" style="background:#faf5ff;border-color:#8b5cf6;color:#6d28d9;">Framework (React/Vue)</div>
+              <div class="rm-arrow"></div>
+              <div class="rm-box" style="background:#fff1f2;border-color:#f43f5e;color:#be123c;">TypeScript & Testing</div>
+              <div class="rm-arrow"></div>
+              <div class="rm-box" style="background:#1e293b;border-color:#475569;color:#fff;">🚀 Deploy & Production</div>
+            </div>
+          </div>
+          <div>
+            <h3 style="color:#1e3a8a;font-family:'Merriweather',serif;margin:0 0 12px;">Peluang Karier</h3>
+            <div class="career-grid" style="grid-template-columns:1fr;">
+              <div class="career-card" style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-weight:700;color:#1e3a8a;">💻 Junior Frontend</div><div style="font-size:.8rem;color:#64748b;">HTML, CSS, JS, Git</div></div><div style="font-weight:700;color:#22c55e;font-size:.85rem;">Rp 5–10jt</div></div>
+              <div class="career-card" style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-weight:700;color:#1e3a8a;">🔧 Frontend Developer</div><div style="font-size:.8rem;color:#64748b;">React/Vue, API, TypeScript</div></div><div style="font-weight:700;color:#22c55e;font-size:.85rem;">Rp 10–20jt</div></div>
+              <div class="career-card" style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-weight:700;color:#1e3a8a;">🏗️ Senior Frontend</div><div style="font-size:.8rem;color:#64748b;">Architecture, Testing, Perf</div></div><div style="font-weight:700;color:#22c55e;font-size:.85rem;">Rp 18–35jt</div></div>
+              <div class="career-card" style="display:flex;justify-content:space-between;align-items:center;"><div><div style="font-weight:700;color:#1e3a8a;">🔗 Fullstack Developer</div><div style="font-size:.8rem;color:#64748b;">Frontend + Node.js + DB</div></div><div style="font-weight:700;color:#22c55e;font-size:.85rem;">Rp 12–30jt</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 36: Kuis -->
+      <div class="slide" id="slide-36">
+        <div class="slide-header"><span style="font-size:2.5rem;">❓</span><h2>Kuis &amp; Latihan</h2></div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="quiz-item"><span class="badge" style="background:#ede9fe;color:#5b21b6;">Diskusi</span><div style="font-size:.95rem;color:#334155;">Apa bedanya <code>let</code>, <code>const</code>, dan <code>var</code>? Kapan pakai masing-masing?</div></div>
+          <div class="quiz-item"><span class="badge" style="background:#ede9fe;color:#5b21b6;">Diskusi</span><div style="font-size:.95rem;color:#334155;">Jelaskan perbedaan Flexbox dan CSS Grid dengan analogi sehari-hari!</div></div>
+          <div class="quiz-item"><span class="badge" style="background:#fff7ed;color:#c2410c;">Tertulis</span><div style="font-size:.95rem;color:#334155;">Buatlah contoh kode Semantic HTML untuk halaman blog sederhana!</div></div>
+          <div class="quiz-item"><span class="badge" style="background:#fff7ed;color:#c2410c;">Tertulis</span><div style="font-size:.95rem;color:#334155;">Tuliskan 3 perbedaan antara <code>==</code> dan <code>===</code> di JavaScript!</div></div>
+          <div class="quiz-item"><span class="badge" style="background:#f0fdf4;color:#065f46;">Praktik</span><div style="font-size:.95rem;color:#334155;">Buat halaman <strong>To-Do List</strong> dengan HTML, CSS, dan JavaScript!</div></div>
+          <div class="quiz-item"><span class="badge" style="background:#f0fdf4;color:#065f46;">Praktik</span><div style="font-size:.95rem;color:#334155;">Jalankan server Express.js sederhana yang menampilkan JSON di browser!</div></div>
+        </div>
+      </div>
+
+      <!-- SLIDE 37: Sumber Belajar -->
+      <div class="slide" id="slide-37">
+        <div class="slide-header"><span style="font-size:2.5rem;">📚</span><h2>Sumber Belajar Lanjutan</h2></div>
+        <div class="ref-grid">
+          <div class="ref-card">
+            <div style="font-weight:800;font-size:.85rem;color:#64748b;margin-bottom:10px;">DOKUMENTASI RESMI</div>
+            <a href="https://developer.mozilla.org" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;margin-bottom:10px;">MDN Web Docs<div style="font-size:.75rem;color:#94a3b8;font-weight:400;">Referensi HTML CSS JS terlengkap</div></a>
+            <a href="https://javascript.info" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;margin-bottom:10px;">JavaScript.info<div style="font-size:.75rem;color:#94a3b8;font-weight:400;">Tutorial JS modern & mendalam</div></a>
+            <a href="https://nodejs.org/docs" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;">Node.js Docs<div style="font-size:.75rem;color:#94a3b8;font-weight:400;">Dokumentasi resmi Node.js</div></a>
+          </div>
+          <div class="ref-card">
+            <div style="font-weight:800;font-size:.85rem;color:#64748b;margin-bottom:10px;">PLATFORM KURSUS</div>
+            <a href="https://freecodecamp.org" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;margin-bottom:10px;">freeCodeCamp<div style="font-size:.75rem;color:#94a3b8;font-weight:400;">Belajar web gratis & terstruktur</div></a>
+            <a href="https://theodinproject.com" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;margin-bottom:10px;">The Odin Project<div style="font-size:.75rem;color:#94a3b8;font-weight:400;">Kurikulum fullstack gratis</div></a>
+            <a href="https://scrimba.com" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;">Scrimba<div style="font-size:.75rem;color:#94a3b8;font-weight:400;">Belajar coding interaktif</div></a>
+          </div>
+          <div class="ref-card">
+            <div style="font-weight:800;font-size:.85rem;color:#64748b;margin-bottom:10px;">YOUTUBE & ROADMAP</div>
+            <div style="font-size:.9rem;font-weight:600;color:#334155;margin-bottom:6px;">Traversy Media</div>
+            <div style="font-size:.9rem;font-weight:600;color:#334155;margin-bottom:6px;">Kevin Powell (CSS)</div>
+            <div style="font-size:.9rem;font-weight:600;color:#334155;margin-bottom:10px;">Fireship (singkat & padat)</div>
+            <a href="https://roadmap.sh/frontend" target="_blank" style="display:block;color:#2563eb;font-weight:700;text-decoration:none;">roadmap.sh/frontend<div style="font-size:.75rem;color:#94a3b8;font-weight:400;">Panduan belajar frontend lengkap</div></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENDING SLIDE -->
+      <div class="slide cover-slide" id="slide-38">
+        <div class="icon-wrapper">🚀</div>
+        <h1>Selamat Belajar!</h1>
+        <div class="accent-line"></div>
+        <p>"Any application that can be written in JavaScript,<br>will eventually be written in JavaScript."<br>— <strong>Jeff Atwood</strong></p>
+        <div style="margin-top:50px;">
+          <a href="../../index.html" style="color:white;text-decoration:none;font-weight:bold;padding:14px 36px;background:#2563eb;border-radius:99px;transition:0.3s;display:inline-block;font-size:1.1rem;box-shadow:0 10px 20px rgba(37,99,235,0.3);">
+            Kembali ke Halaman Utama
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="slide-controls">
+      <button class="btn-nav secondary" id="btn-prev" disabled>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg> <span>Sebelumnya</span>
+      </button>
+      <div class="slide-progress-wrapper">
+        <div class="slide-progress-text">Slide <span id="current-slide-num">1</span> dari <span id="total-slide-num">X</span></div>
+        <div class="slide-progress-bar"><div class="slide-progress-fill" id="progress-fill"></div></div>
+      </div>
+      <button class="btn-nav" id="btn-next">
+        <span>Selanjutnya</span> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentIdx = 0;
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const textCurrent = document.getElementById('current-slide-num');
+      const textTotal = document.getElementById('total-slide-num');
+      const progressFill = document.getElementById('progress-fill');
+      textTotal.textContent = totalSlides;
+      function updateSlide() {
+        slides.forEach((slide, index) => {
+          slide.classList.toggle('active', index === currentIdx);
+        });
+        textCurrent.textContent = currentIdx + 1;
+        progressFill.style.width = ((currentIdx + 1) / totalSlides * 100) + '%';
+        btnPrev.disabled = currentIdx === 0;
+        btnNext.disabled = currentIdx === totalSlides - 1;
+      }
+      function nextSlide() { if (currentIdx < totalSlides - 1) { currentIdx++; updateSlide(); } }
+      function prevSlide() { if (currentIdx > 0) { currentIdx--; updateSlide(); } }
+      btnNext.addEventListener('click', nextSlide);
+      btnPrev.addEventListener('click', prevSlide);
+      const btnFullscreen = document.getElementById('btn-fullscreen');
+      btnFullscreen.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => console.log(err));
+        } else { document.exitFullscreen(); }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+        else if (e.key.toLowerCase() === 'f') btnFullscreen.click();
+      });
+      updateSlide();
+    });
+  </script>
+</body>
+</html>
